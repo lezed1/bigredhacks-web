@@ -1,0 +1,106 @@
+//-
+   General registration page
+
+extends _layout-registration
+
+block vars
+    - var actionUrl = "/register/" + urlparam; //- url the form should submit to
+    - var multipart = true; //- whether the form has multipart data
+    - var cornell_reg = (college.name == "Cornell University");
+
+block append description
+    if (cornell_reg)
+        h1 General Registration
+        p Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the first #{limit} spots are guaranteed.
+        p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon.
+        p Don't miss this amazing event, sign up now!
+        p <strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong>
+    else
+        h1 #{college.name} Registration
+        p This is a special case late reigistration form. Registration is by permission only. After registering, you will be automatically waitlisted. If we have given you permission to attend, please leave us some time to unwaitlist you.
+
+block append account-information
+    .form-group
+        label(for='email') email address *
+        input#email.form-control(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
+    .form-group
+        label(for='password') password *
+        input#password.form-control(type='password', name='password', placeholder='password', required=true)
+    .form-group
+        label(for='confirmpassword') confirm password *
+        input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='password', required=true)
+
+block append basic-information
+    .form-group
+        label(for='firstname') first name *
+        input#firstname.form-control(type='text', name='firstname', minlength='2', placeholder='first name', value=input.firstname || '',  required=true)
+    .form-group
+        label(for='lastname') last name *
+        input#lastname.form-control(type='text', name='lastname', minlength='2', placeholder='last name', value=input.lastname || '', required=true)
+    .form-group
+        label(for='phonenumber') phone number *
+        input#phonenumber.form-control(type='text', name='phonenumber', placeholder='XXX-XXX-XXXX', value=input.phonenumber || '', required=true)
+    .form-group
+        label(for='genderDropdown') gender *
+        select#genderDropdown.form-control(name='genderDropdown', required=true)
+            option(value='') select
+            +generateOptions(en.gender, {selected: (input.genderDropdown || "")})
+
+block append school
+    .form-group
+        labelfull school name *
+        br
+        input.form-control(type='text',value=college.display, readonly=true)
+    .form-group
+        label(for='yearDropdown') academic year *
+        select#yearDropdown.form-control(name='yearDropdown', required='')
+            option(value='') select
+            +generateOptions(en.year, {selected: (input.yearDropdown || "")})
+    .form-group
+        label(for='major') major *
+        input#major.form-control(type='text', name='major', placeholder='major', value=input.major || '', required=true)
+
+block append background
+    .form-group
+        label(for='resume') resume (.pdf) *
+        .wrapper
+            input#resume.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resume', accept='.pdf', required='')
+    .form-group
+        label(for='github') github profile
+        .input-group
+            .input-group-addon @
+            input#github.form-control(type='text', name='github', placeholder='johndoe', value=input.github || '')
+    .form-group
+        label(for='linkedin') linkedIn profile
+        .input-group
+            .input-group-addon http://
+            input#linkedin.form-control(type='text', name='linkedin', placeholder='www.linkedin.com/', value=input.linkedin || '')
+    .form-group
+        label(for='experienceDropdown') is this your first hackathon? *
+        select#experienceDropdown.form-control(name='experienceDropdown', required='')
+            option(value='') select
+            +generateOptions(en.experience, {selected: (input.experienceDropdown || "")})
+
+block append logistics
+    .form-group
+        label(for='dietary') dietary restrictions *
+        select#dietary.form-control(name='dietary', required='')
+            option(value='') select
+            +generateOptions(en.dietary, {selected: (input.dietary || "")})
+    .form-group
+        label(for='tshirt') t-shirt size *
+        select#tshirt.form-control(name='tshirt', required='')
+            option(value='') select
+            +generateOptions(en.tshirt, {selected: (input.tshirt || "")})
+    .form-group
+        label is there anything else you'd like to tell us?
+        textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
+
+block append terms
+    p Please carefully read the two documents below:
+    .form-group
+        a.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2015.pdf', target='_blank') liability waiver & release
+        a.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+        br
+        br
+        p: label By registering and taking part in BigRed//Hacks, you affirm that you have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.

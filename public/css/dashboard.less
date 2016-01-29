@@ -1,0 +1,171 @@
+@import "_global";
+@import "_mentor";
+
+@sidebar-font-size: 14pt;
+@sidebar-brand-font-size: 24pt;
+
+body {
+  @media (max-width: 768px) {
+    padding: 0;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  margin-bottom: 50px;
+}
+
+p {
+  color: @red;
+  font-style: italic;
+}
+
+.btn {
+  font-weight: @weight-normal;
+}
+
+form#resume-form {
+  margin-top: 20px;
+  input {
+    width: 250px;
+  }
+}
+
+.label-helper {
+  &::before {
+    content: " | ";
+    font-style: normal;
+  }
+  font-style: italic;
+}
+
+ul.team-list {
+  margin-top: 10px;
+  color: @red;
+  list-style-type: none;
+
+  li {
+    padding-top: 5px;
+    &::before {
+      content: "["
+    }
+    &::after {
+      content: "]"
+    }
+  }
+}
+
+///////////////
+///Sidebar/////
+///////////////
+
+.sidebar {
+  background: @bg-dark;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+}
+
+.brand {
+  margin-bottom: 10px;
+  display: block;
+  &:focus, &:hover, &:active {
+    text-decoration: none;
+  }
+}
+
+#brand-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  height: 120px;
+}
+
+#brand-text {
+  padding-top: 5px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  font-family: "Blogger Sans Light", Arial, sans-serif;
+  font-size: @sidebar-brand-font-size;
+  color: @white;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #747474;
+  }
+}
+
+.nav-sidebar {
+  @divider-size: 1px;
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+  > li {
+    > a {
+      padding: 10px 10px 10px 20px;
+      font-size: @sidebar-font-size;
+      color: @white;
+
+      border-bottom: @divider-size @bg-light solid;
+      border-top: @divider-size @bg-light solid;
+      &:hover {
+        background-color: lighten(@bg-dark, 20%);
+      }
+      &::before {
+        content: "[ ";
+      }
+      &::after {
+        content: " ]";
+      }
+
+    }
+    &:first-child > a {
+      border-top: @divider-size*2 @bg-light solid;
+    }
+    &:last-child > a {
+      border-bottom: @divider-size*2 @bg-light solid;
+    }
+
+    > a.active {
+      &, &:hover, &:focus {
+        background-color: lighten(@bg-dark, 30%);
+        //background-color: #428bca;
+      }
+    }
+  }
+}
+
+.businfobox {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  .busname {
+    font-family: "Blogger Sans Light", Arial, sans-serif;
+    font-size: 25px;
+    padding-bottom: 10px;
+    color: rgb(51, 122, 183)
+  }
+
+  .busselection {
+    text-align: center;
+  }
+}
+
+.long-text {
+  //width: 80%;
+  color: #000;
+  font-style: normal;
+}
