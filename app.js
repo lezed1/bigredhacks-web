@@ -75,13 +75,13 @@ app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 
 if (app.get('env') === 'production') {
-
-    app.use(require('express-uglify').middleware({src: path.join(__dirname, '/public'), logLevel: 'none'}));
     var oneDay = 86400000;
+    app.use(express.static(path.join(__dirname, 'build'), {maxAge: oneDay}));
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: oneDay}));
 
 }
 else {
+
     app.use(express.static(path.join(__dirname, 'public')));
 }
 
