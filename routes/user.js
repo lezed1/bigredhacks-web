@@ -27,6 +27,10 @@ module.exports = function (io) {
     var router = express.Router();
 
     /* GET user panel of logged in user */
+    router.get('/', function(req,res,next) {
+        res.redirect('user/dashboard');
+    });
+
     router.get('/dashboard', function (req, res, next) {
 
         var params = {Bucket: config.setup.AWS_S3_bucket, Key: 'resume/' + req.user.app.resume};
