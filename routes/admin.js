@@ -15,8 +15,7 @@ var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
 
 //filter out admin users in aggregate queries.
-//todo change to {role: "user"} in 2016 deployment
-var USER_FILTER = {$or: [{role: {$ne: "admin"}}, {role: {$exists: false}}]};
+var USER_FILTER = { role: "user" };
 
 //some commonly used aggregation queries:
 //todo refactor and clean this up
