@@ -34,7 +34,7 @@ router.delete('/reimbursements/school', schoolReimbursementsDelete);
 router.patch('/user/:pubid/setRSVP', setRSVP);
 
 router.patch('/user/:pubid/checkin', checkInUser);
-router.get('/users/checkin', getCheckedInUsers);
+router.get('/users/checkin', getUsersPlanningToAttend);
 
 
 /**
@@ -242,6 +242,9 @@ function updateBus (req, res, next) {
 };
 
 //todo documentation
+/**
+ * Sets a reimbursement for a school
+ */
 function schoolReimbursementsPost (req, res) {
     Reimbursements.findOne({'college.id': req.body.collegeid}, function (err, rem) {
         console.log(req.body);
@@ -275,7 +278,9 @@ function schoolReimbursementsPost (req, res) {
     })
 };
 
-//todo documentation
+/**
+ * Updates the reimbursement for a school
+ */
 function schoolReimbursementsPatch (req, res) {
     Reimbursements.findOne({"college.id": req.body.collegeid}, function (err, rem) {
         if (err) {
@@ -300,7 +305,9 @@ function schoolReimbursementsPatch (req, res) {
     })
 };
 
-//todo documentation
+/**
+ * Deletes a reimbursement for a school
+ */
 function schoolReimbursementsDelete (req, res) {
     Reimbursements.remove({'college.id': req.body.collegeid}, function (err, rem) {
         if (err) {
@@ -311,7 +318,9 @@ function schoolReimbursementsDelete (req, res) {
     })
 };
 
-//todo documentation
+/**
+ * Sets the RSVP status of the user in params.pubid to body.going
+ */
 function setRSVP (req, res) {
     var going = normalize_bool(req.body.going);
     if (going === "") {
@@ -333,7 +342,10 @@ function setRSVP (req, res) {
     });
 };
 
-//todo documentation
+/**
+ * Sets params.pubid as to body.checkedin
+ * Can be used to check a user out (for 2016 TODO)
+ */
 function checkInUser (req, res, next) {
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
@@ -351,8 +363,10 @@ function checkInUser (req, res, next) {
     });
 };
 
-//todo documentation
-function getCheckedInUsers (req, res, next) {
+/**
+ * Finds all users who are eligible to be checked in (either planned on going or are from Cornell)
+ */
+function getUsersPlanningToAttend (req, res, next) {
     var project = "name pubid email school internal.checkedin";
     User.find({$or: [{"internal.going": true}, {"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
@@ -364,7 +378,9 @@ function getCheckedInUsers (req, res, next) {
     })
 };
 
-//todo refactor
+/**
+ * Converts a bool/string to a bool. Otherwise returns the original var.
+ */
 function normalize_bool(string) {
     if (typeof string === "boolean") return string;
     if (string.toLowerCase() == "true") {
