@@ -3,13 +3,13 @@ $(document).ready(function () {
     /**********************
      *** Request Mentor****
      **********************/
-
+/*
     var socket = io(); //client-side Socket.IO object
 
     requestPermission(); //request permission for HTML5 Notifications
 
     showSchedule(); //show events on the schedule page
-
+*/
     /**
      * Requests permission to use HTML5 Notications
      */
@@ -141,6 +141,7 @@ $(document).ready(function () {
      * @param schedule JSON object contains all event information
      * @param eventIndex int represents the index of the given event
      */
+    /*
     function eventNotificationShown(schedule, eventIndex) {
         $.ajax({
             type: "POST",
@@ -260,7 +261,7 @@ $(document).ready(function () {
             "Completed</span></h3>");
         mentorrequestbox.find(".changerequeststatus").remove();
         return false;
-    });
+    });*/
 
     /************************************
      *** Dashboard Home Functionality****

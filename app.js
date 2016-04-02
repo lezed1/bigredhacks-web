@@ -91,7 +91,7 @@ app.use(subdomain({base: config.setup.url}));
 app.use(middle.allRequests);
 
 //setup routes
-app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
+//app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 /*app.use('/subdomain/fa15/', function(req,res,next) {
  // res.redirect('/*');
  });*/
