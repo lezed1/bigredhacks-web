@@ -16,6 +16,27 @@ var middle = require('../middleware');
 
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
+//All routers
+router.patch('/user/:pubid/setStatus', setUserStatus);
+router.patch('/team/:teamid/setStatus', setTeamStatus);
+router.patch('/user/:email/setRole', setUserRole);
+
+router.get('/np', getNoParticipation);
+router.post('/np/set', setNoParticipation);
+
+router.delete('/removeBus', removeBus);
+router.put('/updateBus', updateBus);
+
+router.post('/reimbursements/school', schoolReimbursementsPost);
+router.patch('/reimbursements/school', schoolReimbursementsPatch);
+router.delete('/reimbursements/school', schoolReimbursementsDelete);
+
+router.patch('/user/:pubid/setRSVP', setRSVP);
+
+router.patch('/user/:pubid/checkin', checkInUser);
+router.get('/users/checkin', getUsersPlanningToAttend);
+
+
 /**
  * @api PATCH /user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
  * @apiname setstatus
@@ -26,7 +47,7 @@ var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
  * @apiSuccess (200)
  * @apiError (500)
  * */
-router.patch('/user/:pubid/setStatus', function (req, res, next) {
+function setUserStatus (req, res, next) {
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
             console.log('Error: ' + err)
@@ -86,7 +107,7 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
 
         }
     });
-});
+};
 
 /**
  * @api PATCH /team/:teamid/setStatus Set status of entire team
@@ -98,7 +119,7 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
  * @apiSuccess (200)
  * @apiError (500)
  * */
-router.patch('/team/:teamid/setStatus', function (req, res, next) {
+function setTeamStatus (req, res, next) {
     var id = mongoose.Types.ObjectId(req.params.teamid);
     Team.findById(id, function (err, team) {
         if (err) {
@@ -134,7 +155,7 @@ router.patch('/team/:teamid/setStatus', function (req, res, next) {
             })
         }
     });
-});
+};
 
 /**
  * @api PATCH /user/:email/setRole Set role of a single user
@@ -146,7 +167,7 @@ router.patch('/team/:teamid/setStatus', function (req, res, next) {
  * @apiSuccess (200)
  * @apiError (500)
  * */
-router.patch('/user/:email/setRole', function (req, res, next) {
+function setUserRole (req, res, next) {
     User.findOne({email: req.params.email}, function (err, user) {
         if (err || !user) {
             return res.sendStatus(500);
@@ -159,7 +180,7 @@ router.patch('/user/:email/setRole', function (req, res, next) {
             });
         }
     });
-});
+};
 
 /**
  * @api GET /np Checks whether a user is in no-participation mode
@@ -168,9 +189,9 @@ router.patch('/user/:email/setRole', function (req, res, next) {
  * @apiSuccess (200) true
  * @apiError (200) false
  */
-router.get('/np', function (req, res, next) {
+function getNoParticipation (req, res, next) {
     res.send(req.session.np);
-});
+};
 
 /**
  * @api POST /np/set Enable/disable no participation mode
@@ -181,14 +202,14 @@ router.get('/np', function (req, res, next) {
  * @apiSuccess (200)
  * @apiError (500)
  */
-router.post('/np/set', function (req, res, next) {
+function setNoParticipation (req, res, next) {
     req.session.np = req.body.state;
     res.sendStatus(200);
-});
+};
 
 //todo documentation
 /* POST remove bus from list of buses */
-router.delete('/removeBus', function (req, res, next) {
+function removeBus (req, res, next) {
     Bus.remove({_id: req.body.busid}, function (err) {
         if (err) {
             console.error(err);
@@ -196,11 +217,11 @@ router.delete('/removeBus', function (req, res, next) {
         }
         else return res.sendStatus(200);
     });
-});
+};
 
 //todo documentation
 /* POST update bus in list of buses */
-router.put('/updateBus', function (req, res, next) {
+function updateBus (req, res, next) {
     Bus.findOne({_id: req.body.busid}, function (err, bus) {
         if (err) {
             console.error(err);
@@ -218,10 +239,13 @@ router.put('/updateBus', function (req, res, next) {
             else return res.sendStatus(200);
         });
     });
-});
+};
 
 //todo documentation
-router.post('/reimbursements/school', function (req, res) {
+/**
+ * Sets a reimbursement for a school
+ */
+function schoolReimbursementsPost (req, res) {
     Reimbursements.findOne({'college.id': req.body.collegeid}, function (err, rem) {
         console.log(req.body);
         if (err) {
@@ -252,10 +276,12 @@ router.post('/reimbursements/school', function (req, res) {
             })
         }
     })
-});
+};
 
-//todo documentation
-router.patch('/reimbursements/school', function (req, res) {
+/**
+ * Updates the reimbursement for a school
+ */
+function schoolReimbursementsPatch (req, res) {
     Reimbursements.findOne({"college.id": req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
@@ -277,10 +303,12 @@ router.patch('/reimbursements/school', function (req, res) {
         });
 
     })
-});
+};
 
-//todo documentation
-router.delete('/reimbursements/school', function (req, res) {
+/**
+ * Deletes a reimbursement for a school
+ */
+function schoolReimbursementsDelete (req, res) {
     Reimbursements.remove({'college.id': req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
@@ -288,10 +316,12 @@ router.delete('/reimbursements/school', function (req, res) {
         }
         return res.sendStatus(200);
     })
-});
+};
 
-//todo documentation
-router.patch('/user/:pubid/setRSVP', function (req, res) {
+/**
+ * Sets the RSVP status of the user in params.pubid to body.going
+ */
+function setRSVP (req, res) {
     var going = normalize_bool(req.body.going);
     if (going === "") {
         going = null;
@@ -310,10 +340,13 @@ router.patch('/user/:pubid/setRSVP', function (req, res) {
             });
         }
     });
-});
+};
 
-//todo documentation
-router.patch('/user/:pubid/checkin', function (req, res, next) {
+/**
+ * Sets params.pubid as to body.checkedin
+ * Can be used to check a user out (for 2016 TODO)
+ */
+function checkInUser (req, res, next) {
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
             return res.sendStatus(500);
@@ -328,10 +361,12 @@ router.patch('/user/:pubid/checkin', function (req, res, next) {
             });
         }
     });
-});
+};
 
-//todo documentation
-router.get('/users/checkin', function (req, res, next) {
+/**
+ * Finds all users who are eligible to be checked in (either planned on going or are from Cornell)
+ */
+function getUsersPlanningToAttend (req, res, next) {
     var project = "name pubid email school internal.checkedin";
     User.find({$or: [{"internal.going": true}, {"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
@@ -341,9 +376,11 @@ router.get('/users/checkin', function (req, res, next) {
             res.send(users);
         }
     })
-});
+};
 
-//todo refactor
+/**
+ * Converts a bool/string to a bool. Otherwise returns the original var.
+ */
 function normalize_bool(string) {
     if (typeof string === "boolean") return string;
     if (string.toLowerCase() == "true") {

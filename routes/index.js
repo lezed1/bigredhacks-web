@@ -21,7 +21,7 @@ router.post('/cornell/subscribe', function (req, res, next) {
     var email = req.body.cornellEmail;
     if (req.validationErrors()) {
         console.log(req.validationErrors());
-        req.flash("error", "There was an error adding your email to the list.");
+        req.flash("error", "Please enter a valid email.");
         res.redirect("/");
     }
     else {
@@ -31,6 +31,7 @@ router.post('/cornell/subscribe', function (req, res, next) {
                     req.flash("error", err.error);
                 }
                 else {
+                    console.log(err);
                     req.flash("error", "There was an error adding your email to the list.");
                 }
                 //console.log(err);
