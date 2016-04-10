@@ -2,7 +2,7 @@ var config = require("../config");
 var sendgrid = require("sendgrid")(config.setup.sendgrid_api_key);
 
 /**
- * Asynchronously sends a a transactional email
+ * Asynchronously sends a transactional email
  * @param body Contains the html body of the email
  * @param config Contains parameters: to.email, to.name, from_email, from_name, and subject
  * @param callback a function of (err, json) to handle callback
