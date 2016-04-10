@@ -1,0 +1,229 @@
+//APPLIED genders
+db.users.aggregate(
+  [
+    {
+      $group: {
+      _id: "$gender",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+
+//ACCEPTED genders
+db.users.aggregate(
+  [
+    {
+      $match: {"internal.status": "Accepted"}
+    },
+    {
+      $group: {
+      _id: "$gender",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+
+
+
+//CHECKED IN genders
+db.users.aggregate(
+  [
+    {
+      $match: {$and:[
+        {"internal.status": "Accepted"},
+        {"internal.checkedin" : true}
+      ]}
+    },
+    {
+      $group: {
+      _id: "$gender",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+//FIRST HACK
+//APPLIED
+db.users.aggregate(
+  [
+
+    {
+      $group: {
+      _id: "$app.experience",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+//ACCEPTED
+db.users.aggregate(
+  [
+    {
+      $match: {$and:[
+        {"internal.status": "Accepted"},
+      ]}
+    },
+    {
+      $group: {
+      _id: "$app.experience",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+//AND CHECKED IN
+db.users.aggregate(
+  [
+    {
+      $match: {$and:[
+        {"internal.status": "Accepted"},
+        {"internal.checkedin" : true}
+      ]}
+    },
+    {
+      $group: {
+      _id: "$app.experience",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+//ACCEPTED: Schools
+db.users.aggregate(
+  [
+    {
+      $match: {$and:[
+        {"internal.status": "Accepted"},
+      ]}
+    },
+    {
+      $group: {
+      _id: "$internal.cornell_applicant",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+//Going, not going, etc
+//cornell
+db.users.aggregate(
+  [
+    {
+      $match: {$and:[
+        {"internal.cornell_applicant": true},
+        {"internal.status": "Accepted"}
+      ]}
+    },
+    {
+      $group: {
+      _id: { going: "$internal.going"},
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+//not cornell
+db.users.aggregate(
+  [
+    {
+      $match: {
+      $and:[
+        {$or:[
+          {"internal.cornell_applicant": false},
+          {"internal.cornell_applicant": null}
+        ]},
+        {"internal.status": "Accepted"}
+      ]}
+    },
+    {
+      $group: {
+      _id: { going: "$internal.going"},
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+//applied vegetarians
+db.users.aggregate(
+  [
+
+      {$group: {
+        _id:  "$logistics.dietary",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+//major distribution
+db.users.aggregate(
+  [
+      {
+      $match:
+       { "internal.checkedin" : true }
+      },
+      {
+        $group: {
+        _id:  "$school.major",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+
+//tshirt sizes
+db.users.aggregate(
+  [
+      {
+        $group: {
+        _id:  "$logistics.tshirt",
+       count: {$sum: 1}
+      }
+    }
+  ]
+)
+
+//other school attendees
+db.users.aggregate(
+  [
+      {
+      $match:
+       { "internal.checkedin" : true }
+      },
+      {
+        $group: {
+        _id:  "$school.name",
+       count: {$sum: 1}
+      }
+    },
+    {
+      $sort: {count: -1}
+    }
+  ]
+)
+
+//vicky's lies
+db.users.find(
+  {$and:[
+    {"internal.checkedin" : true},
+    {"internal.status" : "Waitlisted"}
+  ]}
+)
