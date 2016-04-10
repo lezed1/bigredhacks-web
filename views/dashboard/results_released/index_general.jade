@@ -20,8 +20,7 @@ block dashboard_content
 
     if status == "pending"
         p.long-text
-            | Something went wrong. Please contact us at
-            a(href='mailto:info@bigredhacks.com?Subject=Application%20Status%20Error') info@bigredhacks.com
+            | Something went wrong. Please contact us at <a href='mailto:info@bigredhacks.com?Subject=Application%20Status%20Error'> info@bigredhacks.com</a>
 
     else if status == "rejected"
         p.long-text
