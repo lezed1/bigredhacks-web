@@ -17,11 +17,10 @@ var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
 var config = require('../config.js');
-var mandrill = require('mandrill-api/mandrill');
+var email = require('../util/email');
 var uid = require("uid2");
 
 
-var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
 
 passport.use(new LocalStrategy({
@@ -230,10 +229,8 @@ module.exports = function (io) {
                                     if (err) {
                                         console.log(err);
                                     }
-                                    var template_name = "bigredhackstemplate";
-                                    var template_content = [{
-                                        "name": "emailcontent",
-                                        "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                    var email_body =
+                                        "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                         "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
                                         "that we have received your application." + "</p><p>" +
                                         "You can log in to our website any time until the application deadline " +
@@ -241,42 +238,17 @@ module.exports = function (io) {
                                         "If you haven't already, make sure to like us on Facebook and " +
                                         "follow us on Twitter!" + "</p><p>" +
                                         "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                                    }];
 
-                                    var message = {
+                                    var config = {
                                         "subject": "BigRed//Hacks Registration Confirmation",
                                         "from_email": "info@bigredhacks.com",
                                         "from_name": "BigRed//Hacks",
-                                        "to": [{
+                                        "to": {
                                             "email": newUser.email,
                                             "name": newUser.name.first + " " + newUser.name.last,
-                                            "type": "to"
-                                        }],
-                                        "important": false,
-                                        "track_opens": null,
-                                        "track_clicks": null,
-                                        "auto_text": null,
-                                        "auto_html": null,
-                                        "inline_css": null,
-                                        "url_strip_qs": null,
-                                        "preserve_recipients": null,
-                                        "view_content_link": null,
-                                        "tracking_domain": null,
-                                        "signing_domain": null,
-                                        "return_path_domain": null,
-                                        "merge": true,
-                                        "merge_language": "mailchimp"
+                                        },
                                     };
-                                    var async = false;
-                                    mandrill_client.messages.sendTemplate({
-                                        "template_name": template_name,
-                                        "template_content": template_content,
-                                        "message": message, "async": async
-                                    }, function (result) {
-                                        console.log(result);
-                                    }, function (e) {
-                                        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                                    });
+                                    email.sendEmail(email_body, config);
                                     res.redirect('/user/dashboard');
                                 })
                             })
@@ -485,13 +457,10 @@ module.exports = function (io) {
                                             if (err) {
                                                 console.log(err);
                                             }
-                                            var template_name = "bigredhackstemplate";
-
                                             if (newUser.internal.status == "Accepted") {
                                                 var email_subject = "BigRed//Hacks Registration Confirmation";
-                                                var template_content = [{
-                                                    "name": "emailcontent",
-                                                    "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                                var template_content =
+                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                                     "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
                                                     "that you're registered for BigRed//Hacks 2015! " +
                                                     "We'll be sending a lot more logistical information soon." + "</p><p>" +
@@ -499,43 +468,30 @@ module.exports = function (io) {
                                                     "and view logistic information as we post it." + "</p><p>" +
                                                     "If you haven't already, make sure to like us on Facebook and " +
                                                     "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                                                }];
+                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
                                             } else {
-                                                var email_subject = "BigRed//Hacks Wait List Confirmation";
-                                                var template_content = [{
-                                                    "name": "emailcontent",
-                                                    "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                                email_subject = "BigRed//Hacks Wait List Confirmation";
+                                                template_content =
+                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                                     "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
                                                     "that we have received your application and that you have been added to our wait list." + "</p><p>" +
                                                     "You can log in to our website any time to view your status or update " +
                                                     "your resume.  We'll be sending out wait list status updates soon." + "</p><p>" +
                                                     "If you haven't already, make sure to like us on Facebook and " +
                                                     "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                                                }]
+                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
                                             }
 
-                                            var message = {
+                                            var config = {
                                                 "subject": email_subject,
                                                 "from_email": "info@bigredhacks.com",
                                                 "from_name": "BigRed//Hacks",
-                                                "to": [{
+                                                "to": {
                                                     "email": newUser.email,
                                                     "name": newUser.name.first + " " + newUser.name.last,
-                                                    "type": "to"
-                                                }]
+                                                }
                                             };
-                                            var async = false;
-                                            mandrill_client.messages.sendTemplate({
-                                                "template_name": template_name,
-                                                "template_content": template_content,
-                                                "message": message, "async": async
-                                            }, function (result) {
-                                                console.log(result);
-                                            }, function (e) {
-                                                console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                                            });
+                                            email.sendEmail(template_content, config);
                                             res.redirect('/user/dashboard');
                                         })
                                     })
@@ -768,50 +724,23 @@ module.exports = function (io) {
                         res.redirect('/forgotpassword')
                     }
                     else {
-                        var template_name = "bigredhackstemplate";
                         var passwordreseturl = req.protocol + '://' + req.get('host') + "/resetpassword?token=" + user.passwordtoken;
-                        var template_content = [{
-                            "name": "emailcontent",
-                            "content": "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
+                        var template_content =
+                            "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                             "You can reset your password by visiting the following link: </p><p>" +
                             "<a style='color: #B31B1B' href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
                             "<p>If you did not request to change your password, please ignore and delete this email.</p>" +
-                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                        }];
-                        var message = {
+                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
+                        var config = {
                             "subject": "BigRed//Hacks Password Reset",
                             "from_email": "info@bigredhacks.com",
                             "from_name": "BigRed//Hacks",
-                            "to": [{
+                            "to": {
                                 "email": user.email,
                                 "name": user.name.first + " " + user.name.last,
-                                "type": "to"
-                            }],
-                            "important": false,
-                            "track_opens": null,
-                            "track_clicks": null,
-                            "auto_text": null,
-                            "auto_html": null,
-                            "inline_css": null,
-                            "url_strip_qs": null,
-                            "preserve_recipients": null,
-                            "view_content_link": null,
-                            "tracking_domain": null,
-                            "signing_domain": null,
-                            "return_path_domain": null,
-                            "merge": true,
-                            "merge_language": "mailchimp"
+                            },
                         };
-                        var async = false;
-                        mandrill_client.messages.sendTemplate({
-                            "template_name": template_name,
-                            "template_content": template_content,
-                            "message": message, "async": async
-                        }, function (result) {
-                            console.log(result);
-                        }, function (e) {
-                            console.err('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                        });
+                        email.sendEmail(template_content, config);
                     }
                 });
             }

@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var mongoose = require('mongoose');
-var mandrill = require('mandrill-api/mandrill');
 
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
@@ -13,8 +12,7 @@ var Reimbursements = require('../../models/reimbursements.js');
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
-
-var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
+var email = require('../../util/email');
 
 //All routers
 router.patch('/user/:pubid/setStatus', setUserStatus);
@@ -65,38 +63,32 @@ function setUserStatus (req, res, next) {
                     return res.sendStatus(500);
                 } else {
                     if (oldStatus == "Waitlisted" && newStatus == "Accepted" && middle.helper.isResultsReleased()) {
-                        //email sending should not block save
                         console.log('Sending an "off the waitlist" email');
-                        var template_name = "bigredhackstemplate";
-                        var template_content = [{
-                            "name": "emailcontent",
-                            "content": "<p>Hey " + user.name.first + ",</p><p>" +
-                            "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
-                            "<p>Please be at Call Auditorium in Kennedy Hall at 5pm to sign in.  The opening ceremony starts at 6pm, with hacking starting at 8pm.  A more updated schedule will be posted soon.  We hope to see you there!</p>" +
-                            "<p>BigRed//Hacks Team</p>"
-                        }];
+                        var template_content =
+                            "<p>Hey " + user.name.first + ",</p><p>" +
+                            "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! " +
+                            "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
+                            "<p>Please be at Call Auditorium in Kennedy Hall at 5pm to sign in.  The opening ceremony starts at 6pm, with hacking starting at 8pm.  " +
+                            "A more updated schedule will be posted soon.  We hope to see you there!</p>" +
+                            "<p>BigRed//Hacks Team</p>";
 
-                        var message = {
+                        var config = {
                             "subject": "You've been accepted to BigRed//Hacks 2015!",
                             "from_email": "info@bigredhacks.com",
                             "from_name": "BigRed//Hacks",
-                            "to": [{
+                            "to": {
                                 "email": user.email,
                                 "name": user.name.first + " " + user.name.last,
-                                "type": "to"
-                            }]
+                            }
                         };
-                        var async = false;
-                        mandrill_client.messages.sendTemplate({
-                            "template_name": template_name,
-                            "template_content": template_content,
-                            "message": message, "async": async
-                        }, function (result) {
-                            console.log(result);
-                            return res.sendStatus(200);
-                        }, function (e) {
-                            console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                            return res.sendStatus(500);
+                        email.sendEmail(template_content, config, function(err,json){
+                            if (err){
+                                console.log('An error occurred: ' + err.name + ' - ' + err.message);
+                                return res.sendStatus(500);
+                            } else {
+                                console.log(json);
+                                return res.sendStatus(200);
+                            }
                         });
                     }
                     else {

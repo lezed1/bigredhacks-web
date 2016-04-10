@@ -20,7 +20,7 @@ The application uses the following APIs:
 
 * AWS S3
 * Mailchimp
-* Mandrill
+* SendGrid
 
 ### Deployment
 The app is configured to work with Heroku and Openshift hosting services. MongoDB is configured to work with MongoLab (`MONGOLAB_URI`) and Compose (`COMPOSE_URI`).
