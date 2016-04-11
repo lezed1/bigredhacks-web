@@ -219,11 +219,3 @@ db.users.aggregate(
     }
   ]
 )
-
-//vicky's lies
-db.users.find(
-  {$and:[
-    {"internal.checkedin" : true},
-    {"internal.status" : "Waitlisted"}
-  ]}
-)
