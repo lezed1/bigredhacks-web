@@ -55,6 +55,7 @@ var validator = function () {
         },
         hackathonsAttended: function (req) {
             req.assert('hackathonsAttended', 'Please specify the number of hackathons you have attended.').notEmpty();
+            req.assert('hackathonsAttended', 'Please specify a whole number.').isInt();
         },
         cornellEmail: function (req) {
             req.assert('cornellEmail', 'Email address is not valid.').isEmail();

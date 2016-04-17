@@ -123,7 +123,7 @@ module.exports = function (io) {
         var user = req.user;
 
         req = validator.validate(req, [
-            'passwordOptional', 'phonenumber', 'dietary', 'tshirt', 'yearDropdown', 'major', 'linkedin', 'q1', 'q2', 'anythingelse', 'experienceDropdown'
+            'passwordOptional', 'phonenumber', 'dietary', 'tshirt', 'yearDropdown', 'major', 'linkedin', 'q1', 'q2', 'anythingelse', 'hackathonsAttended'
         ]);
         //console.log(req.validationErrors());
         var errors = req.validationErrors();
@@ -148,7 +148,7 @@ module.exports = function (io) {
             user.app.questions.q2 = req.body.q2;
             user.app.github = req.body.github;
             user.app.linkedin = req.body.linkedin;
-            user.app.experience = req.body.experienceDropdown;
+            user.app.hackathonsAttended = req.body.hackathonsAttended;
             user.logistics.dietary = req.body.dietary;
             user.logistics.tshirt = req.body.tshirt;
             user.logistics.anythingelse = req.body.anythingelse;

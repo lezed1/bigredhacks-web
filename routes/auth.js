@@ -132,7 +132,7 @@ module.exports = function (io) {
 
             //todo reorder validations to be consistent with form
             req = validator.validate(req, [
-                'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'experienceDropdown', 'yearDropdown'
+                'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'hackathonsAttended', 'yearDropdown'
             ]);
 
 
@@ -195,7 +195,7 @@ module.exports = function (io) {
                                 q1: req.body.q1,
                                 q2: req.body.q2
                             },
-                            experience: req.body.experienceDropdown
+                            hackathonsAttended: req.body.hackathonsAttended
                         },
                         role: "user"
                     });
@@ -336,7 +336,7 @@ module.exports = function (io) {
                 //todo reorder validations to be consistent with form
                 //application questions are removed
                 req = validator.validate(req, [
-                    'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'anythingelse', 'experienceDropdown', 'yearDropdown'
+                    'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'anythingelse', 'hackathonsAttended', 'yearDropdown'
                 ]);
 
 
@@ -399,7 +399,7 @@ module.exports = function (io) {
                                 github: req.body.github,
                                 linkedin: req.body.linkedin,
                                 resume: file.filename,
-                                experience: req.body.experienceDropdown
+                                hackathonsAttended: req.body.hackathonsAttended
                             },
                             role: "user"
                         });
