@@ -75,10 +75,8 @@ block append background
             .input-group-addon http://
             input#linkedin.form-control(type='text', name='linkedin', placeholder='www.linkedin.com/', value=input.linkedin || '')
     .form-group
-        label(for='experienceDropdown') is this your first hackathon? *
-        select#experienceDropdown.form-control(name='experienceDropdown', required='')
-            option(value='') select
-            +generateOptions(en.experience, {selected: (input.experienceDropdown || "")})
+        label(for='hackathonsAttended') how many hackathons have you attended? *
+        input#hackathonsAttended.form-control(type = 'number', name='hackathonsAttended', required=true, value=input.hackathonsAttended, placeholder=0, min=0, max=100)
 
 block append logistics
     .form-group

@@ -53,8 +53,8 @@ var validator = function () {
         yearDropdown: function (req) {
             req.assert('yearDropdown', 'Please specify a graduation year.').notEmpty();
         },
-        experienceDropdown: function (req) {
-            req.assert('experienceDropdown', 'Please specify if this is your first hackathon.').notEmpty();
+        hackathonsAttended: function (req) {
+            req.assert('hackathonsAttended', 'Please specify the number of hackathons you have attended.').notEmpty();
         },
         cornellEmail: function (req) {
             req.assert('cornellEmail', 'Email address is not valid.').isEmail();

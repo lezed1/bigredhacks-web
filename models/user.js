@@ -40,7 +40,7 @@ var userSchema = new mongoose.Schema({
             q1: String,//@todo fill out with identifiers for questions
             q2: String
         },
-        experience: {type: String, enum: en.user.experience}
+        hackathonsAttended: Number,
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
