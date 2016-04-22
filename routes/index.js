@@ -7,9 +7,9 @@ var middle = require('./middleware.js');
 
 var config = require('../config.js');
 
-/* GET home page. */
+/* GET home page. TODO: return to be index after testing */
 router.get('/', function (req, res, next) {
-    res.render('index', {
+    res.render('test', {
         title: 'Cornell\'s Ultimate Hackathon'
     });
 });
