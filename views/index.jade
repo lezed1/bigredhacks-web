@@ -26,7 +26,7 @@ block append content
             .collapse.navbar-collapse.navbar-right.navbar-main-collapse
                 ul.nav.navbar-nav
                     li: a(href="#about") About
-                    li: a(href="#sustainability") Sustainability
+                    li: a(href="#sustainable") Sustainability
                     li: a(href="#sponsors") Sponsors
                     li: a(href="#faq") FAQ
 
@@ -86,7 +86,7 @@ block append content
             br
 
     //- Section: about
-    section#sustainable.sustainble
+    section#sustainable.sustainable
         +sectionHeading("Sustainable hacks")
         .container
             br
@@ -165,9 +165,9 @@ block append content
                             label(for='cornellEmail') email address *
                             input#cornellEmail.form-control(type='email', name='cornellEmail', placeholder='bigredhacks@cornell.edu', value='', required='')
                     #regFooter.modal-footer
-                        button#regCornell.btn.btn-red.reg-select(type='button') Cornell/Ithaca
-                        a.btn.btn-red.reg-select(href='/register') Somewhere else
-                        button#cornell-submit.btn.btn-red.hidden(type='submit') Submit
+                        button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
+                        a.btn.btn-blue.reg-select(href='/register') Somewhere else
+                        button#cornell-submit.btn.btn-blue.hidden(type='submit') Submit
 
 block footer
     script(src="/js/vendor/jquery.easing.min.js")
