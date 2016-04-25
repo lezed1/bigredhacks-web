@@ -62,15 +62,15 @@ function pad(num, size) {
 
     //randomly select a background image
     var numImages = images.length;
-    var index = Math.floor(Math.random() * numImages);
-    var image = images[index];
-    $('.intro').css({
-        'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
-        'background-size': 'cover'
-    });
+    // var index = Math.floor(Math.random() * numImages);
+    // var image = images[index];
+    // $('.intro').css({
+    //     'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
+    //     'background-size': 'cover'
+    // });
     $('.nav.navbar-nav').addClass(image.navbar);
     $('#intro .announcement').addClass(image.navbar);
-    $('#cover-photo-attribution').html("Cover photo by " + image.by + "/" + image.with + "<br/>");
+    // $('#cover-photo-attribution').html("Cover photo by " + image.by + "/" + image.with + "<br/>");
 
     //registration modal stuff
     var footer, title;
