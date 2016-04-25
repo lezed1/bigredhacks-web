@@ -41,36 +41,6 @@ function pad(num, size) {
         });
     });
 
-    //properties correspond to indexed background images in /img/bgd
-    var images = [
-        {
-            navbar: "orange",
-            by: "Lindsay France",
-            with: "University Photography"
-        },
-        {
-            navbar: "blue",
-            by: "Robert Barker",
-            with: "University Photography"
-        },
-        {
-            navbar: "purple",
-            by: "Jason Koski",
-            with: "University Photography"
-        }
-    ];
-
-    //randomly select a background image
-    var numImages = images.length;
-    // var index = Math.floor(Math.random() * numImages);
-    // var image = images[index];
-    // $('.intro').css({
-    //     'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
-    //     'background-size': 'cover'
-    // });
-    $('.nav.navbar-nav').addClass(image.navbar);
-    $('#intro .announcement').addClass(image.navbar);
-    // $('#cover-photo-attribution').html("Cover photo by " + image.by + "/" + image.with + "<br/>");
 
     //registration modal stuff
     var footer, title;
@@ -118,4 +88,87 @@ function pad(num, size) {
         }
     })
 
+    // Clouds
+
 })(jQuery);
+// Clouds
+var clouds = [];
+var rainDrops = [];
+const RAIN_VELOCITY = 25;
+var swapHeights = []; // Heights when drops switch color
+
+// // Populate swap heights
+// (function populateSwaps($) {
+//     var $sections = $("section");
+//     for (var i in $sections) {
+//         console.log($sections[i]);
+//         swapHeights.push($sections[i].position().top);
+//         console.log(swapHeights[i]);
+//     }
+// })(jQuery);
+
+// Create cloud
+function createCloud($, velocity, xPos, yPos, cloudClass) {
+    var cloudHolder = {};
+    var cloud = $("<div>", {class : cloudClass});
+    for (i = 0; i < 5; i++) {
+        cloud.append($("<div>", {class : "triangle"}));
+    }
+    cloudHolder.cloud = cloud;
+    cloudHolder.posX = xPos;
+    cloudHolder.posY = yPos;
+    cloudHolder.velocity = velocity;
+    $(".intro").append(cloud);
+    clouds.push(cloudHolder);
+}
+
+function cloudUpdate($) {
+    // Move clouds
+    for (var x in clouds) {
+        if (clouds[x].posX > $(window).width()) {
+            clouds[x].posX =-100;
+        }
+        clouds[x].posX += clouds[x].velocity;
+        clouds[x].cloud.css({top: clouds[x].posY, left: clouds[x].posX, position:'absolute'});
+
+        // Drop rain
+        if (Math.random() > .97) {
+            var rainDropHolder = {};
+            var rainDrop = $("<div>", {class : "raindrop"});
+            rainDrop.css({height: Math.floor(Math.random() * 75 + 25 )});
+            $(".intro").append(rainDrop);
+            rainDropHolder.posY = clouds[x].posY + 120;
+            rainDropHolder.posX = clouds[x].posX + Math.random() * 150;
+            rainDropHolder.rainDrop = rainDrop;
+            rainDropHolder.active = true;
+            rainDrops.push(rainDropHolder);
+        }
+    }
+    // Move rain
+    for (var x in rainDrops) {
+        rainDrops[x].posY += RAIN_VELOCITY;
+        rainDrops[x].rainDrop.css({top: rainDrops[x].posY, left: rainDrops[x].posX, position:'absolute'});
+
+        // If you don't kill before the height of raindrop, they will expand the page
+        if (rainDrops[x].posY > $(document).height() - 200) {
+            rainDrops[x].rainDrop.remove();
+            rainDrops[x].active = false;
+        }
+    }
+
+    // Remove dead drops
+    var i = rainDrops.length;
+    while (i--) {
+        if (rainDrops[x] && !rainDrops[x].active) {
+            rainDrops.splice(i,1);
+        }
+    }
+
+
+}
+
+createCloud(jQuery, .8,-100, 650, "cloud1");
+createCloud(jQuery, 1,-200, 600, "cloud2");
+createCloud(jQuery, .5,-300, 700, "cloud3");
+
+setInterval(cloudUpdate, 50, jQuery);
