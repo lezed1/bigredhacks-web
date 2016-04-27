@@ -17,7 +17,7 @@ html {
 body {
   width: 100%;
   height: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   font-weight: @weight-normal;
   color: @black;
   background-color: @bg-light;
@@ -27,7 +27,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 30px;
-  font-family: "Sans Serif", karla;
+  font-family: 'Lato', sans-serif;
   font-weight: @weight-normal;
   letter-spacing: 1px;
   text-transform: lowercase;
@@ -218,7 +218,7 @@ img.leaf {
   .slogan {
     text-align: center;
     position: relative;
-    color: @picton;
+    color: @black;
 
     img {
       position: relative;
@@ -236,6 +236,7 @@ img.leaf {
       background-color: rgba(0, 0, 0, 0);
       text-decoration: none;
       //text-shadow: -2px 0 1px #000;
+      color: @picton;
     }
 
     h3, h4 {
@@ -268,6 +269,7 @@ img.leaf {
   position: absolute;
   top: 0;
   //background: rgba(0, 0, 0, 0.3);
+  background: @off-white;
 }
 
 .brand-heading {
@@ -282,21 +284,25 @@ img.leaf {
 //--- About
 //============================
 .about {
-  background-color: @cornflower;
+  background-color: @light-blue;
 
   p, h2 {
     padding-left: 25%;
     width:75%;
-    color: @white;
+    color: @black;
   }
 }
 
 .sponsors {
-  background-color: @cornflower;
+  background-color: @darker-blue;
   p, h2 {
-    padding-left: 25%;
-    width:75%;
+    //padding-left: 25%;
+    //width:75%;
     color: @white;
+  }
+  .container {
+    padding-left: 15%;
+    width: 75%;
   }
 }
 
@@ -306,13 +312,20 @@ img.leaf {
     padding-left: 25%;
     width:75%;
   }
+  background: @off-white;
 }
 
 .faq {
-  h2, .container {
+  h2 {
+    padding-left: 0%;
+    color: @off-white;
+  }
+  .container {
     padding-left: 15%;
     width:75%;
+    color: @off-white;
   }
+  background: @dark-blue;
 }
 
 .boxed-grey {
@@ -364,6 +377,10 @@ footer p {
   &.btn-blue {
     font-weight: @weight-bold;
   }
+  &.btn-light-blue {
+    font-weight: @weight-bold;
+  }
+  
   &.fixed-width {
     width: 90px;
   }
@@ -406,11 +423,14 @@ footer p {
 
 }
 
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
 @media (max-width: 768px) {
   .intro {
     .slogan {
       h2 {
         font-size: @main-header-size - 10pt;
+        font-family: 'Montserrat', sans-serif;
       }
     }
   }
@@ -588,4 +608,41 @@ footer p {
   width: 3px;
   height: 65px;
   background: @cornflower;
+}
+
+//sponsors
+.logos li {
+  list-style-type: none;
+  display: inline;
+}
+.logos ul {
+  //padding: 0;
+  margin: auto;
+}
+
+.logos {
+  z-index: 100;
+  //height: 10px;
+  width: auto;
+  margin: 5px;
+  position: relative;
+  display: block;
+  float: left;
+}
+
+.logo-4 img {
+  height: 50px;
+
+}
+
+.logo-3 img {
+  height: 40px;
+}
+
+.logo-2 img {
+  height: 30px;
+}
+
+.logo-1 img{
+  height: 20px;
 }
