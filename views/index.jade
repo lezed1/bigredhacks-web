@@ -70,18 +70,18 @@ block append content
                 if middlehelp.isRegistrationOpen()
                     button.btn.btn-blue.fixed-width(data-toggle="modal" data-target="#regModal") register
                     | &nbsp;&nbsp;&nbsp;
-                    a.btn.btn-blue.fixed-width(href="/login") login
+                    a.btn.btn-light-blue.fixed-width(href="/login") login
                 else
-                    a.btn.btn-blue(href="/register/cornelluniversity") cornell register
+                    a.btn.btn-light-blue(href="/register/cornelluniversity") cornell register
                     | &nbsp;&nbsp;&nbsp;
-                    a.btn.btn-blue.fixed-width(href="/login") login
+                    a.btn.btn-light-blue.fixed-width(href="/login") login
 
     //- Section: about
     section#about.about
         +sectionHeading("Be a part of something big")
         .container
             br
-            p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days,students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
+            p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days, students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
             p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
             br
 
@@ -94,15 +94,8 @@ block append content
             p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
             br
 
-    //- Section: sponsors
-    section#sponsors.sponsors
-        +sectionHeading("Our amazing sponsors")
-        .container
-            br
-            p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days,students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
-            p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
-            br
-    //- Section: faw
+
+    //- Section: faq
     if true
         section#faq.faq
             +sectionHeading("Frequently Asked Questions")
@@ -128,7 +121,57 @@ block append content
                     dd We're doing applications a little differently this year. General applications are immediately available for all students not at Cornell. In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis. Add yourself to the mailing list so that you'll know when applications open.
                     dt Have more questions?
                     dd Send them to #[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us #[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
-
+    //- Section: sponsors
+    section#sponsors.sponsors
+        +sectionHeading("Our amazing sponsors")
+        .container
+            br
+            .logos
+                ul
+                    li.logo-4
+                        img.logos#capitalone(src='img/logos/capitalone.png')
+                    li.logo-3
+                        img.logos#uber(src='img/logos/uber.png')
+                    li.logo-3
+                        img.logos#priceline(src='img/logos/priceline.png')
+                    li.logo-2
+                        img.logos#bloomberg(src='img/logos/bloomberg.png')
+                    li.logo-2
+                        img.logos#a16z(src='img/logos/a16z.png')
+                    li.logo-2
+                        img.logos#goldmansachs(src='img/logos/goldmansachs.png')
+                    li.logo-2
+                        img.logos#mathworks(src='img/logos/mathworks.png')
+                    li.logo-2
+                        img.logos#epic(src='img/logos/epic.png')
+                    li.logo-2
+                        img.logos#oracle(src='img/logos/oracle.png')
+                    li.logo-1
+                        img.logos#wolfram(src='img/logos/wolfram.png')
+                    li.logo-1
+                        img.logos#microsoft(src='img/logos/microsoft.png')
+                    li.logo-2
+                        img.logos#buttonfrog(src='img/logos/buttonfrog.png')
+                    li.logo-2
+                        img.logos#stickermule(src='img/logos/stickermule.png')
+                    li.logo-2
+                        img.logos#dotco(src='img/logos/dotco.png')
+                    li.logo-2
+                        img.logos#sabra(src='img/logos/sabra.png')
+                    li.logo-2
+                        img.logos#insomnia(src='img/logos/insomnia.png')
+                    li.logo-2
+                        img.logos#chobani(src='img/logos/chobani.png')
+                    li.logo-2
+                        img.logos#eship(src='img/logos/eship.png')
+                    li.logo-2
+                        img.logos#mlh(src='img/logos/mlh.png')
+                    li.logo-2
+                        img.logos#cornellcs(src='img/logos/cornell-cs.png')
+            br
+            br
+            br
+            
     footer
         .container
             .row
