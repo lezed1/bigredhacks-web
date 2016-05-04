@@ -215,6 +215,10 @@ img.leaf {
   -o-background-size: cover;
   background-size: cover;
 
+@font-face {
+    font-family: 'Oval-Light';
+    src: url("public/fonts/Oval-Light.otf");
+}
   .slogan {
     text-align: center;
     position: relative;
@@ -237,6 +241,7 @@ img.leaf {
       text-decoration: none;
       //text-shadow: -2px 0 1px #000;
       color: @picton;
+      font-family: 'Oval-Light';
     }
 
     h3, h4 {
@@ -603,17 +608,29 @@ footer p {
 
 
 .cloud1{
-  @colors: gainsboro, gainsboro, gainsboro, white, gainsboro, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
+  .triangle{
+    &:nth-child(1) {
+        opacity: 0.8;
+    }
+    &:nth-child(4) {
+        opacity: 0.1;
+    }
+  }
 }
 
 .cloud2{
-  @colors: gainsboro, gainsboro, gainsboro, transparent, gainsboro, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
 }
 
 .cloud3{
-  @colors: gainsboro, gainsboro, gainsboro, white, white, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
+  .hex-gen(160px, @colors);
+}
+.cloud4{
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
 }
 

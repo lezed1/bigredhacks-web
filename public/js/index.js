@@ -111,7 +111,7 @@ var swapHeights = []; // Heights when drops switch color
 function createCloud($, velocity, xPos, yPos, cloudClass) {
     var cloudHolder = {};
     var cloud = $("<div>", {class : cloudClass});
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 6; i++) {
         cloud.append($("<div>", {class : "triangle"}));
     }
     cloudHolder.cloud = cloud;
@@ -167,8 +167,12 @@ function cloudUpdate($) {
 
 }
 
-createCloud(jQuery, .8,-100, 650, "cloud1");
-createCloud(jQuery, 1,-200, 600, "cloud2");
-createCloud(jQuery, .5,-300, 700, "cloud3");
+//createCloud(jQuery, .8,-100, 250, "cloud1");
+//createCloud(jQuery, 1,-200, 400, "cloud2");
+//createCloud(jQuery, .5,-300, 450, "cloud3");
+createCloud(jQuery, 5,-100, 250, "cloud1");
+createCloud(jQuery, 5,-200, 400, "cloud2");
+createCloud(jQuery, 5,-300, 450, "cloud3");
+createCloud(jQuery, 5,-325, 410, "cloud4");
 
 setInterval(cloudUpdate, 50, jQuery);
