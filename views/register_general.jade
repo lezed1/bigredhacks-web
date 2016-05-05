@@ -93,7 +93,7 @@ block append logistics
             +generateOptions(en.tshirt, {selected: (input.tshirt || "")})
     .form-group
         label is there any hardware that you want to hack on?
-        input#hardware.form-control.typeahead_hardware(type='text', name='hardware', placeholder='Hardware', value=input.hardware || '')
+        input#hardware.form-control.typeahead(type='text', name='hardware', placeholder='Hardware', value=input.hardware || '')
     .form-group
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}

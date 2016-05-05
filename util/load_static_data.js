@@ -126,7 +126,6 @@ function _addColleges(filepath, done) {
                     done(err + " " + filepath + " " + rowIndex);
                 }
             });
-        //console.log(resultRow); //here is your result json object
     });
 
     //end_parsed will be emitted once parsing finished
@@ -150,9 +149,8 @@ function _addHardware(filepath, done) {
     //read from file
     fileStream.pipe(csvConverter);
 
-    // TODO: Replace with actual quantities
     csvConverter.on("record_parsed", function (res, rawRow, rowIndex) {
-        Hardware.add(res.id,
+        Hardware.add(
                     res.name,
                     0,
                     0,

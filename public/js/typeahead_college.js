@@ -38,7 +38,7 @@ var engine = new Bloodhound({
 engine.initialize();
 
 //general typeahead
-$('.typeahead').typeahead({
+$('#college').typeahead({
     hint: true,
     highlight: true,
     autoselect: false,

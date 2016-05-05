@@ -12,10 +12,9 @@ var schemaOptions = {
 };
 
 var hardwareSchema = new mongoose.Schema({
-    _id: {type: String, required: true, unique: true}, //unique college id
     name: {type: String, required: true, index: true},
-    quantityAvailable: {type: Number, required: true},
-    quantityOwned: {type: Number, required: true},
+    quantityAvailable: {type: Number, default: 0, required: true},
+    quantityOwned: {type: Number, default: 0, required: true},
 }, schemaOptions);
 
 /**
@@ -25,23 +24,24 @@ var hardwareSchema = new mongoose.Schema({
  * @param quantityOwned
  * @param callback
  */
-hardwareSchema.statics.add = function (id ,name, quantityAvailable, quantityOwned, callback) {
+hardwareSchema.statics.add = function (name, quantityAvailable, quantityOwned, callback) {
+    quantityAvailable = typeof quantityAvailable !== 'undefined' ?  quantityAvailable : 0;
+    quantityOwned = typeof quantityOwned !== 'undefined' ?  quantityOwned : 0;
+
     var hardware = new this({
-        _id: id,
         name: name,
         quantityAvailable: quantityAvailable,
         quantityOwned: quantityOwned,
     });
 
-    // TODO: Populate
-    // this.findOne({_id: id}, function (err, res) {
-    //     if (res === null) {
-    //         //entry does not exist
-    //         hardware.save(function (err) {
-    //             callback(err, hardware);
-    //         });
-    //     }
-    // });
+    this.findOne({name: name}, function (err, res) {
+        if (res === null) {
+            //entry does not exist
+            hardware.save(function (err) {
+                callback(err, hardware);
+            });
+        }
+    });
 };
 
 /**
@@ -50,6 +50,7 @@ hardwareSchema.statics.add = function (id ,name, quantityAvailable, quantityOwne
  * @todo limit field selection
  */
 hardwareSchema.statics.getAll = function (callback) {
+    console.log('moo');
         if (cache == null) {
             this.find({}, function (err, res) {
                 if (err) {
@@ -57,7 +58,7 @@ hardwareSchema.statics.getAll = function (callback) {
                 }
                 res = res.map(function (x) {
                     return {
-                        name: x.display
+                        name: x.name
                     }
                 });
                 cache = res;
