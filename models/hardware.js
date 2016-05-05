@@ -50,7 +50,6 @@ hardwareSchema.statics.add = function (name, quantityAvailable, quantityOwned, c
  * @todo limit field selection
  */
 hardwareSchema.statics.getAll = function (callback) {
-    console.log('moo');
         if (cache == null) {
             this.find({}, function (err, res) {
                 if (err) {
