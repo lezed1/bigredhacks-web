@@ -39,6 +39,11 @@ block append basic-information
             +generateOptions(en.gender, {selected: (input.genderDropdown || "")})
 
 block append school
+    .form-group
+        label(for='highSchoolDropdown') are you a high school student? *
+        select#highSchoolDropdown.form-control(name='highSchoolDropdown', required=true)
+            option(value='') select
+            +generateOptions(en.highSchool, {selected: (input.highSchoolDropdown || "")})
     input#collegeid.form-control(type='hidden', name='collegeid', value=input.collegeid || '', required=true)
     .form-group
         label(for='college') full school name *

@@ -41,6 +41,9 @@ var validator = function () {
         linkedin: function (req) {
             req.assert('linkedin', 'LinkedIn URL is not valid.').optionalOrisURL();
         },
+        highSchoolDropdown: function (req) {
+            req.assert('highSchoolDropdown', 'Please specify whether you are a high school student.').notEmpty();
+        },
         collegeid: function (req) {
             req.assert('collegeid', 'Please specify a school.').notEmpty();
         },
