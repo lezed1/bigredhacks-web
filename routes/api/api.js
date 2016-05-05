@@ -14,7 +14,6 @@ router.get('/colleges', function (req, res, next) {
 });
 
 router.get('/hardware', function (req, res, next) {
-    console.log('woo');
     Hardware.getAll(function (err, data) {
         if (err) console.log(err);
         else res.send(data);
