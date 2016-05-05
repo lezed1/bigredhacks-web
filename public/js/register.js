@@ -96,6 +96,10 @@ $('document').ready(function () {
             anythingelse: {
                 required: false,
                 maxlength: 1000
+            },
+            hardware: {
+                required: false,
+                maxlength: 100
             }
         },
         messages: {

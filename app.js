@@ -143,7 +143,13 @@ app.locals.middlehelp = require("./routes/middleware").helper;
 //@todo move to setup
 //@todo force synchronous
 //loading colleges
-require('./util/load_colleges.js').loadOnce(function (err) {
+require('./util/load_static_data.js').collegeLoader.loadOnce(function (err) {
+    if (err) {
+        console.log(err);
+    }
+});
+
+require('./util/load_static_data.js').hardwareLoader.loadOnce(function (err) {
     if (err) {
         console.log(err);
     }

@@ -29,6 +29,7 @@ var userSchema = new mongoose.Schema({
     school: {
         id: {type: String, ref: "College", index: true},
         name: String,
+        highSchool: {type: String, required: true},
         year: {type: String, enum: en.user.year},
         major: String
     },
@@ -38,9 +39,10 @@ var userSchema = new mongoose.Schema({
         resume: String,
         questions: {
             q1: String,//@todo fill out with identifiers for questions
-            q2: String
+            q2: String,
+            hardware: String
         },
-        hackathonsAttended: Number,
+        hackathonsAttended: String,
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},

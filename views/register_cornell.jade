@@ -77,7 +77,9 @@ block append background
             input#linkedin.form-control(type='text', name='linkedin', placeholder='www.linkedin.com/', value=input.linkedin || '')
     .form-group
         label(for='hackathonsAttended') how many hackathons have you attended? *
-        input#hackathonsAttended.form-control(type = 'number', name='hackathonsAttended', required=true, value=input.hackathonsAttended, placeholder=0, min=0, max=100)
+        select#hackathonsAttended.form-control(name='hackathonsAttended', required=true)
+            option(value='') select
+            +generateOptions(en.hackathonsAttended, {selected: (input.hackathonsAttended || "")})
 
 block append logistics
     .form-group

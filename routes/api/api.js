@@ -2,11 +2,19 @@
 var express = require('express');
 var router = express.Router();
 var Colleges = require('../../models/college.js');
+var Hardware = require('../../models/hardware.js');
 var User = require('../../models/user.js');
 var middle = require('../middleware');
 
 router.get('/colleges', function (req, res, next) {
     Colleges.getAll(function (err, data) {
+        if (err) console.log(err);
+        else res.send(data);
+    });
+});
+
+router.get('/hardware', function (req, res, next) {
+    Hardware.getAll(function (err, data) {
         if (err) console.log(err);
         else res.send(data);
     });

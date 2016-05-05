@@ -12,7 +12,9 @@ var en = {
         tshirt: "XS/S/M/L/XL".split("/"),
         status: "Pending Accepted Waitlisted Rejected".split(" "), //take care when changing
         experience: "Yes/No".split("/"), //store boolean state as string for simplicity
-        role: "user/admin/bus captain/test/mentor".split("/")
+        hackathonsAttended: "0-3/4-9/10+".split("/"), //store boolean state as string for simplicity
+        role: "user/admin/bus captain/test/mentor".split("/"),
+        highSchool: "Yes/No".split("/"),
     },
     admin: {
         travel_mode: "Charter Bus/Other".split("/")

@@ -39,6 +39,11 @@ block append basic-information
             +generateOptions(en.gender, {selected: (input.genderDropdown || "")})
 
 block append school
+    .form-group
+        label(for='highSchoolDropdown') are you a high school student? *
+        select#highSchoolDropdown.form-control(name='highSchoolDropdown', required=true)
+            option(value='') select
+            +generateOptions(en.highSchool, {selected: (input.highSchoolDropdown || "")})
     input#collegeid.form-control(type='hidden', name='collegeid', value=input.collegeid || '', required=true)
     .form-group
         label(for='college') full school name *
@@ -76,7 +81,9 @@ block append background
             input#linkedin.form-control(type='text', name='linkedin', placeholder='www.linkedin.com/', value=input.linkedin || '')
     .form-group
         label(for='hackathonsAttended') how many hackathons have you attended? *
-        input#hackathonsAttended.form-control(type = 'number', name='hackathonsAttended', required=true, value=input.hackathonsAttended, placeholder=0, min=0, max=100)
+        select#hackathonsAttended.form-control(name='hackathonsAttended', required=true)
+            option(value='') select
+            +generateOptions(en.hackathonsAttended, {selected: (input.hackathonsAttended || "")})
 
 block append logistics
     .form-group
@@ -89,6 +96,9 @@ block append logistics
         select#tshirt.form-control(name='tshirt', required='')
             option(value='') select
             +generateOptions(en.tshirt, {selected: (input.tshirt || "")})
+    .form-group
+        label is there any hardware that you want to hack on?
+        input#hardware.form-control.typeahead(type='text', name='hardware', placeholder='Hardware', value=input.hardware || '')
     .form-group
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}

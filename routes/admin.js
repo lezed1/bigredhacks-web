@@ -19,6 +19,23 @@ var USER_FILTER = { role: "user" };
 
 //some commonly used aggregation queries:
 //todo refactor and clean this up
+
+/**
+ * Lowercases data, converts its array fields to objects, and sets defaults
+ * @param data
+ * @param defaults
+ */
+function objectAndDefault (data, defaults) {
+    //make all values lowercase
+    data = _.map(data, function (x) {
+        return _.mapObject(x, function (val, key) {
+            return (typeof val == 'string') ? val.toLowerCase() : val;
+        });
+    });
+
+    //remap values to key,value pairs and fill defaults
+    return _.defaults(_.object(_.map(data, _.values)), defaults);
+}
 var aggregate = {
     applicants: {
         //runs simple aggregation for applicants over a match criteria
@@ -32,32 +49,18 @@ var aggregate = {
                         done(err);
                     }
                     else {
-                        //console.log(result);
-                        //make all values lowercase
-                        result = _.map(result, function (x) {
-                            return _.mapObject(x, function (val, key) {
-                                return (typeof val == 'string') ? val.toLowerCase() : val;
-                            });
-                        });
-                        //console.log(result);
-
-                        //remap values to key,value pairs and fill defaults
-                        result = _.defaults(_.object(_.map(result, _.values)), {
+                        result = objectAndDefault(result, {
                             null: 0,
                             accepted: 0,
                             rejected: 0,
                             waitlisted: 0,
                             pending: 0
-                        }); //{pending: 5, accepted: 10}
+                        });
+
                         result.total = _.reduce(result, function (a, b) {
                             return a + b;
                         });
 
-                        //fold null prop into pending
-                        //legacy support when internal.status in user model did not have default: 'Pending'
-                        //todo consider removing in 2016+ deployments
-                        result.pending += result["null"];
-                        result = _.omit(result, "null");
                         done(null, result);
                     }
                 })
@@ -74,6 +77,56 @@ var aggregate = {
                     }
                     else {
 
+                    }
+                })
+            }
+        },
+        gender: function () {
+            return function (done) {
+                User.aggregate(
+                    [
+                        {$match: USER_FILTER},
+                        {$group: {
+                            _id: "$gender",
+                            total: {$sum: 1}
+                        }}
+                    ]
+                , function (err, totalRes) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        User.aggregate(
+                            [
+                                {$match: {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}},
+                                {$group: {
+                                    _id: "$gender",
+                                    totalAccepted: {$sum: 1}
+                                }}
+                            ], function (err, acceptedRes) {
+                                if (err) {
+                                    done(err);
+                                } else {
+
+                                    totalRes = objectAndDefault(totalRes, {
+                                        male: 0,
+                                        female: 0
+                                    });
+
+                                    acceptedRes = objectAndDefault(acceptedRes, {
+                                        male: 0,
+                                        female: 0
+                                    });
+
+
+                                    const res = {
+                                        male: 100.0 * acceptedRes.male / totalRes.male,
+                                        female: 100.0 * acceptedRes.female / totalRes.female,
+                                    };
+
+                                    done(null, res);
+                                }
+                                }
+                        )
                     }
                 })
             }
@@ -236,19 +289,17 @@ router.get('/search', function (req, res, next) {
 
 /* GET Review page to review a random applicant who hasn't been reviewed yet */
 router.get('/review', function (req, res, next) {
-    //todo remove exists in 2016 deployment
-    var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
+    var query = { 'internal.status': "Pending" };
     query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
         if (err) {
             console.log(err);
         }
+
         //redirect if no applicants left to review
         if (count == 0) {
             return res.redirect('/admin');
-        }
-
-        else {
+        } else {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
@@ -256,7 +307,8 @@ router.get('/review', function (req, res, next) {
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
                     school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
-                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})) //explicit bus assignment
+                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
+                    gender: aggregate.applicants.gender(),
                 }, function (err, stats) {
                     if (err) {
                         console.error(err);

@@ -152,6 +152,7 @@ module.exports = function (io) {
             user.logistics.dietary = req.body.dietary;
             user.logistics.tshirt = req.body.tshirt;
             user.logistics.anythingelse = req.body.anythingelse;
+            user.logistics.hardware = req.body.hardware;
             user.save(function (err, doc) {
                 if (err) {
                     // If it failed, return error
