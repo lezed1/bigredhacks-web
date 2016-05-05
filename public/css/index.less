@@ -9,6 +9,18 @@
 @nav-blue: rgba(178, 223, 244, 0.7);
 @nav-orange: fade(@orange, 70%);
 
+@font-face {
+  font-family: 'Oval-Light';
+  src: url('/fonts/oval-light/oval-light-webfont.eot');
+  src: url('/fonts/oval-light/oval-light-webfont.eot?#iefix') format('embedded-opentype'),
+  url('/fonts/oval-light/oval-light-webfont.woff2') format('woff2'),
+  url('/fonts/oval-light/oval-light-webfont.woff') format('woff'),
+  url('/fonts/oval-light/oval-light-webfont.ttf') format('truetype'),
+  url('/fonts/oval-light/oval-light-webfont.svg#oval_lightregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   width: 100%;
   height: 100%;
@@ -17,7 +29,7 @@ html {
 body {
   width: 100%;
   height: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: @weight-normal;
   color: @black;
   background-color: @bg-light;
@@ -27,7 +39,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 30px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: @weight-normal;
   letter-spacing: 1px;
   text-transform: lowercase;
@@ -237,6 +249,7 @@ img.leaf {
       text-decoration: none;
       //text-shadow: -2px 0 1px #000;
       color: @picton;
+      font-family: 'Oval-Light';
     }
 
     h3, h4 {
@@ -269,7 +282,7 @@ img.leaf {
   position: absolute;
   top: 0;
   //background: rgba(0, 0, 0, 0.3);
-  background: @off-white;
+  background: @white;
 }
 
 .brand-heading {
@@ -294,17 +307,20 @@ img.leaf {
 }
 
 .sponsors {
-  background-color: @darker-blue;
+  background-color: @white;
   p, h2 {
     //padding-left: 25%;
     //width:75%;
-    color: @white;
+    color: @black;
   }
   .container {
     padding-left: 15%;
     width: 75%;
   }
+
 }
+
+
 
 .sustainable {
 
@@ -312,7 +328,7 @@ img.leaf {
     padding-left: 25%;
     width:75%;
   }
-  background: @off-white;
+  background: @white;
 }
 
 .faq {
@@ -325,7 +341,17 @@ img.leaf {
     width:75%;
     color: @off-white;
   }
-  background: @dark-blue;
+  background: @sky-blue;
+  dt {
+    font-size: 20px;
+    //font-weight: bold;
+  }
+  dd{
+    font-size: 16px;
+  }
+  a{
+    color: @light-purple;
+  }
 }
 
 .boxed-grey {
@@ -367,7 +393,7 @@ footer p {
 //============================
 
 .btn {
-  font-family: "Roboto", Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: 14px;
   letter-spacing: 0.5px;
   padding: 9px 15px 9px 15px;
@@ -430,7 +456,7 @@ footer p {
     .slogan {
       h2 {
         font-size: @main-header-size - 10pt;
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Oval Light', sans-serif;
       }
     }
   }
@@ -590,17 +616,29 @@ footer p {
 
 
 .cloud1{
-  @colors: gainsboro, gainsboro, gainsboro, white, gainsboro, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
+  .triangle{
+    &:nth-child(1) {
+        opacity: 0.8;
+    }
+    &:nth-child(4) {
+        opacity: 0.1;
+    }
+  }
 }
 
 .cloud2{
-  @colors: gainsboro, gainsboro, gainsboro, transparent, gainsboro, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
 }
 
 .cloud3{
-  @colors: gainsboro, gainsboro, gainsboro, white, white, gainsboro;
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
+  .hex-gen(160px, @colors);
+}
+.cloud4{
+  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
 }
 
