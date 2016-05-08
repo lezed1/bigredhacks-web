@@ -567,7 +567,7 @@ footer p {
   width: @width;
   @height: ceil(@width*sqrt(3)/2);
   height: @height;
-  position: relative;
+  position: absolute;
   margin: 0 auto;
   transform-origin: 0 0;
   transform: translateX(@width/2) rotate(30deg);
@@ -578,6 +578,7 @@ footer p {
     border-style: solid;
     border-width: @height/2 @width/4 0;
     transform-origin: @width/4 @height/2 + 1;
+    z-index: 1000;
     // Sass function to auto generate rotation
     @counter: 1;
     .loop (@i) when (@i <= 6){
@@ -635,20 +636,51 @@ footer p {
         opacity: 0.1;
     }
   }
+
+  animation-name: cloudDrift;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }
 
 .cloud2{
   @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
+  animation-name: cloudDrift;
+  animation-duration: 26s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  .triangle {
+   &:nth-child(2) {
+     opacity: 0.8;
+   }
+    &:nth-child(2) {
+      opacity: 0.1;
+   }
+  }
 }
 
 .cloud3{
   @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
+  animation-name: cloudDrift;
+  animation-duration: 22s;
+  animation-iteration-count: infinite;
+  .triangle {
+    &:nth-child(2) {
+      opacity: 0.8;
+    }
+    &:nth-child(2) {
+      opacity: 0.1;
+    }
+  }
 }
 .cloud4{
   @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
   .hex-gen(160px, @colors);
+  animation-name: cloudDrift;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
 }
 
 .raindrop {
@@ -760,4 +792,10 @@ footer p {
   .leyeClose {
     top: calc(50% + 50px);
   }
+}
+
+@keyframes cloudDrift {
+  0% {left: -20%}
+  100% {left: 100%}
+
 }
