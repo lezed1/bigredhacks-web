@@ -27,8 +27,9 @@ block append content
                 ul.nav.navbar-nav
                     li: a(href="#about") About
                     li: a(href="#sustainable") Sustainability
-                    li: a(href="#sponsors") Sponsors
                     li: a(href="#faq") FAQ
+                    li: a(href="#sponsors") Sponsors
+
 
     //- Creates a message if content exists, where type:error|success
     mixin message(content, type)
@@ -52,29 +53,31 @@ block append content
     //- Section: intro
     section#intro.intro
         .transparent
-        .slogan
-            h2 #[img(src="img/icon/brh-icon-blue-full.svg" height="75" width="95")] BIGRED//HACKS
-            .date
-                h4 Sept 16-18, 2016 @ Ithaca, NY
-            h3 Cornell University
-            br/
+        .intro-wrapper
+            .intro-contents
+                h2 #[img(src="img/icon/brh-icon-blue-full.svg" height="75" width="95")] BIGRED//HACKS
+                .slogan
+                    .date
+                        h4 Sept 16-18, 2016 @ Ithaca, NY
+                    h3 Cornell University
+                    br/
 
-            br
-
-            if isUser
-                case userRole
-                    when "admin": a.btn.btn-blue(href="/admin/dashboard") my dashboard
-                    when "mentor": a.btn.btn-blue(href="/admin/dashboard") my dashboard
-                    default: a.btn.btn-blue(href="/admin/dashboard") my dashboard
-            else
-                if middlehelp.isRegistrationOpen()
-                    button.btn.btn-blue.fixed-width(data-toggle="modal" data-target="#regModal") register
-                    | &nbsp;&nbsp;&nbsp;
-                    a.btn.btn-light-blue.fixed-width(href="/login") login
-                else
-                    a.btn.btn-light-blue(href="/register/cornelluniversity") cornell register
-                    | &nbsp;&nbsp;&nbsp;
-                    a.btn.btn-light-blue.fixed-width(href="/login") login
+                    br
+                    div
+                        if isUser
+                            case userRole
+                                when "admin": a.btn.btn-blue(href="/admin/dashboard") my dashboard
+                                when "mentor": a.btn.btn-blue(href="/admin/dashboard") my dashboard
+                                default: a.btn.btn-blue(href="/admin/dashboard") my dashboard
+                        else
+                            if middlehelp.isRegistrationOpen()
+                                button.btn.btn-blue.fixed-width(data-toggle="modal" data-target="#regModal") register
+                                | &nbsp;&nbsp;&nbsp;
+                                a.btn.btn-light-blue.fixed-width(href="/login") login
+                            else
+                                a.btn.btn-light-blue(href="/register/cornelluniversity") cornell register
+                                | &nbsp;&nbsp;&nbsp;
+                                a.btn.btn-light-blue.fixed-width(href="/login") login
 
     //- Section: about
     section#about.about
