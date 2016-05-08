@@ -306,17 +306,17 @@ h1.leaf {
   position: relative;
   background-color: @white;
   display: inline-block;
-  padding-left: 10px;
+  padding-left: 0px;
   padding-right: 6px;
   &:before {
-    content: "[";
+    //content: "[";
     display: block;
     position: absolute;
     //top: -3px;
     left: -2px;
   }
   &:after {
-    content: "]";
+    //content: "]";
     display: block;
     position: absolute;
     top: 9.8px;
@@ -324,31 +324,31 @@ h1.leaf {
   }
 }
 
-.header-wrapper {
-  display: block;
-  position: relative;
+//.header-wrapper {
+//  display: block;
+//  position: relative;
+//
+//  &::before {
+//    background-color: @black;
+//    width: 100%;
+//    height: 2px;
+//    display: block;
+//    content: " ";
+//    position: absolute;
+//    top: 58%;
+//  }
+//}
 
-  &::before {
-    background-color: @black;
-    width: 100%;
-    height: 2px;
-    display: block;
-    content: " ";
-    position: absolute;
-    top: 58%;
-  }
-}
-
-.header-wrapper-leaf {
-  .header-wrapper;
-  &&:before {
-    height: 1.5px;
-    top: 50%;
-    @media (max-width: @header-decor-min-width) {
-      height: 0px;
-    }
-  }
-}
+//.header-wrapper-leaf {
+//  .header-wrapper;
+//  &&:before {
+//    height: 1.5px;
+//    top: 50%;
+//    @media (max-width: @header-decor-min-width) {
+//      height: 0px;
+//    }
+//  }
+//}
 
 legend {
   margin-bottom: 0; //needed for correct display with firefox
@@ -361,7 +361,7 @@ h2 {
 h2, legend {
   width: auto;
   padding-top: 10px;
-  font-family: "Blogger Sans Light", Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: @h2-size;
   border-bottom-width: 0;
 }
