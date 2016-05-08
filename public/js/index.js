@@ -12,13 +12,13 @@ function pad(num, size) {
 (function ($) {
 
     //jQuery to collapse the navbar on scroll
-    $(window).scroll(function () {
+    /*$(window).scroll(function () {
         if ($(".navbar").offset().top > 50) {
             $(".navbar-fixed-top").addClass("top-nav-collapse");
         } else {
             $(".navbar-fixed-top").removeClass("top-nav-collapse");
         }
-    });
+    });*/
 
     //jQuery for page scrolling feature - requires jQuery Easing plugin
     $(function () {
@@ -113,11 +113,12 @@ resizes(jQuery);
 
 // Create cloud
 function createCloud($, xPos, yPos, cloudClass, appendee) {
-    var $cloud = $("<div>", {class : cloudClass});
+    var $cloud = $('<div>', {class : cloudClass});
+
+    //$cloud.attr();
+    //$cloud.attr('width',200);
+    //$cloud.attr('height',200);
     $cloud.offset({top: yPos, left: xPos});
-    for (var i = 0; i < 6; i++) {
-        $cloud.append($("<div>", {class : "triangle"}));
-    }
 
     $(appendee).append($cloud);
 }
