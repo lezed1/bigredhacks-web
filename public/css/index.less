@@ -23,6 +23,14 @@
 
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
+img {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
 html {
   width: 100%;
   height: 100%;
@@ -264,7 +272,6 @@ img.leaf {
     .intro-contents {
       display: inline-block;
       .slogan {
-        display: inline-block;
         text-align: right;
         float: right;
       }
@@ -641,8 +648,16 @@ footer p {
   }
 }
 
+.cloud-generic {
+  background-image :url(/img/cloud1.svg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  height: 200px;
+  width: 300px;
+}
 
 .cloud1{
+  .cloud-generic;
   z-index: -1;
   max-height: 200px;
   width: auto;
@@ -655,6 +670,7 @@ footer p {
 }
 
 .cloud2{
+  .cloud-generic;
   z-index: -1;
   max-height: 250px;
   width: auto;
@@ -664,6 +680,7 @@ footer p {
   animation-duration: 40s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+  .cloud-generic;
 }
 
 .cloud3{
