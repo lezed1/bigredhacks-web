@@ -308,11 +308,14 @@ img.leaf {
 //============================
 .about {
   background-color: @light-blue;
-
+  z-index: -2;
+  position: relative;
   p, h2 {
+    position: relative;
     padding-left: 25%;
     width:75%;
     color: @black;
+    z-index: 999;
   }
 }
 
@@ -333,10 +336,12 @@ img.leaf {
 
 
 .sustainable {
-
+  z-index: -2;
+  position: relative;
   p, h2 {
     padding-left: 25%;
     width:75%;
+    z-index: 50;
   }
   background: @white;
 }
@@ -630,38 +635,27 @@ footer p {
 
 
 .cloud1{
-  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
-  .hex-gen(160px, @colors);
-  .triangle{
-    &:nth-child(1) {
-        opacity: 0.8;
-    }
-    &:nth-child(4) {
-        opacity: 0.1;
-    }
-  }
-
+  z-index: -1;
+  max-height: 200px;
+  width: auto;
+  opacity: 0.6;
+  position: absolute;
   animation-name: cloudDrift;
-  animation-duration: 30s;
+  animation-duration: 60s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
 
 .cloud2{
-  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
-  .hex-gen(160px, @colors);
+  z-index: -1;
+  max-height: 250px;
+  width: auto;
+  opacity: 0.6;
+  position: absolute;
   animation-name: cloudDrift;
-  animation-duration: 26s;
+  animation-duration: 40s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  .triangle {
-   &:nth-child(2) {
-     opacity: 0.8;
-   }
-    &:nth-child(2) {
-      opacity: 0.1;
-   }
-  }
 }
 
 .cloud3{
@@ -801,5 +795,14 @@ footer p {
 @keyframes cloudDrift {
   0% {left: -20%}
   100% {left: 100%}
+}
 
+@keyframes leftCloudFade {
+  0% {left: 10%}
+  100% {left: -20%}
+}
+
+@keyframes rightCloudFade {
+  0% {left: 80%}
+  100% {left: 100%}
 }

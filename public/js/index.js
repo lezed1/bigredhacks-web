@@ -113,11 +113,12 @@ resizes(jQuery);
 
 // Create cloud
 function createCloud($, xPos, yPos, cloudClass, appendee) {
-    var $cloud = $("<div>", {class : cloudClass});
+    var $cloud = $('<img >', {class : cloudClass});
+    $cloud.attr('src', "img/cloud1.svg");
     $cloud.offset({top: yPos, left: xPos});
-    for (var i = 0; i < 6; i++) {
-        $cloud.append($("<div>", {class : "triangle"}));
-    }
+    //for (var i = 0; i < 6; i++) {
+   //     $cloud.append($("<div>", {class : "triangle"}));
+   // }
 
     $(appendee).append($cloud);
 }
