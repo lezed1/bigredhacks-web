@@ -236,7 +236,7 @@ img.leaf {
 
     img {
       position: relative;
-      top: -25px;
+      top: -21px;
       padding-right: 10px;
     }
     h2, h4, h3 {
@@ -251,13 +251,21 @@ img.leaf {
       text-decoration: none;
       //text-shadow: -2px 0 1px #000;
       color: @picton;
-      font-family: 'Oval-Light';
+      font-family: 'Oval-Light', sans-serif;
+      text-transform: uppercase;
     }
 
     h3, h4 {
       margin: 0 0 15px;
       //text-shadow: -2.5px 2.5px 8px #000;
+      //text-align: right;
+
     }
+ //   .date {
+ //     //text-align: right;
+ //     position: absolute;
+  //    right: 0;
+  //  }
 
     .announcement {
       &.orange {
@@ -461,11 +469,11 @@ footer p {
     .slogan {
       h2 {
         font-size: @main-header-size - 10pt;
-        font-family: 'Oval Light', sans-serif;
       }
     }
   }
 }
+
 
 @media (max-width: 480px) {
 
