@@ -100,12 +100,16 @@ function resizes($) {
     console.log("boom");
     $(".cloud1").remove();
     $(".cloud2").remove();
+    $(".cloud3").remove();
+    $(".cloud4").remove();
 
     introHeight =$(".intro").height();
     sustHeight = $("#sustainable").height() + introHeight + cloudHeight;
     aboutHeight = $("#about").height() + sustHeight;
 
     createCloud($, -325, sustHeight, "cloud1", ".intro");
+    createCloud($, -325, introHeight, "cloud3", ".intro");
+    createCloud($, -300, introHeight- 250, "cloud4", ".intro");
     createCloud($, -325, aboutHeight, "cloud2", ".intro");
 }
 

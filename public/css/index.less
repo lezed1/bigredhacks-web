@@ -249,7 +249,7 @@ img.leaf {
       padding-right: 10px;
     }
     h2, h4, h3 {
-
+      z-index: 600;
     }
 
     h2 {
@@ -431,6 +431,8 @@ footer p {
   font-size: 14px;
   letter-spacing: 0.5px;
   padding: 9px 15px 9px 15px;
+  z-index: 600;
+  position: relative;
   &.btn-red {
     font-weight: @weight-bold;
   }
@@ -613,6 +615,36 @@ footer p {
   width: 300px;
 }
 
+.cloud-static {
+  background-image :url(/img/cloud1.svg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  z-index: 500;
+  position: absolute;
+  height: 600px;
+  width: 1000px;
+}
+@media (min-width: 767px) {
+  .leftClouds {
+    .cloud-static;
+    left: -10%;
+    top: 20%;
+  }
+
+  .rightClouds {
+    .cloud-static;
+    left: 60%;
+    top: 40%;
+  }
+}
+
+.rainClouds {
+  .cloud-static;
+  top: 80%;
+  width: 500px;
+  opacity: .8;
+}
+
 .cloud1{
   .cloud-generic;
   z-index: -1;
@@ -624,6 +656,7 @@ footer p {
   animation-duration: 60s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+  .cloud-generic;
 }
 
 .cloud2{
@@ -641,26 +674,45 @@ footer p {
 }
 
 .cloud3{
-  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
-  .hex-gen(160px, @colors);
+  .cloud-generic;
+  z-index: 50;
+  max-height: 250px;
+  width: auto;
+  opacity: 0.6;
+  position: absolute;
   animation-name: cloudDrift;
-  animation-duration: 22s;
+  animation-duration: 35s;
   animation-iteration-count: infinite;
-  .triangle {
-    &:nth-child(2) {
-      opacity: 0.8;
-    }
-    &:nth-child(2) {
-      opacity: 0.1;
-    }
-  }
+  animation-timing-function: linear;
+  .cloud-generic;
 }
 .cloud4{
-  @colors: gainsboro, gainsboro, gainsboro, gainsboro, gainsboro, gainsboro;
-  .hex-gen(160px, @colors);
+  .cloud-generic;
+  z-index: 1;
+  max-height: 400px;
+  width: auto;
+  opacity: 0.9;
+  position: absolute;
   animation-name: cloudDrift;
-  animation-duration: 18s;
+  animation-duration: 45s;
   animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  .cloud-generic;
+  height: 250px;
+}
+
+.cloud5{
+  .cloud-generic;
+  z-index: 50;
+  max-height: 250px;
+  width: auto;
+  opacity: 0.6;
+  position: absolute;
+  animation-name: cloudDrift;
+  animation-duration: 48s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  .cloud-generic;
 }
 
 .raindrop {
