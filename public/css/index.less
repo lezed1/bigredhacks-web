@@ -606,26 +606,6 @@ footer p {
   }
 }
 
-.fish {
-  width: 1000px;
-  height: 1000px;
-  position: relative;
-  margin: 0 auto;
-  transform-origin: 0 0;
-  .cloud2{
-    position: absolute;
-    &:nth-child(1) {
-      transform-origin: 0px 0px;
-    }
-    &:nth-child(2) {
-      transform-origin: -400px -400px;
-    }
-    &:nth-child(3) {
-      transform-origin: -550px 150px;
-    }
-  }
-}
-
 .cloud-generic {
   background-image :url(/img/cloud1.svg);
   background-size:contain;
@@ -734,6 +714,64 @@ footer p {
   .cloud-generic;
 }
 
+.fishSchool {
+  //background-image :url(/img/fish1.svg);
+  //background-size:contain;
+  //background-repeat: no-repeat;
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  animation-name: fishSwim;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  //animation-name: fishSwim;
+  //animation-duration: 8s;
+  //animation-iteration-count: 1;
+  //animation-timing-function: linear;
+}
+
+
+.fish-1 {
+  background-image :url(/img/fish1.svg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  height: 40px;
+  width: 60px;
+  position: absolute;
+  //animation-name: fishSwim;
+  //animation-duration: 8s;
+  //animation-iteration-count: 1;
+  //animation-timing-function: linear;
+}
+
+.fish-2 {
+  background-image :url(/img/fish2.svg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  height: 40px;
+  width: 60px;
+  position: absolute;
+  //animation-name: fishSwim;
+  //animation-duration: 8s;
+  //animation-iteration-count: 1;
+  //animation-timing-function: linear;
+}
+
+.fish-3 {
+  background-image :url(/img/fish3.svg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  height: 40px;
+  width: 60px;
+  position: absolute;
+  //animation-name: fishSwim;
+  //animation-duration: 8s;
+  //animation-iteration-count: 1;
+  //animation-timing-function: linear;
+}
+
+
 .raindrop {
   width: 3px;
   height: 65px;
@@ -796,10 +834,6 @@ footer p {
   position: absolute;
   top: calc(50% - 70px);
   left: calc(50% - 15px);
-  animation-name: fishSwim;
-  animation-duration: 18s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
 }
 
 .fullEye(@t, @l) {
@@ -874,9 +908,9 @@ footer p {
 @keyframes fishSwim {
   0% {left: 100%; top: 50%;}
   16% {transform: rotate(10deg);}
-  33% {top: 1%;}
+  33% {top: 40%;}
   50% {transform: rotate(-10deg);}
-  66% {top: 100%;}
+  66% {top: 60%;}
   83% {transform: rotate(10deg);}
-  100% {left: -40%; }
+  100% {left: -40%; top: 50%; }
 }

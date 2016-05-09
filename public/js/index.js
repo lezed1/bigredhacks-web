@@ -91,13 +91,20 @@ function pad(num, size) {
 
 })(jQuery);
 
+var $fishSchool;
+(function ($) {
+    $fishSchool = $('<div>', {class : "fishSchool"});
+    $(".faq").append($fishSchool);
+    return $fishSchool;
+})(jQuery);
+
+
 const cloudHeight = 40;
 var introHeight;
 var sustHeight;
 var aboutHeight;
 
 function resizes($) {
-    console.log("boom");
     $(".cloud1").remove();
     $(".cloud2").remove();
     $(".cloud3").remove();
@@ -111,6 +118,8 @@ function resizes($) {
     createCloud($, -325, introHeight, "cloud3", ".intro");
     createCloud($, -300, introHeight- 250, "cloud4", ".intro");
     createCloud($, -325, aboutHeight, "cloud2", ".intro");
+
+    createSchool($);
 }
 
 resizes(jQuery);
@@ -118,10 +127,6 @@ resizes(jQuery);
 // Create cloud
 function createCloud($, xPos, yPos, cloudClass, appendee) {
     var $cloud = $('<div>', {class : cloudClass});
-
-    //$cloud.attr();
-    //$cloud.attr('width',200);
-    //$cloud.attr('height',200);
     $cloud.offset({top: yPos, left: xPos});
 
     $(appendee).append($cloud);
@@ -130,3 +135,27 @@ function createCloud($, xPos, yPos, cloudClass, appendee) {
 (function($){
 $(window).resize(function() { resizes(jQuery) });
 $(window).trigger('resize'); })(jQuery);
+
+// Fish
+function createSchool($) {
+    // A school of fish managed by the first fish
+    // Clear old school if it exists
+    $(".fish-1").remove();
+    $(".fish-2").remove();
+    $(".fish-3").remove();
+
+    createFish($, -300, 0, "fish-"+ Math.floor(Math.random() * 3), ".fishSchool");
+    createFish($, 100, 200, "fish-"+ Math.floor(Math.random() * 3), ".fishSchool");
+    createFish($, -300, 0, "fish-"+ Math.floor(Math.random() * 3), ".fishSchool").offset({top: 50, left: 50});
+
+    $fishSchool.one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+        console.log('dead');
+        createSchool($); // Refresh fish
+    });
+}
+
+function createFish($, xPos, yPos, fishClass, appendee) {
+    var $fish = $('<div>', {class : fishClass});
+    $(appendee).append($fish);
+    return $fish;
+}
