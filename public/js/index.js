@@ -159,3 +159,5 @@ function createFish($, xPos, yPos, fishClass, appendee) {
     $(appendee).append($fish);
     return $fish;
 }
+
+jQuery( document ).ready(function() {console.log("rdy"); skrollr.init({forceHeight: false});});
