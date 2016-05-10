@@ -364,7 +364,7 @@ img.leaf {
 
 .faq {
   position: relative;
-  z-index: 1000;
+  z-index: 500;
   padding-top: 180px;
   opacity: 0.8;
 
@@ -693,68 +693,42 @@ footer p {
   width: auto;
   opacity: 0.6;
   position: absolute;
-  //animation-name: cloudDrift;
-  //animation-duration: 48s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
   .cloud-generic;
 }
 
-.fishSchool {
-  //background-image :url(/img/fish1.svg);
-  //background-size:contain;
-  //background-repeat: no-repeat;
-  height: 1px;
-  width: 1px;
-  position: absolute;
-  animation-name: fishSwim;
-  animation-duration: 5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  //animation-name: fishSwim;
-  //animation-duration: 8s;
-  //animation-iteration-count: 1;
-  //animation-timing-function: linear;
-}
-
-
-.fish-1 {
-  background-image :url(/img/fish1.svg);
+.fishGeneric {
   background-size:contain;
   background-repeat: no-repeat;
   height: 40px;
   width: 60px;
   position: absolute;
-  //animation-name: fishSwim;
-  //animation-duration: 8s;
-  //animation-iteration-count: 1;
-  //animation-timing-function: linear;
+  z-index: 1000;
 }
 
-.fish-2 {
-  background-image :url(/img/fish2.svg);
-  background-size:contain;
-  background-repeat: no-repeat;
-  height: 40px;
-  width: 60px;
-  position: absolute;
-  //animation-name: fishSwim;
-  //animation-duration: 8s;
-  //animation-iteration-count: 1;
-  //animation-timing-function: linear;
+
+.redfish {
+  .fishGeneric;
+  background-image: url(/img/fishred.svg);
 }
 
-.fish-3 {
-  background-image :url(/img/fish3.svg);
-  background-size:contain;
-  background-repeat: no-repeat;
-  height: 40px;
-  width: 60px;
-  position: absolute;
-  //animation-name: fishSwim;
-  //animation-duration: 8s;
-  //animation-iteration-count: 1;
-  //animation-timing-function: linear;
+.bluefish {
+  .fishGeneric;
+  background-image: url(/img/fishblue.svg);
+}
+
+.orangefish {
+  .fishGeneric;
+  background-image: url(/img/fishorange.svg);
+}
+
+.yellowfish {
+  .fishGeneric;
+  background-image: url(/img/fishyellow.svg);
+}
+
+.greenfish {
+  .fishGeneric;
+  background-image: url(/img/fishgreen.svg);
 }
 
 
