@@ -28,7 +28,7 @@ block dashboard_content
                 .form-group.has-error
                     label.sr-only(for='addteamid') enter teammate id
                     input#addteamid.form-control(type='text', name='userid', placeholder='user id')
-                button#addteamid-submit.btn.btn-red(type='submit', disabled='') add a teammate
+                button#addteamid-submit.btn.btn-blue(type='submit', disabled='') add a teammate
         ul.team-list
             if team.length == 0
                 if middlehelp.isRegistrationOpen()
@@ -38,7 +38,7 @@ block dashboard_content
                     li= member.name
         if middlehelp.isRegistrationOpen()
             if team.length > 0
-                a.btn.btn-red(href="/user/team/leave") Remove yourself from this team.
+                a.btn.btn-blue(href="/user/team/leave") Remove yourself from this team.
     if middlehelp.isRegistrationOpen()
         .form-group
             .checkbox
@@ -47,8 +47,8 @@ block dashboard_content
                     | I plan to work with (a) Cornell student(s).
 
     +sectionHeading("resume")
-    a.btn.btn-red(href=resumeLink, target='_blank') view my resume
-    button#resume-update.btn.btn-red update my resume
+    a.btn.btn-blue(href=resumeLink, target='_blank') view my resume
+    button#resume-update.btn.btn-blue update my resume
     br
     br
     form#resume-form.form-inline(method='post', action='/user/updateresume', style='display:none', enctype='multipart/form-data')
@@ -57,4 +57,4 @@ block dashboard_content
         .form-group.has-error
             input#resumeinput.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resumeinput', accept='.pdf', required='')
         .form-group
-            button#resume-save.btn.btn-red(type='submit', disabled='') Save
+            button#resume-save.btn.btn-blue(type='submit', disabled='') Save
