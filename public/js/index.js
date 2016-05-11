@@ -92,8 +92,37 @@ function pad(num, size) {
 })(jQuery);
 
 (function($){
-// $(window).resize(function() { resizes(jQuery) });
 $(window).trigger('resize'); })(jQuery);
 
+(function generateRainDrops($) {
+    // const barHeight = $('.top-nav-collapse').height();
+    const introHeight = $('#intro').height() + 0;
+    const aboutHeight = $('#about').height() + introHeight;
+    const sustainableHeight = $('#sustainable').height() + aboutHeight;
+    const whaleHeight = $('#whaleDiv').height() + sustainableHeight;
+    const faqHeight = $('#faq').height() + whaleHeight;
+    const sponsorHeight = $('#sponsors').height() + faqHeight;
+    const footerHeight = $('footer').height() + sponsorHeight;
 
-jQuery( document ).ready(function() {console.log("rdy"); skrollr.init({forceHeight: false});});
+    //  .raindrop(style="left:20%;" data-top="top:100%; opacity:!1" data--200-bottom-top="top:-10%; opacity:!1;" data--130-bottom-top="top:-10%; opacity:!0;")
+    var height = 65;
+    var $div = $("<div>", {class: "raindrop"})
+        .offset({left: 50})
+        .attr("data-0", "top:" + (aboutHeight) + "px; opacity:0;")
+        .attr("data-170-top", "opacity:0;")
+        .attr("data-140-top", "opacity:1;")
+        .attr("data-" + (aboutHeight-65), "top:" + (aboutHeight + height + 50) + "px; background:rgb(255,255,255);")
+        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 100) + "px; background:rgb(212,239,253);")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255);")
+        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 1;")
+        .attr("data-" + footerHeight, "top:"+ (footerHeight + height + 100) + "px; background:rgb(255,255,255); opacity: 0;");
+    $("#intro").append($div);
+})(jQuery);
+
+
+jQuery( document ).ready(function() {console.log("rdy"); skrollr.init({
+        forceHeight: false,
+        smoothScrollingDuration: 250,
+        smoothScrolling: true
+    });
+});
