@@ -27,10 +27,10 @@ img {
 }
 
 //disable horizontal scrolling
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
+//html, body {
+//    max-width: 100%;
+//    overflow-x: hidden;
+//}
 
 html {
   width: 100%;
@@ -555,6 +555,16 @@ footer p {
   .clockCircle p{
     visibility: hidden;
   }
+  
+  .clockBody {
+    visibility: hidden;
+  }
+  .hill {
+    visibility: hidden;
+  }
+  .clockTop {
+    visibility: hidden;
+  }
 
 }
 
@@ -792,11 +802,11 @@ footer p {
     height: 125px;
     background: #FFFFFF;
     .counter {
-      padding-top: 20px;
+      padding-top: 24px;
       text-align: center;
       vertical-align: middle;
       font-size: 50px;
-      line-height: 40px;
+      line-height: 30px;
       color: @picton;
     }
     p {
@@ -1027,7 +1037,7 @@ footer p {
   .wave3 {
     .wave;
     background-image: url(/img/waves/wave3.svg);
-    bottom: -150px;
+    top: 97%;
     left: 2%;
   }
 }
