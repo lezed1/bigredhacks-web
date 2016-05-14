@@ -9,6 +9,9 @@
 @nav-blue: rgba(178, 223, 244, 0.7);
 @nav-orange: fade(@orange, 70%);
 
+@content-padding-left: 20%;
+@content-width: 100% - @content-padding-left;
+
 .noselect {
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -65,7 +68,7 @@ p, dl {
 
 dd {
   line-height: @body-line-height;
-  margin: 0 0 20px;
+  margin: 0 0 25px;
 }
 
 a {
@@ -185,20 +188,27 @@ a {
 //--- General sections
 //============================
 
+section {
+  .container {
+    width: @content-width;
+    padding-left: @content-padding-left;
+  }
+}
+
 .bluebox {
   background-color: @sky-blue;
   margin-left: 150px;
   margin-right: 150px;
   //margin-top: 0px;
-  width: 75%;
+  //width: 75%;
     h2 {
     padding-left: 18%;
-    width:75%;
+    //width:75%;
     color: @sky-blue;
   }
   p{
     padding-left: 22%;
-    width: 75%;
+    //width: 75%;
     color: @jasonblue;
   }
   h3,h4{
@@ -230,15 +240,6 @@ a {
   }
 }
 
-img.leaf {
-  float: left;
-  @media (max-width: 500px) {
-    width: 0;
-    height: 0;
-    visibility: hidden;
-  }
-}
-
 // ===========================
 //--- Intro
 //============================
@@ -249,7 +250,6 @@ img.leaf {
   padding-top: 15%; //with announcement
   position: relative;
   background-color: @white;
-  //background: url(../img/bgd/cornell_000.jpg) no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -292,7 +292,7 @@ img.leaf {
       font-family: 'Oval-Light', sans-serif;
       text-transform: uppercase;
       .noselect;
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
 
     h3, h4 {
@@ -360,8 +360,8 @@ img.leaf {
   position: relative;
   p, h2 {
     position: relative;
-    padding-left: 25%;
-    width:75%;
+    //padding-left: @content-padding-left;
+    //width: @content-width;
     color: @black;
     z-index: 999;
   }
@@ -370,8 +370,8 @@ img.leaf {
 .sponsors {
   background-color: @white;
   h2 {
-    padding-left: 25%;
-    width:75%;
+    //padding-left: @content-padding-left;
+    //width:@content-width;
     color: @black;
   }
 
@@ -385,8 +385,8 @@ img.leaf {
   z-index: -2;
   position: relative;
   p, h2 {
-    padding-left: 25%;
-    width:75%;
+    //padding-left: @content-padding-left;
+    //width: @content-width;
     z-index: 50;
   }
   background: @white;
@@ -402,8 +402,8 @@ img.leaf {
   h2, dd, dt {
     //padding-left: 0%;
     color: @off-white;
-    padding-left: 25%;
-    width:75%;
+    //padding-left: @content-padding-left;
+    //width: @content-width;
   }
   .container {
   //  padding-left: 25%;
@@ -413,6 +413,7 @@ img.leaf {
   background: @ocean-blue;
   dt {
     font-size: 20px;
+    padding-top: 10px;
     //font-weight: bold;
   }
   dd{
@@ -533,6 +534,7 @@ footer p {
   .clockCircle p{
     visibility: hidden;
   }
+
 }
 
 
@@ -634,7 +636,7 @@ footer p {
   height: 40px;
   width: 60px;
   position: absolute;
-  z-index: 1000;
+  z-index: -10;
 }
 
 
@@ -760,6 +762,7 @@ footer p {
   }
 
   .clockCircle {
+    .noselect;
     position: absolute;
     top: 20%;
     left: calc(50% - (45px));
