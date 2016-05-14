@@ -2,7 +2,9 @@
  * Typeahead
  */
 var engine3 = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    datumTokenizer: function (d) {
+        return Bloodhound.tokenizers.whitespace(d.name);
+    },
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     prefetch: '/majors.json',
 });
@@ -10,12 +12,15 @@ var engine3 = new Bloodhound({
 engine3.initialize();
 
 //general typeahead
-$('#major').typeahead( null, {
-    displayKey: 'name',
+$('#major').typeahead( {
+    hint: true,
+    highlight: true,
+    autoselect: false,
+    minLength: 3}, {
+    displayKey: '',
     source: engine3.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-    console.log('typetype');
-    $(this).data("major", datum.name);
+    $(this).data("major", datum);
 });
 
 
