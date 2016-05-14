@@ -15,7 +15,7 @@ $('document').ready(function () {
         var f1 = $('#' + params[0]).val(),
             f2 = $('#' + params[1]).val();
         return f1 !== "" && f2 !== "";
-    }, 'Enter a valid college. Enter "Unlisted" if your college is not listed.');
+    }, 'Enter a valid school. Enter "Unlisted - [your school name]" if your school is not listed.');
 
     //valid linkedin url or optional
     $.validator.addMethod("linkedinURL", function (val, elem, params) {
@@ -99,7 +99,7 @@ $('document').ready(function () {
             },
             hardware: {
                 required: false,
-                maxlength: 100
+                maxlength: 1000 
             }
         },
         messages: {
@@ -119,8 +119,18 @@ $('document').ready(function () {
             lastname: "Please enter your last name",
             phonenumber: "Please provide a valid phone number",
             resume: "Please upload a valid .pdf",
-            major: "Please enter your major",
-            linkedin: "Please provide a valid LinkedIn url"
+            major: "Please enter your major. Enter undecided if you do not have one.",
+            linkedin: "Please provide a valid LinkedIn url",
+            hardware: "Please hit enter to add a hardware",
         }
     });
+});
+
+// Disable hitting enter to submit
+$('#registrationForm ').on('keyup keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) {
+        e.preventDefault();
+        return false;
+    }
 });

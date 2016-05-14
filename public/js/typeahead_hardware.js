@@ -11,17 +11,11 @@ var engine2 = new Bloodhound({
 
 engine2.initialize();
 
-//general typeahead
-// $('#hardware').typeahead( null, {
-//     displayKey: 'name',
-//     source: engine2.ttAdapter()
-// }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-//     $(this).data("hardware", datum.name);
-// });
-
-$('hardware').tagsinput({
+$('#hardware').tagsinput({
     typeaheadjs: {
         displayKey: 'name',
+        valueKey: 'name',
+        name: 'name',
         source: engine2.ttAdapter()
     }
 });

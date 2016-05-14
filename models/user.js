@@ -40,7 +40,7 @@ var userSchema = new mongoose.Schema({
         questions: {
             q1: String,//@todo fill out with identifiers for questions
             q2: String,
-            hardware: String
+            hardware: [String]
         },
         hackathonsAttended: String,
     },

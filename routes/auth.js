@@ -195,7 +195,7 @@ module.exports = function (io) {
                             questions: {
                                 q1: req.body.q1,
                                 q2: req.body.q2,
-                                hardware: req.body.hardware
+                                hardware: req.body.hardware.split(",")
                             },
                             hackathonsAttended: req.body.hackathonsAttended
                         },
