@@ -201,12 +201,25 @@ section {
     width: @content-width;
     padding-left: @content-padding-left;
   }
+  .bluebox {
+    .container {
+      position: relative;
+      left: -80px;
+      width: 50%;
+    }
+  }
+  .sustainable {
+    .container {
+      width: 40%
+    }
+  }
 }
 
 .bluebox {
   background-color: @sky-blue;
   margin-left: @landing-box-margin;
   margin-right: @landing-box-margin;
+  padding: 0 0 60px 0;
   //margin-top: 0px;
   //width: 75%;
     h2 {
@@ -254,8 +267,8 @@ section {
 
 .intro {
   width: 100%;
-  padding: 20% 0 40px 0;
-  padding-top: 15%; //with announcement
+  padding: 100px 0 80px 0;
+  //padding-top: 15%; //with announcement
   position: relative;
   background-color: @white;
   -webkit-background-size: cover;
@@ -388,8 +401,8 @@ section {
 
 
 .sustainable {
-  padding-top: 300px;
-  padding-bottom: 300px;
+  padding-top: 250px;
+  padding-bottom: 250px;
   z-index: -2;
   position: relative;
   p, h2 {
