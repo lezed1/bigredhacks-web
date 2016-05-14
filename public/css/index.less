@@ -396,6 +396,7 @@ img.leaf {
   position: relative;
   z-index: 500;
   padding-top: 180px;
+  padding-bottom: 180px;
   opacity: 0.8;
 
   h2, dd, dt {
@@ -819,7 +820,6 @@ footer p {
     height: 600px;
     width: 1000px;
   }
-  @media (min-width: 767px) {
     .leftClouds {
       .cloud-static;
       //left: -10%;
@@ -831,7 +831,6 @@ footer p {
       //left: 60%;
       top: 40%;
     }
-  }
 
   .rainClouds {
     .cloud-static;
@@ -888,10 +887,6 @@ footer p {
     width: auto;
     opacity: 0.9;
     position: absolute;
-    //animation-name: cloudDrift;
-    //animation-duration: 45s;
-    //animation-iteration-count: infinite;
-    //animation-timing-function: linear;
     .cloud-generic;
     height: 250px;
   }
@@ -922,11 +917,7 @@ footer p {
   }
   // Whale
   #whaleDiv {
-    //float: left;
     position: relative;
-    //top: calc(50% - 70px);
-    //padding-top: 180px;
-    //left: calc(50% - 15px);
   }
 
   .fullEye {
@@ -982,5 +973,47 @@ footer p {
     .leyeClose {
       top: 51%;
     }
+  }
+
+  .wave1 {
+    background-image :url(/img/waves/wave1.svg);
+    background-size:contain;
+    background-repeat: no-repeat;
+    z-index: 3500;
+    position: absolute;
+    height: 300px;
+    width: 700px;
+    top: -5px;
+    left: 55%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .wave2 {
+    background-image :url(/img/waves/wave2.svg);
+    background-size:contain;
+    background-repeat: no-repeat;
+    z-index: 3500;
+    position: absolute;
+    height: 300px;
+    width: 700px;
+    top: 6%;
+    left: 45%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .wave3 {
+    background-image :url(/img/waves/wave1.svg);
+    background-size:contain;
+    background-repeat: no-repeat;
+    z-index: 3500;
+    position: absolute;
+    height: 300px;
+    width: 700px;
+    bottom: -150px;
+    left: 2%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
