@@ -1,5 +1,6 @@
 @import "_global";
 @import "_fontawesome-custom";
+@import "_index_effects";
 
 @main-header-size: 48pt;
 @body-line-height: 1.6em;
@@ -9,8 +10,9 @@
 @nav-blue: rgba(178, 223, 244, 0.7);
 @nav-orange: fade(@orange, 70%);
 
-@content-padding-left: 20%;
-@content-width: 100% - @content-padding-left;
+@landing-box-margin: 150px;
+@content-padding-left: 0%;
+@content-width: 50%;
 
 .noselect {
   -webkit-user-select: none;
@@ -197,17 +199,17 @@ section {
 
 .bluebox {
   background-color: @sky-blue;
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-left: @landing-box-margin;
+  margin-right: @landing-box-margin;
   //margin-top: 0px;
   //width: 75%;
     h2 {
-    padding-left: 18%;
+    //padding-left: 18%;
     //width:75%;
     color: @sky-blue;
   }
   p{
-    padding-left: 22%;
+    //padding-left: 22%;
     //width: 75%;
     color: @jasonblue;
   }
@@ -677,7 +679,7 @@ footer p {
 //sponsors
 
 .logos {
-  width: 800px;
+  width: 800px; //todo width based on screen
   margin: 0 auto 30px auto;
   text-align: center;
 }
@@ -718,10 +720,10 @@ footer p {
   margin-top: -30px;
 }
 
-
 .clocktowerland {
   position: relative;
 }
+
 @media (min-width: 767px) {
   .clocktower {
     background-image: url(/img/clocktower.svg);
@@ -765,7 +767,7 @@ footer p {
     .noselect;
     position: absolute;
     top: 20%;
-    left: calc(50% - (45px));
+    left: ~"calc(~50% - (45px))";
     border-radius: 50%;
     width: 125px;
     height: 125px;
@@ -808,7 +810,6 @@ footer p {
     width: 125px;
     height: 125px;
   }
-
 
   .cloud-generic {
     background-image :url(/img/cloud1.svg);
@@ -857,7 +858,6 @@ footer p {
     //animation-duration: 60s;
     //animation-iteration-count: infinite;
     //animation-timing-function: linear;
-    .cloud-generic;
   }
 
   .cloud2{
@@ -871,7 +871,6 @@ footer p {
     //animation-duration: 40s;
     //animation-iteration-count: infinite;
     //animation-timing-function: linear;
-    .cloud-generic;
   }
 
   .cloud3{
@@ -885,7 +884,6 @@ footer p {
     //animation-duration: 35s;
     //animation-iteration-count: infinite;
     //animation-timing-function: linear;
-    .cloud-generic;
   }
   .cloud4{
     .cloud-generic;
@@ -894,7 +892,6 @@ footer p {
     width: auto;
     opacity: 0.9;
     position: absolute;
-    .cloud-generic;
     height: 250px;
   }
 
@@ -905,7 +902,6 @@ footer p {
     width: auto;
     opacity: 0.6;
     position: absolute;
-    .cloud-generic;
   }
 
 
@@ -929,8 +925,8 @@ footer p {
 
   .fullEye {
     position: absolute;
-    height:15px;
-    width:30px;
+    height: 15px;
+    width: 30px;
     border-radius: 70px 70px 0 0;
     -moz-border-radius: 70px 70px 0 0;
     -webkit-border-radius: 70px 70px 0 0;
@@ -982,8 +978,7 @@ footer p {
     }
   }
 
-  .wave1 {
-    background-image :url(/img/waves/wave1.svg);
+  .wave {
     background-size:contain;
     background-repeat: no-repeat;
     z-index: 3500;
@@ -996,31 +991,24 @@ footer p {
     margin-right: auto;
   }
 
+  .wave1 {
+    .wave;
+    background-image: url(/img/waves/wave1.svg);
+    top: -5px;
+    left: 55%;
+  }
+
   .wave2 {
-    background-image :url(/img/waves/wave2.svg);
-    background-size:contain;
-    background-repeat: no-repeat;
-    z-index: 3500;
-    position: absolute;
-    height: 300px;
-    width: 700px;
+    .wave;
+    background-image: url(/img/waves/wave2.svg);
     top: 6%;
     left: 45%;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .wave3 {
-    background-image :url(/img/waves/wave1.svg);
-    background-size:contain;
-    background-repeat: no-repeat;
-    z-index: 3500;
-    position: absolute;
-    height: 300px;
-    width: 700px;
+    .wave;
+    background-image: url(/img/waves/wave3.svg);
     bottom: -150px;
     left: 2%;
-    margin-left: auto;
-    margin-right: auto;
   }
 }
