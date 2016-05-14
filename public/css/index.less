@@ -411,6 +411,9 @@ section {
     z-index: 50;
   }
   background: @white;
+  .content {
+    padding-top: 100px;
+  }
 }
 
 .faq {
@@ -552,24 +555,15 @@ footer p {
     }
   }
   
-  .clockCircle p{
+  .clockCircle p, .clockBody, .hill, .clockTop, .raindrop{
     visibility: hidden;
-  }
-  
-  .clockBody {
-    visibility: hidden;
-  }
-  .hill {
-    visibility: hidden;
-  }
-  .clockTop {
-    visibility: hidden;
+    display: none;
   }
 
 }
 
 
-@media (max-width: 480px) {
+@media (max-width: 496px) {
 
   .navbar-custom .nav.navbar-nav {
     background-color: rgba(255, 255, 255, .4);
@@ -583,6 +577,40 @@ footer p {
     display: none
   }
 
+  .bluebox {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  section {
+    .container {
+      width: 100%;
+      padding: 0 15px 0 15px;
+    }
+    .sustainable {
+      padding-top: 0;
+      padding-bottom: 50px;
+      .container {
+        width: 100%;
+      }
+      .content {
+        padding-top: 0;
+      }
+    }
+    .bluebox {
+      .container {
+        width: 100%;
+        left: 0;
+      }
+    }
+    .intro {
+      padding-bottom: 20px;
+    }
+  }
+
+  .faq {
+    padding-top: 50px;
+  }
 }
 
 .top-nav-collapse {
