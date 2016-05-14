@@ -90,7 +90,7 @@ block append content
                     br
                     br
                     br
-                    //h2 Be a part of something big
+                    //- about
                     .big-heading
                         h2 Be a part of something big 
 
@@ -104,16 +104,6 @@ block append content
         .leftClouds(data-50="left:-10%;" data-top="left:-60%;")
         .rightClouds(data-50="left:60%;" data-top="left:100%;")
         .rainClouds(data-0="left:-30%;" data-160-top="left:0%;")
-    //- Section: about
-    //section#about.about
-     //   .bluebox
-
-       //     +sectionHeading("Be a part of something big")
-         //   .container
-           //     br
-             //   p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days, students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
-               // p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
-               // br
 
     //- Section: sustainable
     section#clocktowerland.clocktowerland
@@ -125,15 +115,13 @@ block append content
                 p days until
                 p BigRed//Hacks!
         section#sustainable.sustainable
-            br
-            br
-            br
-            +sectionHeading("Sustainable hacks")
-            .container
-                br
-                p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days,students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
-                p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
-                br
+            .content
+                +sectionHeading("Sustainable hacks")
+                .container
+                    br
+                    p BigRed//Hacks is the first ever student-run, large-scale hackathon at Cornell University. Across three days,students from all across the northeast will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
+                    p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
+                    br
 
 
 
