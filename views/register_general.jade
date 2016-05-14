@@ -56,7 +56,7 @@ block append school
             +generateOptions(en.year, {selected: (input.yearDropdown || "")})
     .form-group
         label(for='major') major *
-        input#major.form-control(type='text', name='major', placeholder='major', value=input.major || '', required=true)
+        input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
 
 block append background
     .form-group

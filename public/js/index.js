@@ -119,8 +119,18 @@ $(window).trigger('resize'); })(jQuery);
     $("#intro").append($div);
 })(jQuery);
 
+// Clocktower timer
+(function ($) {
+    const SEP_SIXTEEN = 1473984000;
+    $timer = $('.counter');
+    console.log(Date.now());
+    daysLeft = Math.floor( Math.abs( Date.now() / 1000 - SEP_SIXTEEN ) / 86400) + 1;
+    $timer.text(daysLeft + '');
+})(jQuery);
 
-jQuery( document ).ready(function() {console.log("rdy"); skrollr.init({
+
+jQuery( document ).ready(function() {
+    skrollr.init({
         forceHeight: false,
         smoothScrollingDuration: 250,
         smoothScrolling: true
