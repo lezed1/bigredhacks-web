@@ -94,7 +94,7 @@ function pad(num, size) {
 (function($){
 $(window).trigger('resize'); })(jQuery);
 
-(function generateRainDrops($) {
+function generateRainDrops($) {
     // const barHeight = $('.top-nav-collapse').height();
     const introHeight = $('#intro').height() + 0;
     const aboutHeight = $('#about').height() + introHeight;
@@ -116,8 +116,8 @@ $(window).trigger('resize'); })(jQuery);
         .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255);")
         .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 1;")
         .attr("data-" + footerHeight, "top:"+ (footerHeight + height + 100) + "px; background:rgb(255,255,255); opacity: 0;");
-    $("#intro").append($div);
-})(jQuery);
+        $("#intro").append($div);
+}
 
 // Clocktower timer
 (function ($) {
@@ -133,6 +133,9 @@ jQuery( document ).ready(function() {
     skrollr.init({
         forceHeight: false,
         smoothScrollingDuration: 250,
-        smoothScrolling: true
+        smoothScrolling: true,
+        mobileCheck: function() {return false;}
     });
+
+    generateRainDrops($);
 });

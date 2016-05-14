@@ -381,6 +381,7 @@ img.leaf {
 
 .sustainable {
   padding-top: 300px;
+  padding-bottom: 300px;
   z-index: -2;
   position: relative;
   p, h2 {
@@ -621,109 +622,6 @@ footer p {
   }
 }
 
-.cloud-generic {
-  background-image :url(/img/cloud1.svg);
-  background-size:contain;
-  background-repeat: no-repeat;
-  height: 200px;
-  width: 300px;
-}
-
-.cloud-static {
-  background-image :url(/img/clouds/high-cloud-1.svg);
-  background-size:contain;
-  background-repeat: no-repeat;
-  z-index: 500;
-  position: absolute;
-  height: 600px;
-  width: 1000px;
-}
-@media (min-width: 767px) {
-  .leftClouds {
-    .cloud-static;
-    //left: -10%;
-    top: 20%;
-  }
-
-  .rightClouds {
-    .cloud-static;
-    //left: 60%;
-    top: 40%;
-  }
-}
-
-.rainClouds {
-  .cloud-static;
-  top: 80%;
-  width: 500px;
-  opacity: .8;
-}
-
-.cloud1{
-  .cloud-generic;
-  z-index: -1;
-  max-height: 200px;
-  width: auto;
-  opacity: 0.6;
-  position: absolute;
-  //animation-name: cloudDrift;
-  //animation-duration: 60s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
-  .cloud-generic;
-}
-
-.cloud2{
-  .cloud-generic;
-  z-index: -1;
-  max-height: 250px;
-  width: auto;
-  opacity: 0.6;
-  position: absolute;
-  //animation-name: cloudDrift;
-  //animation-duration: 40s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
-  .cloud-generic;
-}
-
-.cloud3{
-  .cloud-generic;
-  z-index: 50;
-  max-height: 250px;
-  width: auto;
-  opacity: 0.6;
-  position: absolute;
-  //animation-name: cloudDrift;
-  //animation-duration: 35s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
-  .cloud-generic;
-}
-.cloud4{
-  .cloud-generic;
-  z-index: 1;
-  max-height: 400px;
-  width: auto;
-  opacity: 0.9;
-  position: absolute;
-  //animation-name: cloudDrift;
-  //animation-duration: 45s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
-  .cloud-generic;
-  height: 250px;
-}
-
-.cloud5{
-  .cloud-generic;
-  z-index: 50;
-  max-height: 250px;
-  width: auto;
-  opacity: 0.6;
-  position: absolute;
-  .cloud-generic;
-}
 
 .fishGeneric {
   background-size:contain;
@@ -813,79 +711,12 @@ footer p {
   margin-top: -30px;
 }
 
-.whale {
-  position: relative;
-  padding-bottom: 180px;
-  margin-left: auto;
-  margin-right: auto;
-}
-// Whale
-#whale {
-  float: left;
-  position: absolute;
-  top: calc(50% - 70px);
-  left: calc(50% - 15px);
-}
-
-.fullEye(@t, @l) {
-  float: left;
-  position: absolute;
-  top: calc(50% - (@t + 0px));
-  left: calc(50% - (@l + 0px));
-    height:15px;
-    width:30px;
-    border-radius: 70px 70px 0 0;
-    -moz-border-radius: 70px 70px 0 0;
-    -webkit-border-radius: 70px 70px 0 0;
-    background:white;
-  z-index: 999;
-}
-
-.eyeClose(@t, @l) {
-  float: left;
-  position: absolute;
-  opacity: 100%;
-  top: calc(50% - (@t - 0px));
-  left: calc(50% - (@l - 0px));
-    height:15px;
-    width:30px;
-    border-radius: 60px 60px 0 0;
-    -moz-border-radius: 60px 60px 0 0;
-    -webkit-border-radius: 60px 60px 0 0;
-    background:#4997C9;
-  z-index: 1000;
-}
-
-.lfullEye {
-  .fullEye(-45,7);
-}
-
-.leyeClose {
-  .eyeClose(-45,7);
-}
-
-.rfullEye {
-  .fullEye(-45,13);
-}
-
-.reyeClose {
-  .eyeClose(-45,13);
-}
-
-#whaleDiv:hover {
-  .reyeClose {
-    top: calc(50% + 50px);
-  }
-  .leyeClose {
-    top: calc(50% + 50px);
-  }
-}
 
 .clocktowerland {
   position: relative;
 }
-
-.clocktower {
+@media (min-width: 767px) {
+  .clocktower {
     background-image: url(/img/clocktower.svg);
     background-size: contain;
     background-repeat: no-repeat;
@@ -894,77 +725,262 @@ footer p {
     left: 80%;
     position: absolute;
     z-index: 1000;
-}
-
-.clockTop {
-  position: absolute;
-  z-index: 1;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 75px 300px 75px;
-  top: -300px;
-  bottom: 0;
-  left: 75%;
-  //overflow: hidden;
-  border-color: transparent transparent #d8d8d8 transparent;
-}
-.clockBody {
-  position: absolute;
-  z-index: 50;
-  width: 150px;
-  max-width: 150px;
-  height: calc(100%);
-  top: 0;
-  bottom: 0;
-  left: 75%;
-  overflow: hidden;
-  background: #f0f0f0;
-}
-
-.clockCircle {
-  position:absolute;
-  top: 20%;
-  left:  calc(50% - (45px));
-  border-radius: 50%;
-  width: 125px;
-  height: 125px;
-  background: #FFFFFF;
-  .counter {
-    padding-top: 20px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 50px;
-    line-height: 40px;
-    color: @picton;
   }
-  p {
-    text-align: center;
-    vertical-align: middle;
-    font-size: 12px;
-    line-height: 1px;
-    color: @picton;
+
+  .clockTop {
+    position: absolute;
+    z-index: 1;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 75px 300px 75px;
+    top: -300px;
+    bottom: 0;
+    left: 75%;
+    //overflow: hidden;
+    border-color: transparent transparent #d8d8d8 transparent;
   }
-}
 
-.hill {
-  background-image: url(/img/hill.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 940px;
-  height: 443px;
-  left: 70%;
-  top: -443px;
-  position: absolute;
-  z-index: 3000;
-}
+  .clockBody {
+    position: absolute;
+    z-index: 50;
+    width: 150px;
+    max-width: 150px;
+    height: calc(100%);
+    top: 0;
+    bottom: 0;
+    left: 75%;
+    overflow: hidden;
+    background: #f0f0f0;
+  }
 
-.clockWindow {
-  position:absolute;
-  background-image: url(/img/windows.svg);
-  background-repeat: no-repeat;
-  top: 5%;
-  left:  calc(50% - (37px));
-  width: 125px;
-  height: 125px;
+  .clockCircle {
+    position: absolute;
+    top: 20%;
+    left: calc(50% - (45px));
+    border-radius: 50%;
+    width: 125px;
+    height: 125px;
+    background: #FFFFFF;
+    .counter {
+      padding-top: 20px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 50px;
+      line-height: 40px;
+      color: @picton;
+    }
+    p {
+      text-align: center;
+      vertical-align: middle;
+      font-size: 12px;
+      line-height: 1px;
+      color: @picton;
+    }
+  }
+
+  .hill {
+    background-image: url(/img/hill.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 940px;
+    height: 443px;
+    left: 70%;
+    top: -443px;
+    position: absolute;
+    z-index: 3000;
+  }
+
+  .clockWindow {
+    position: absolute;
+    background-image: url(/img/windows.svg);
+    background-repeat: no-repeat;
+    top: 5%;
+    left: calc(50% - (37px));
+    width: 125px;
+    height: 125px;
+  }
+
+
+  .cloud-generic {
+    background-image :url(/img/cloud1.svg);
+    background-size:contain;
+    background-repeat: no-repeat;
+    height: 200px;
+    width: 300px;
+  }
+
+  .cloud-static {
+    background-image :url(/img/clouds/high-cloud-1.svg);
+    background-size:contain;
+    background-repeat: no-repeat;
+    z-index: 500;
+    position: absolute;
+    height: 600px;
+    width: 1000px;
+  }
+  @media (min-width: 767px) {
+    .leftClouds {
+      .cloud-static;
+      //left: -10%;
+      top: 20%;
+    }
+
+    .rightClouds {
+      .cloud-static;
+      //left: 60%;
+      top: 40%;
+    }
+  }
+
+  .rainClouds {
+    .cloud-static;
+    top: 80%;
+    width: 500px;
+    opacity: .8;
+  }
+
+  .cloud1{
+    .cloud-generic;
+    z-index: -1;
+    max-height: 200px;
+    width: auto;
+    opacity: 0.6;
+    position: absolute;
+    //animation-name: cloudDrift;
+    //animation-duration: 60s;
+    //animation-iteration-count: infinite;
+    //animation-timing-function: linear;
+    .cloud-generic;
+  }
+
+  .cloud2{
+    .cloud-generic;
+    z-index: -1;
+    max-height: 250px;
+    width: auto;
+    opacity: 0.6;
+    position: absolute;
+    //animation-name: cloudDrift;
+    //animation-duration: 40s;
+    //animation-iteration-count: infinite;
+    //animation-timing-function: linear;
+    .cloud-generic;
+  }
+
+  .cloud3{
+    .cloud-generic;
+    z-index: 50;
+    max-height: 250px;
+    width: auto;
+    opacity: 0.6;
+    position: absolute;
+    //animation-name: cloudDrift;
+    //animation-duration: 35s;
+    //animation-iteration-count: infinite;
+    //animation-timing-function: linear;
+    .cloud-generic;
+  }
+  .cloud4{
+    .cloud-generic;
+    z-index: 1;
+    max-height: 400px;
+    width: auto;
+    opacity: 0.9;
+    position: absolute;
+    //animation-name: cloudDrift;
+    //animation-duration: 45s;
+    //animation-iteration-count: infinite;
+    //animation-timing-function: linear;
+    .cloud-generic;
+    height: 250px;
+  }
+
+  .cloud5{
+    .cloud-generic;
+    z-index: 50;
+    max-height: 250px;
+    width: auto;
+    opacity: 0.6;
+    position: absolute;
+    .cloud-generic;
+  }
+
+
+  .whale {
+    background-image :url(/img/whale.png);
+    background-size:contain;
+    background-repeat: no-repeat;
+    z-index: 500;
+    position: absolute;
+    height: 300px;
+    width: 700px;
+    top: -220px;
+    left: 35%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  // Whale
+  #whaleDiv {
+    //float: left;
+    position: relative;
+    //top: calc(50% - 70px);
+    //padding-top: 180px;
+    //left: calc(50% - 15px);
+  }
+
+  .fullEye {
+    position: absolute;
+    height:15px;
+    width:30px;
+    border-radius: 70px 70px 0 0;
+    -moz-border-radius: 70px 70px 0 0;
+    -webkit-border-radius: 70px 70px 0 0;
+    background: white;
+    z-index: 999;
+  }
+
+  .eyeClose {
+    position: absolute;
+    height: 15px;
+    width: 30px;
+    border-radius: 60px 60px 0 0;
+    -moz-border-radius: 60px 60px 0 0;
+    -webkit-border-radius: 60px 60px 0 0;
+    background: #4A90E2;
+    z-index: 1000;
+  }
+
+  .lfullEye {
+    .fullEye;
+    left: 4%;
+    top: 50%;
+  }
+
+  .leyeClose {
+    .eyeClose;
+    left: 4%;
+    top: 53%;
+  }
+
+  .rfullEye {
+    .fullEye;
+    left: 15%;
+    top: 50%;
+  }
+
+  .reyeClose {
+    .eyeClose;
+    left: 15%;
+    top: 53%;
+  }
+
+  .whale:hover {
+    .reyeClose {
+      top: 51%;
+    }
+    .leyeClose {
+      top: 51%;
+    }
+  }
 }
