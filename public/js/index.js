@@ -130,12 +130,12 @@ function generateRainDrops($) {
 
 
 jQuery( document ).ready(function() {
+    generateRainDrops($);
+    
     skrollr.init({
         forceHeight: false,
         smoothScrollingDuration: 250,
         smoothScrolling: true,
         mobileCheck: function() {return false;}
     });
-
-    generateRainDrops($);
 });
