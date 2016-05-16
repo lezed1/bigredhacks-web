@@ -17,6 +17,11 @@ $('document').ready(function () {
         return f1 !== "" && f2 !== "";
     }, 'Enter a valid school. Enter "Unlisted - [your school name]" if your school is not listed.');
 
+    $.validator.addMethod("validMajor", function (val, elem) {
+        var val = $('#major').val();
+	// TODO
+    }, 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed.');
+
     //valid linkedin url or optional
     $.validator.addMethod("linkedinURL", function (val, elem, params) {
         return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";

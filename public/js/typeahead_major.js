@@ -2,31 +2,37 @@
  * Typeahead
  */
 var engine3 = new Bloodhound({
-    datumTokenizer: function (d) {
-        return Bloodhound.tokenizers.whitespace(d.name);
-    },
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/majors.json',
+    prefetch: {
+        url: '/majors.json',
+        filter: function (data) {
+            return $.map(data, function (major) {
+                return major;
+            });
+        }
+    }
 });
 
 engine3.initialize();
+var ttadapt = engine3.ttAdapter();
+var $major = $('#major');
 
 //general typeahead
-$('#major').typeahead( {
+$major.typeahead( {
     hint: true,
     highlight: true,
     autoselect: false,
-    minLength: 3}, {
+    minLength: 1}, {
     displayKey: '',
-    source: engine3.ttAdapter()
+    source: ttadapt
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-    $(this).data("major", datum);
 });
 
 
 //clear if empty on focusout
 $("document").ready(function () {
-    $("#major").on("focusout", function () {
+    $major.on("focusout", function () {
         if ($(this).val().length == 0) {
             $(this).data("major", "");
         }
