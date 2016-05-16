@@ -880,10 +880,10 @@ footer p {
     background-image :url(/img/clouds/high-cloud-1.svg);
     background-size:contain;
     background-repeat: no-repeat;
-    z-index: 500;
+    z-index: 2;
     position: absolute;
-    height: 600px;
-    width: 1000px;
+    width: 32%;
+    height: 32%;
   }
     .leftClouds {
       .cloud-static;
@@ -904,61 +904,24 @@ footer p {
     opacity: .8;
   }
 
-  .cloud1{
-    .cloud-generic;
-    z-index: -1;
-    max-height: 200px;
-    width: auto;
-    opacity: 0.6;
-    position: absolute;
-    //animation-name: cloudDrift;
-    //animation-duration: 60s;
-    //animation-iteration-count: infinite;
-    //animation-timing-function: linear;
+  .driftCloud1 {
+    .cloud-static;
+    background-image: url(/img/clouds/lowcloud1.svg);
+    top: 40%;
+    opacity: .8;
+    z-index: 3000;
+    width: 10%;
+    height: 10%;
   }
 
-  .cloud2{
-    .cloud-generic;
-    z-index: -1;
-    max-height: 250px;
-    width: auto;
-    opacity: 0.6;
-    position: absolute;
-    //animation-name: cloudDrift;
-    //animation-duration: 40s;
-    //animation-iteration-count: infinite;
-    //animation-timing-function: linear;
-  }
-
-  .cloud3{
-    .cloud-generic;
-    z-index: 50;
-    max-height: 250px;
-    width: auto;
-    opacity: 0.6;
-    position: absolute;
-    //animation-name: cloudDrift;
-    //animation-duration: 35s;
-    //animation-iteration-count: infinite;
-    //animation-timing-function: linear;
-  }
-  .cloud4{
-    .cloud-generic;
-    z-index: 1;
-    max-height: 400px;
-    width: auto;
-    opacity: 0.9;
-    position: absolute;
-    height: 250px;
-  }
-
-  .cloud5{
-    .cloud-generic;
-    z-index: 50;
-    max-height: 250px;
-    width: auto;
-    opacity: 0.6;
-    position: absolute;
+  .driftCloud2 {
+    .cloud-static;
+    background-image: url(/img/clouds/lowcloud2.svg);
+    top: 40%;
+    opacity: .8;
+    z-index: 3000;
+    width: 10%;
+    height: 10%;
   }
 
 
