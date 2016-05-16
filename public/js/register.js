@@ -99,7 +99,7 @@ $('document').ready(function () {
             },
             hardware: {
                 required: false,
-                maxlength: 1000 
+                maxlength: 1000     
             }
         },
         messages: {
