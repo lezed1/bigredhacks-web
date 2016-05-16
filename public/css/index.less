@@ -689,41 +689,6 @@ footer p {
 }
 
 
-.fishGeneric {
-  background-size:contain;
-  background-repeat: no-repeat;
-  height: 40px;
-  width: 60px;
-  position: absolute;
-  z-index: -10;
-}
-
-
-.redfish {
-  .fishGeneric;
-  background-image: url(/img/fishred.svg);
-}
-
-.bluefish {
-  .fishGeneric;
-  background-image: url(/img/fishblue.svg);
-}
-
-.orangefish {
-  .fishGeneric;
-  background-image: url(/img/fishorange.svg);
-}
-
-.yellowfish {
-  .fishGeneric;
-  background-image: url(/img/fishyellow.svg);
-}
-
-.greenfish {
-  .fishGeneric;
-  background-image: url(/img/fishgreen.svg);
-}
-
 
 .raindrop {
   position: absolute;
@@ -824,7 +789,7 @@ footer p {
     .noselect;
     position: absolute;
     top: 20%;
-    left: ~"calc(~50% - (45px))";
+    left: calc(~"50% - 62.5px");
     border-radius: 50%;
     width: 125px;
     height: 125px;
@@ -1032,4 +997,41 @@ footer p {
     top: 97%;
     left: 2%;
   }
+
+
+  .fishGeneric {
+    background-size:contain;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 60px;
+    position: absolute;
+    z-index: -10;
+  }
+
+
+  .redfish {
+    .fishGeneric;
+    background-image: url(/img/fishred.svg);
+  }
+
+  .bluefish {
+    .fishGeneric;
+    background-image: url(/img/fishblue.svg);
+  }
+
+  .orangefish {
+    .fishGeneric;
+    background-image: url(/img/fishorange.svg);
+  }
+
+  .yellowfish {
+    .fishGeneric;
+    background-image: url(/img/fishyellow.svg);
+  }
+
+  .greenfish {
+    .fishGeneric;
+    background-image: url(/img/fishgreen.svg);
+  }
+
 }

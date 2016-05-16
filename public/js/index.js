@@ -95,28 +95,53 @@ function pad(num, size) {
 $(window).trigger('resize'); })(jQuery);
 
 function generateRainDrops($) {
-    // const barHeight = $('.top-nav-collapse').height();
-    const introHeight = $('#intro').height() + 0;
+    const barHeight = $('.top-nav-collapse').height();
+    const introHeight = $('.transparent').height() + 0;
     const aboutHeight = $('#about').height() + introHeight;
-    const sustainableHeight = $('#sustainable').height() + aboutHeight;
+    const sustainableHeight = $('#sustainable').height() + introHeight;
     const whaleHeight = $('#whaleDiv').height() + sustainableHeight;
     const faqHeight = $('#faq').height() + whaleHeight;
     const sponsorHeight = $('#sponsors').height() + faqHeight;
     const footerHeight = $('footer').height() + sponsorHeight;
+    const docHeight =  $(document).height();
 
     //  .raindrop(style="left:20%;" data-top="top:100%; opacity:!1" data--200-bottom-top="top:-10%; opacity:!1;" data--130-bottom-top="top:-10%; opacity:!0;")
     var height = 65;
     var $div = $("<div>", {class: "raindrop"})
-        .offset({left: 50})
-        .attr("data-0", "top:" + (aboutHeight) + "px; opacity:0;")
-        .attr("data-170-top", "opacity:0;")
-        .attr("data-140-top", "opacity:1;")
-        .attr("data-" + (aboutHeight-65), "top:" + (aboutHeight + height + 50) + "px; background:rgb(255,255,255);")
-        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 100) + "px; background:rgb(212,239,253);")
-        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255);")
+        .offset({left: 290})
+        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0;")
+        .attr("data-20", "opacity:0;")
+        .attr("data-" + introHeight * .7, "opacity:0;")
+        .attr("data-" + introHeight * .8, "top:" + (introHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 65px;")
+        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 50) + "px; background:rgb(212,239,253);")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 120px;")
         .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 1;")
-        .attr("data-" + footerHeight, "top:"+ (footerHeight + height + 100) + "px; background:rgb(255,255,255); opacity: 0;");
+        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0; height: 200px;");
         $("#intro").append($div);
+
+    var $div2 = $("<div>", {class: "raindrop"})
+        .offset({left: 200})
+        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0;")
+        .attr("data-20", "opacity:0;")
+        .attr("data-" + introHeight * .7, "opacity:0;")
+        .attr("data-" + introHeight * .8, "top:" + (introHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 120px;")
+        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 350) + "px; background:rgb(212,239,253);")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 40;")
+        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 160) + "px; background:rgb(212,239,253); opacity: 1;")
+        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0; height: 120px;");
+    $("#intro").append($div2);
+
+    var $div3 = $("<div>", {class: "raindrop"})
+        .offset({left: 160})
+        .attr("data-0", "top:" + (introHeight  + height ) + "px; opacity:0;")
+        .attr("data-20", "opacity:0;")
+        .attr("data-" + introHeight * .7, "opacity:0;")
+        .attr("data-" + introHeight * .8, "top:" + (introHeight + 70) + "px; background:rgb(212,239,253); opacity:1; height: 250;")
+        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 100) + "px; background:rgb(212,239,253);")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 100) + "px; background:rgb(255,255,255); height: 80px;")
+        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 400) + "px; background:rgb(212,239,253); opacity: 1; height: 120px;")
+        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0;");
+    $("#intro").append($div3);
 }
 
 // Clocktower timer
