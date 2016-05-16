@@ -102,7 +102,7 @@ ul.team-list {
     display: block;
     overflow-x: hidden;
     overflow-y: auto;
-    border-right: 1px solid #747474;
+    border-right: 1px solid @purple;
   }
 }
 
@@ -120,7 +120,7 @@ ul.team-list {
       border-bottom: @divider-size @bg-light solid;
       border-top: @divider-size @bg-light solid;
       &:hover {
-        background-color: lighten(@bg-dark, 20%);
+        background-color: darken(@sky-blue, 40%);
       }
       //&::before {
       //  content: "[ ";
@@ -139,7 +139,7 @@ ul.team-list {
 
     > a.active {
       &, &:hover, &:focus {
-        background-color: lighten(@bg-dark, 30%);
+        background-color: darken(@sky-blue, 60%);
         //background-color: #428bca;
       }
     }

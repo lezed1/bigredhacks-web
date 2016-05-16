@@ -121,7 +121,7 @@ function generateRainDrops($) {
 
     var $div2 = $("<div>", {class: "raindrop"})
         .offset({left: 200})
-        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0;")
+        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0; width: 3px;")
         .attr("data-20", "opacity:0;")
         .attr("data-" + introHeight * .7, "opacity:0;")
         .attr("data-" + introHeight * .8, "top:" + (introHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 120px;")
