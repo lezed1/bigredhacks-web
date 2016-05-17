@@ -1,6 +1,6 @@
 extends _global/_layout
 
-Generates full section header
+//-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
         //img.leaf(src="img/leaf-red.svg")
@@ -33,7 +33,6 @@ block append content
 
     //- Creates a message if content exists, where type:error|success
     mixin message(content, type)
-        -console.log(content)
         if content
             - var msg_class
             case type.toLowerCase()
@@ -83,14 +82,13 @@ block append content
                                 a.btn.btn-light-blue(href="/register/cornelluniversity") cornell register
                                 | &nbsp;&nbsp;&nbsp;
                                 a.btn.btn-light-blue.fixed-width(href="/login") login
-
+                //- section about
                 //+sectionHeading("Be a part of something big")
-                .container
+                .about#about.container
                     br
                     br
                     br
                     br
-                    //- about
                     .big-heading
                         h2 Be a part of something big 
 
@@ -341,5 +339,5 @@ block footer
     script(src="/js/vendor/jquery.scrollTo.js")
     script(src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js")
     script(src="/js/jquery.validate.options.js")
-    script(src="/js/skrollr.min.js")
+    script(src="/js/vendor/skrollr.min.js")
     script(src="/js/index.js")
