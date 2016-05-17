@@ -123,7 +123,7 @@ body {
     width: 85px;
     left: 0;
   }
-  .filepicker-components(@light-blue);
+  .filepicker-components(@neutral);
 }
 
 .filepicker-preview > div {
@@ -151,6 +151,7 @@ body {
   display: block;
   line-height: 22px;
   cursor: text;
+  .bootstrap-tagsinput-components(@neutral);
 
   input {
     border: none;
@@ -177,7 +178,7 @@ body {
       cursor:pointer;
       &:after{
         content: "x";
-        padding:0px 2px;
+        padding:0 2px;
       }
       &:hover {
         //box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -222,9 +223,6 @@ label {
 
 .form-group {
   .form-style(@neutral);
-  .bootstrap-tagsinput {
-    .bootstrap-tagsinput-components(@neutral);
-  }
   &.has-success {
     .form-style(@success);
     .bootstrap-tagsinput {
