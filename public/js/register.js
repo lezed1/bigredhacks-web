@@ -19,8 +19,8 @@ $('document').ready(function () {
 
     $.validator.addMethod("validMajor", function (val, elem) {
         var val = $('#major').val();
-	// TODO
-    }, 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed.');
+        return (engine3.get([val]).length != 0 || val.indexOf('Unlisted - ') == 0);
+    }, 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed or "Undecided" if you do not have one.');
 
     //valid linkedin url or optional
     $.validator.addMethod("linkedinURL", function (val, elem, params) {
@@ -80,7 +80,8 @@ $('document').ready(function () {
                 schoolNotCornell: true
             },
             major: {
-                required: true
+                required: true,
+                validMajor: [],
             },
             resume: {
                 required: true,
@@ -124,7 +125,7 @@ $('document').ready(function () {
             lastname: "Please enter your last name",
             phonenumber: "Please provide a valid phone number",
             resume: "Please upload a valid .pdf",
-            major: "Please enter your major. Enter undecided if you do not have one.",
+            major: 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed, or "Undecided" if you do not have one.',
             linkedin: "Please provide a valid LinkedIn url",
             hardware: "Please hit enter to add a hardware",
         }
