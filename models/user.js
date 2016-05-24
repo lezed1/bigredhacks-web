@@ -29,7 +29,6 @@ var userSchema = new mongoose.Schema({
     school: {
         id: {type: String, ref: "College", index: true},
         name: String,
-        highSchool: {type: String, required: true},
         year: {type: String, enum: en.user.year},
         major: String
     },

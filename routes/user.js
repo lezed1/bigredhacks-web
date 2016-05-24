@@ -141,7 +141,6 @@ module.exports = function (io) {
             if (req.body.password !== "") {
                 user.password = req.body.password;
             }
-            //console.log(req.body);
             user.phone = req.body.phonenumber;
             user.school.major = req.body.major;
             user.app.questions.q1 = req.body.q1;
