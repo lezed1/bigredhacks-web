@@ -96,52 +96,71 @@ $(window).trigger('resize'); })(jQuery);
 
 function generateRainDrops($) {
     const barHeight = $('.top-nav-collapse').height();
-    const introHeight = $('.transparent').height() + 0;
-    const aboutHeight = $('#about').height() + introHeight;
-    const sustainableHeight = $('#sustainable').height() + introHeight;
-    const whaleHeight = $('#whaleDiv').height() + sustainableHeight;
-    const faqHeight = $('#faq').height() + whaleHeight;
-    const sponsorHeight = $('#sponsors').height() + faqHeight;
-    const footerHeight = $('footer').height() + sponsorHeight;
+    const introHeight = $('.transparent').offset().top;
+    const sustainableHeight = $('#sustainable').offset().top;
+    const whaleHeight = $('#whaleDiv').offset().top;
+    const faqHeight = $('#faq').offset().top;
+    const sponsorHeight = $('#sponsors').offset().top;
+    const actualSponsorHeight = $('#sponsors').height() + sponsorHeight;
+    const footerHeight = $('footer').offset().top;
     const docHeight =  $(document).height();
+    const cloudHeight = $('.rainClouds').offset().top;
+
+    console.log(introHeight);
+
+    console.log(cloudHeight);
+
+    // Raincloud width: 25%
+    const cloudRight = $( window ).width() * .25;
+    const cloudRealHeight = $( window ).height() * .15;
+    const cloudBottom = cloudRealHeight + 65;
 
     //  .raindrop(style="left:20%;" data-top="top:100%; opacity:!1" data--200-bottom-top="top:-10%; opacity:!1;" data--130-bottom-top="top:-10%; opacity:!0;")
     var height = 65;
     var $div = $("<div>", {class: "raindrop"})
-        .offset({left: 290})
-        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0;")
-        .attr("data-20", "opacity:0;")
-        .attr("data-" + introHeight * .7, "opacity:0;")
-        .attr("data-" + introHeight * .8, "top:" + (introHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 65px;")
-        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 50) + "px; background:rgb(212,239,253);")
-        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 120px;")
-        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 1;")
-        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0; height: 200px;");
+        .offset({left: 9 * cloudRight / 13})
+        .attr("data-0", "top:" + (cloudHeight + cloudBottom) + "px; opacity:0;")
+        .attr("data-" + cloudHeight, "top: " + (cloudHeight + cloudRealHeight + cloudRealHeight/3) +"px; opacity:0;")
+        .attr("data-" + sustainableHeight, "top:" + (sustainableHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 65px;")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 125px; width: 9px;")
+        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 0; width: 15px;");
         $("#intro").append($div);
 
     var $div2 = $("<div>", {class: "raindrop"})
-        .offset({left: 200})
-        .attr("data-0", "top:" + (introHeight  + height) + "px; opacity:0; width: 3px;")
-        .attr("data-20", "opacity:0;")
-        .attr("data-" + introHeight * .7, "opacity:0;")
-        .attr("data-" + introHeight * .8, "top:" + (introHeight  + 70) + "px; background:rgb(212,239,253); opacity:1; height: 120px;")
-        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 350) + "px; background:rgb(212,239,253);")
-        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 40;")
-        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 160) + "px; background:rgb(212,239,253); opacity: 1;")
-        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0; height: 120px;");
+        .offset({left: 8*cloudRight / 13})
+        .attr("data-0", "top:" + (cloudHeight + cloudBottom) + "px; opacity:0;")
+        .attr("data-" + cloudHeight, "top: " + (cloudHeight + cloudRealHeight + cloudRealHeight/2) +"px; opacity:0;")
+        .attr("data-" + sustainableHeight, "top:" + (sustainableHeight  + 140) + "px; background:rgb(212,239,253); opacity:1; height: 120px;")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 100px; width: 9px;")
+        .attr("data-" + (sponsorHeight - 25), "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 0; width: 15px;");
     $("#intro").append($div2);
 
     var $div3 = $("<div>", {class: "raindrop"})
-        .offset({left: 160})
-        .attr("data-0", "top:" + (introHeight  + height ) + "px; opacity:0;")
-        .attr("data-20", "opacity:0;")
-        .attr("data-" + introHeight * .7, "opacity:0;")
-        .attr("data-" + introHeight * .8, "top:" + (introHeight + 70) + "px; background:rgb(212,239,253); opacity:1; height: 250;")
-        .attr("data-" + sustainableHeight, "top:"+ (sustainableHeight + height + 100) + "px; background:rgb(212,239,253);")
-        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 100) + "px; background:rgb(255,255,255); height: 80px;")
-        .attr("data-" + sponsorHeight, "top:"+ (sponsorHeight + height + 400) + "px; background:rgb(212,239,253); opacity: 1; height: 120px;")
-        .attr("data-" + (docHeight-700), "top:"+ docHeight + "px; background:rgb(255,255,255); opacity: 0;");
+        .offset({left: 7*cloudRight / 13})
+        .attr("data-0", "top:" + (cloudHeight + cloudBottom) + "px; opacity:0;")
+        .attr("data-" + cloudHeight, "top: " + (cloudHeight + cloudRealHeight + cloudRealHeight/5) +"px; opacity:0;")
+        .attr("data-" + sustainableHeight, "top:" + (sustainableHeight  + 150) + "px; background:rgb(212,239,253); opacity:1; height: 75px;")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500) + "px; background:rgb(255,255,255); height: 75px; width: 9px;")
+        .attr("data-" + (sponsorHeight - 50), "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 0; width: 15px;");
     $("#intro").append($div3);
+
+    var $div4 = $("<div>", {class: "raindrop"})
+        .offset({left: 6*cloudRight / 13})
+        .attr("data-0", "top:" + (cloudHeight + cloudBottom) + "px; opacity:0;")
+        .attr("data-" + cloudHeight, "top: " + (cloudHeight + cloudRealHeight + cloudRealHeight/6) +"px; opacity:0;")
+        .attr("data-" + sustainableHeight, "top:" + (sustainableHeight  + 75) + "px; background:rgb(212,239,253); opacity:1; height: 45px;")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500 ) + "px; background:rgb(255,255,255); height: 50px; width: 9px;")
+        .attr("data-" + (sponsorHeight - 75), "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 0; width: 15px;");
+    $("#intro").append($div4);
+
+    var $div5 = $("<div>", {class: "raindrop"})
+        .offset({left: 5*cloudRight / 13})
+        .attr("data-0", "top:" + (cloudHeight + cloudBottom) + "px; opacity:0;")
+        .attr("data-" + cloudHeight, "top: " + (cloudHeight + cloudRealHeight + cloudRealHeight/4) +"px; opacity:0;")
+        .attr("data-" + sustainableHeight, "top:" + (sustainableHeight  + 190) + "px; background:rgb(212,239,253); opacity:1; height: 135px;")
+        .attr("data-" + faqHeight, "top:"+ (faqHeight + height + 500 ) + "px; background:rgb(255,255,255); height: 25px; width: 9px;")
+        .attr("data-" + (sponsorHeight - 100), "top:"+ (sponsorHeight + height + 100) + "px; background:rgb(212,239,253); opacity: 0; width: 15px;");
+    $("#intro").append($div5);
 }
 
 // Clocktower timer
@@ -163,4 +182,10 @@ jQuery( document ).ready(function() {
         smoothScrolling: true,
         mobileCheck: function() {return false;}
     });
+});
+
+jQuery( window ).resize(function() {
+    // Raindrops won't match proportions. TODO: Realign drops
+    $('.raindrop').remove();
+
 });
