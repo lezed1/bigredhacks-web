@@ -27,6 +27,7 @@ var userSchema = new mongoose.Schema({
         anythingelse: String
     },
     school: {
+        highSchool: {type: String, enum: en.user.highSchool, required: true},
         id: {type: String, ref: "College", index: true},
         name: String,
         year: {type: String, enum: en.user.year},
