@@ -11,7 +11,8 @@ var engine3 = new Bloodhound({
                 return major;
             });
         }
-    }
+    },
+    limit: 3
 });
 
 engine3.initialize();
@@ -19,13 +20,13 @@ var ttadapt = engine3.ttAdapter();
 var $major = $('#major');
 
 //general typeahead
-$major.typeahead( {
-    hint: true,
-    highlight: true,
-    autoselect: false,
-    minLength: 1}, {
+$major.typeahead({
+        minLength: 1,
+    },
+    {
     displayKey: '',
-    source: ttadapt
+    source: ttadapt,
+    limit: 3
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
 });
 
