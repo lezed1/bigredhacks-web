@@ -130,7 +130,22 @@ $('document').ready(function () {
             hardware: "Please hit enter to add a hardware",
         }
     });
+
+    // Check if using IE
+    // http://stackoverflow.com/questions/19999388/check-if-user-is-using-ie-with-jquery
+    (function () {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer, return version number
+        {
+            alert("We have detected you are using Internet Explorer. While you can still register using Internet Explorer, it is " +
+                  "not officially supported. We recommend using Chrome or Firefox if you encounter any issues.");
+        }
+    })();
+
 });
+
 
 // Disable hitting enter to submit
 $('#registrationForm ').on('keyup keypress', function(e) {

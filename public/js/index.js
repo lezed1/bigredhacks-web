@@ -95,15 +95,10 @@ function pad(num, size) {
 $(window).trigger('resize'); })(jQuery);
 
 function generateRainDrops($) {
-    const barHeight = $('.top-nav-collapse').height();
     const introHeight = $('.transparent').offset().top;
     const sustainableHeight = $('#sustainable').offset().top;
-    const whaleHeight = $('#whaleDiv').offset().top;
     const faqHeight = $('#faq').offset().top;
     const sponsorHeight = $('#sponsors').offset().top;
-    const actualSponsorHeight = $('#sponsors').height() + sponsorHeight;
-    const footerHeight = $('footer').offset().top;
-    const docHeight =  $(document).height();
     const cloudHeight = $('.rainClouds').offset().top;
 
     console.log(introHeight);
@@ -174,8 +169,14 @@ function generateRainDrops($) {
 
 
 jQuery( document ).ready(function() {
-    generateRainDrops($);
-    
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (!(msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)))  // If not internet explorer, can generate rain
+    {
+        generateRainDrops($);
+    }
+
     skrollr.init({
         forceHeight: false,
         smoothScrollingDuration: 250,
