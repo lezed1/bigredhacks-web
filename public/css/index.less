@@ -892,79 +892,156 @@ footer p {
     height: 10%;
   }
 
-
-  .whale {
-    background-image :url(/img/whale.png);
-    background-size:contain;
-    background-repeat: no-repeat;
-    z-index: 500;
-    position: absolute;
-    height: 300px;
-    width: 700px;
-    top: -220px;
-    left: 35%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  // Whale
-  #whaleDiv {
-    position: relative;
-  }
-
-  .fullEye {
-    position: absolute;
-    height: 15px;
-    width: 30px;
-    border-radius: 70px 70px 0 0;
-    -moz-border-radius: 70px 70px 0 0;
-    -webkit-border-radius: 70px 70px 0 0;
-    background: white;
-    z-index: 999;
-  }
-
-  .eyeClose {
-    position: absolute;
-    height: 15px;
-    width: 30px;
-    border-radius: 60px 60px 0 0;
-    -moz-border-radius: 60px 60px 0 0;
-    -webkit-border-radius: 60px 60px 0 0;
-    background: #4A90E2;
-    z-index: 1000;
-  }
-
-  .lfullEye {
-    .fullEye;
-    left: 4%;
-    top: 50%;
-  }
-
-  .leyeClose {
-    .eyeClose;
-    left: 4%;
-    top: 53%;
-  }
-
-  .rfullEye {
-    .fullEye;
-    left: 15%;
-    top: 50%;
-  }
-
-  .reyeClose {
-    .eyeClose;
-    left: 15%;
-    top: 53%;
-  }
-
-  .whale:hover {
-    .reyeClose {
-      top: 51%;
+  @media (min-width: 1500px) {
+    .whale {
+      background-image: url(/img/whale.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: 500;
+      position: absolute;
+      height: 300px;
+      width: 700px;
+      top: -220px;
+      left: 35%;
+      margin-left: auto;
+      margin-right: auto;
     }
+
+    // Whale
+    #whaleDiv {
+      position: relative;
+    }
+
+    .fullEye {
+      position: absolute;
+      height: 15px;
+      width: 30px;
+      border-radius: 70px 70px 0 0;
+      -moz-border-radius: 70px 70px 0 0;
+      -webkit-border-radius: 70px 70px 0 0;
+      background: white;
+      z-index: 999;
+    }
+
+    .eyeClose {
+      position: absolute;
+      height: 15px;
+      width: 30px;
+      border-radius: 60px 60px 0 0;
+      -moz-border-radius: 60px 60px 0 0;
+      -webkit-border-radius: 60px 60px 0 0;
+      background: #4A90E2;
+      z-index: 1000;
+    }
+
+    .lfullEye {
+      .fullEye;
+      left: 4%;
+      top: 50%;
+    }
+
     .leyeClose {
-      top: 51%;
+      .eyeClose;
+      left: 4%;
+      top: 53%;
+    }
+
+    .rfullEye {
+      .fullEye;
+      left: 15%;
+      top: 50%;
+    }
+
+    .reyeClose {
+      .eyeClose;
+      left: 15%;
+      top: 53%;
+    }
+
+    .whale:hover {
+      .reyeClose {
+        top: 51%;
+      }
+      .leyeClose {
+        top: 51%;
+      }
     }
   }
+
+    .whale {
+      background-image: url(/img/whale.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: 500;
+      position: absolute;
+      height: 150px;
+      width: 350px;
+      top: -110px;
+      left: 35%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    // Whale
+    #whaleDiv {
+      position: relative;
+    }
+
+    .fullEye {
+      position: absolute;
+      height: 7px;
+      width: 14px;
+      border-radius: 70px 70px 0 0;
+      -moz-border-radius: 70px 70px 0 0;
+      -webkit-border-radius: 70px 70px 0 0;
+      background: white;
+      z-index: 999;
+    }
+
+    .eyeClose {
+      position: absolute;
+      height: 7px;
+      width: 14px;
+      border-radius: 60px 60px 0 0;
+      -moz-border-radius: 60px 60px 0 0;
+      -webkit-border-radius: 60px 60px 0 0;
+      background: #4A90E2;
+      z-index: 1000;
+    }
+
+    .lfullEye {
+      .fullEye;
+      left: 4%;
+      top: 50%;
+    }
+
+    .leyeClose {
+      .eyeClose;
+      left: 4%;
+      top: 53%;
+    }
+
+    .rfullEye {
+      .fullEye;
+      left: 15%;
+      top: 50%;
+    }
+
+    .reyeClose {
+      .eyeClose;
+      left: 15%;
+      top: 53%;
+    }
+
+    .whale:hover {
+      .reyeClose {
+        top: 51%;
+      }
+      .leyeClose {
+        top: 51%;
+      }
+    }
+
 
   .wave {
     background-size:contain;
