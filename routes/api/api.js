@@ -24,8 +24,12 @@ router.get('/hardware', function (req, res, next) {
 //todo prevent access when registration is completely closed
 router.get('/validEmail', function (req, res, next) {
     User.findOne({email: req.query.email}, function (err, user) {
-        if (err) console.err(err);
-        else res.send(!user);
+        if (err) {
+            res.send("Please enter a valid email.");
+        }
+        else {
+            res.send(!user);
+        }
     });
 });
 

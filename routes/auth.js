@@ -220,10 +220,12 @@ module.exports = function (io) {
                         else {
                             helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
                                 if (err) {
-                                    console.log(err);
+                                    // TODO: If this happens, the user wasn't added to the listserv. This is probably okay
+                                    // Since the email is probably fake anyway, but the user IS still registered.
+                                    // console.log(err);
                                 }
                                 else {
-                                    console.log(result);
+                                    // console.log(result);
                                 }
 
                                 //send email and redirect to home page
