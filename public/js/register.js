@@ -19,6 +19,10 @@ $('document').ready(function () {
 
     $.validator.addMethod("validMajor", function (val, elem) {
         var val = $('#major').val();
+        if (val.indexOf("cs") >=0) {
+            $('#major').val("Computer Science (CS)");
+            val = "Computer Science (CS)";
+        }
         return (engine3.get([val]).length != 0 || val.indexOf('Unlisted - ') == 0);
     }, 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed or "Undecided" if you do not have one.');
 
@@ -143,6 +147,7 @@ $('document').ready(function () {
                   "not officially supported. We recommend using Chrome or Firefox if you encounter any issues.");
         }
     })();
+
 
 });
 
