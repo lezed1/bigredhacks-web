@@ -217,11 +217,9 @@ section {
 
 .bluebox {
   background-color: @sky-blue;
-  margin-left: @landing-box-margin;
-  margin-right: @landing-box-margin;
+  margin-left: calc(~"25% - 150px");
+  margin-right: calc(~"25% - 150px");
   padding: 0 0 60px 0;
-  //margin-top: 0px;
-  //width: 75%;
     h2 {
     //padding-left: 18%;
     //width:75%;
@@ -267,7 +265,7 @@ section {
 
 .intro {
   width: 100%;
-  padding: 100px 0 80px 0;
+  padding: 200px 0 80px 0;
   //padding-top: 15%; //with announcement
   position: relative;
   background-color: @white;
@@ -296,24 +294,40 @@ section {
       width: 95px;
       display: inline-block;
       margin-right: -10px;
+      margin-bottom: 0;
+      vertical-align: bottom;
     }
 
     h2, h4, h3 {
       z-index: 600;
     }
 
-    h1 {
-      font-size: @main-header-size; //60px;
-      line-height: @main-header-size;
-      //font-weight: 700;
-      background-color: rgba(0, 0, 0, 0);
-      text-decoration: none;
-      //text-shadow: -2px 0 1px #000;
-      color: @picton;
-      font-family: 'Oval-Light', sans-serif;
-      text-transform: uppercase;
-      .noselect;
-      margin-bottom: 0;
+    .h1container {
+      position: relative;
+      height: 50px;
+      margin-left: calc(~"25% - 150px");
+      display: inline-block;
+      padding-bottom: 0;
+      top: -50px;
+      float: left;
+
+      .icon { top: -10px; }
+      h1 {
+        margin: 0;
+        padding: 0;
+        //position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-size: @main-header-size; //60px;
+        line-height: @main-header-size;
+        background-color: rgba(0, 0, 0, 0);
+        text-decoration: none;
+        color: @picton;
+        font-family: 'Oval-Light', sans-serif;
+        text-transform: uppercase;
+        .noselect;
+        vertical-align: text-bottom;
+      }
     }
 
     h3, h4 {
@@ -861,7 +875,7 @@ footer p {
     .leftClouds {
       .cloud-static;
       left: 0%;
-      top: 20%;
+      top: 28%;
     }
 
     .rightClouds {
