@@ -13,6 +13,7 @@ engine2.initialize();
 
 $('#hardware').tagsinput({
     typeaheadjs: {
+        minLength: 0,
         displayKey: 'name',
         valueKey: 'name',
         name: 'name',

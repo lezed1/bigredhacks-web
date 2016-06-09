@@ -26,7 +26,7 @@ $major.typeahead({
     {
     displayKey: '',
     source: ttadapt,
-    limit: 3
+    limit: 4
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
 });
 
