@@ -57,31 +57,32 @@ block append content
             .intro-contents
             .bluebox
                 .slogan
-                    .date
-                        br
-                        br
-                        br
-                        h4 Sept 16-18, 2016 @ Ithaca, NY
-                    h3 Cornell University
                     br
-
                     br
+                    br
+                    br
+                    .center-date
+                        .big-heading2
+                            h2 Sept 16-18, 2016 @ Ithaca, NY
+                            h2 Cornell University
+                            br
+                            br
 
-                    div
-                        if isUser
-                            case userRole
-                                when "admin": a.btn.btn-blue(href="/admin/dashboard") admin dashboard
-                                when "mentor": a.btn.btn-blue(href="/admin/dashboard") my dashboard
-                                default: a.btn.btn-blue(href="/user/dashboard") my dashboard
-                        else
-                            if middlehelp.isRegistrationOpen()
-                                button.btn.btn-blue.fixed-width(data-toggle="modal" data-target="#regModal") register
-                                | &nbsp;&nbsp;&nbsp;
-                                a.btn.btn-light-blue.fixed-width(href="/login") login
+                            if isUser
+                                case userRole
+                                    when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
+                                    when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
+                                    default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
                             else
-                                a.btn.btn-light-blue(href="/register/cornelluniversity") cornell register
-                                | &nbsp;&nbsp;&nbsp;
-                                a.btn.btn-light-blue.fixed-width(href="/login") login
+                                if middlehelp.isRegistrationOpen()
+                                    button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
+                                    | &nbsp;&nbsp;&nbsp;
+                                    a.btn.btn-blue(href="/login") login
+                                else
+                                    a.btn.btn-blue(href="/register/cornelluniversity") cornell register
+                                    | &nbsp;&nbsp;&nbsp;
+                                    a.btn.btn-blue(href="/login") login
+
                 //- section about
                 //+sectionHeading("Be a part of something big")
                 .about#about.container
@@ -103,7 +104,7 @@ block append content
                     br
                     br
 
-        .leftClouds(data-100="left:0%;" data-top="left:-30%;")
+        .leftClouds(data-100="left:-5%;" data-top="left:-30%;")
         .rightClouds(data-50="left:70%;" data-top="left:100%;")
         .rainClouds(data-0="left:-30%;" data-160-top="left:0%;")
 

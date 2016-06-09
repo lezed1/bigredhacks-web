@@ -2,7 +2,7 @@
 @import "_fontawesome-custom";
 @import "_index_effects";
 
-@main-header-size: 48pt;
+@main-header-size: 68pt;
 @body-line-height: 1.6em;
 @body-size: 16px;
 
@@ -129,6 +129,9 @@ a {
 
 .navbar-custom.top-nav-collapse .nav.navbar-nav {
   background-color: rgba(0, 0, 0, 0);
+  a {
+    font-size: 16px;
+  }
 }
 
 .navbar-custom ul.nav li a {
@@ -238,6 +241,21 @@ section {
   color: @jasonblue;
     font-size: 40px;
     text-transform: lowercase;
+    width:100%;
+}
+
+.center-date {
+  width: 70%;
+  left: 30%;
+}
+
+.big-heading2 h2{
+  //position: relative;
+  padding-left: 30%;
+  color: @jasonblue;
+  font-size: 40px;
+  text-transform: lowercase;
+  text-align: left;
 }
 
 .home-section {
@@ -290,8 +308,8 @@ section {
       background-size:contain;
       background-repeat: no-repeat;
       position: relative;
-      height: 75px;
-      width: 95px;
+      height: 100px;
+      width: 100px;
       display: inline-block;
       margin-right: -10px;
       margin-bottom: 0;
@@ -308,10 +326,10 @@ section {
       margin-left: calc(~"25% - 150px");
       display: inline-block;
       padding-bottom: 0;
-      top: -50px;
+      top: -75px;
       float: left;
 
-      .icon { top: -10px; }
+      .icon { top: -15px; }
       h1 {
         margin: 0;
         padding: 0;
@@ -330,11 +348,9 @@ section {
       }
     }
 
-    h3, h4 {
+    h2, h3, h4 {
       margin: 0 0 15px;
-      //text-shadow: -2.5px 2.5px 8px #000;
-      //text-align: right;
-
+      color: @picton;
     }
     .intro-contents {
       display: inline-block;
@@ -368,6 +384,13 @@ section {
     text-align: center;
   }
 }
+
+.buttondiv {
+  position: relative;
+  float: left;
+  margin-left: calc(~"25% - 50px");
+}
+
 
 .transparent {
   width: 100%;
@@ -415,7 +438,7 @@ section {
 
 
 .sustainable {
-  padding-top: 250px;
+  padding-top: 200px;
   padding-bottom: 250px;
   z-index: -2;
   position: relative;
@@ -439,21 +462,15 @@ section {
   opacity: 0.8;
 
   h2, dd, dt {
-    //padding-left: 0%;
     color: @off-white;
-    //padding-left: @content-padding-left;
-    //width: @content-width;
   }
   .container {
-  //  padding-left: 25%;
-   // width:75%;
     color: @off-white;
   }
   background: @ocean-blue;
   dt {
     font-size: 20px;
     padding-top: 10px;
-    //font-weight: bold;
   }
   dd{
     font-size: 16px;
@@ -514,9 +531,13 @@ footer p {
   }
   &.btn-blue {
     font-weight: @weight-bold;
+    border-radius: 10px;
+    width: 150px;
   }
   &.btn-light-blue {
     font-weight: @weight-bold;
+    border-radius: 10px;
+    width: 150px;
   }
   
   &.fixed-width {
@@ -562,6 +583,11 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    .big-heading2 h2{
+      font-size: 10px;
+    }
+
+
   .intro {
     .slogan {
       h2 {
@@ -636,80 +662,9 @@ footer p {
   opacity: .92;
 }
 
-/*
-.landing-icon {
-  font-size: 100px;
-  line-height: 102px;
-  color: darken(@cornflower, 0%);
-}
-
-.landing-container {
-  text-align: center;
-  padding-top: 100px;
-  margin-bottom: 100px;
-  text-transform: lowercase;
-}
-
-.landing-header {
-  text-align: center;
-  font-size: 48px;
-  color: @cornflower;
-}
-
-.landing-subheader {
-  text-align: center;
-  font-size: 16px;
-  color: @black;
-}*/
-
 .modal-footer#regFooter {
   text-align: center;
 }
-
-/*
-// hexagon art
-.hex-gen(@width: 100px, @colors) {
-  width: @width;
-  @height: ceil(@width*sqrt(3)/2);
-  height: @height;
-  position: absolute;
-  margin: 0 auto;
-  transform-origin: 0 0;
-  transform: translateX(@width/2) rotate(30deg);
-  .triangle{
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: @height/2 @width/4 0;
-    transform-origin: @width/4 @height/2 + 1;
-    z-index: -9999;
-    // Sass function to auto generate rotation
-    @counter: 1;
-    .loop (@i) when (@i <= 6){
-      &:nth-child(@{i}) {
-        @rot: @i * 60;
-        border-color: extract(@colors,((@i))) transparent;
-        transform: rotate(@rot*1deg);
-      }
-      .loop(@i + 1);
-    }
-    .loop(@counter);
-    //.loop2 (@i) when (@i <= 5){
-    // &:nth-child(@{i}) {
-    //     @rot: @i * 60;
-    //     transform-origin: @width/4 @height/2 + 0;
-    //     border-image: linear-gradient(#000000,#333333); // TODO: nicer borders
-    //     transform: rotate(@rot*1deg);
-    //   }
-    // .loop2(@i + 1);
-    //}
-    //@counter2: 0;
-    //.loop2(@counter2);
-  }
-}
-*/
-
 
 .raindrop {
   position: absolute;
@@ -753,16 +708,6 @@ footer p {
   max-width: 26%;
   margin: 0 3%;
 }
-
-//#a16z img {
-//  height: 70px;
-//  margin-top: -40px
-//}
-
-//#bloomberg img {
-//  padding-top: 20px;
-//  margin-top: -30px;
-//}
 
 .clocktowerland {
   position: relative;
