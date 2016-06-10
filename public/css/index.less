@@ -257,7 +257,7 @@ section {
 }
 
 .big-heading2 h2{
-  //position: relative;
+  position: relative;
   padding-left: 31%;
   padding-right: 0;
   margin-right: 0;
@@ -332,11 +332,11 @@ section {
     .h1container {
       position: relative;
       height: 50px;
-      margin-left: calc(~"25% - 150px");
+      //margin-left: calc(~"25% - 150px");
       display: inline-block;
       padding-bottom: 0;
-      top: -70px;
-      float: left;
+      //top: -70px;
+      //float: left;
 
       .icon { top: -15px; }
       h1 {
@@ -461,9 +461,11 @@ section {
   }
 }
 
+.preload01  { background: url(/img/whale_happy.svg) no-repeat -9999px -9999px; }
+
 .hillholder {
   position: relative;
-  z-index: 100;
+  z-index: 50;
 }
 
 .faq {
@@ -633,8 +635,6 @@ footer p {
     width: 100%;
   }
 
-  .big-heading2 {
-  }
 
   .buttons {
     padding-left: 0;
@@ -789,7 +789,7 @@ footer p {
 
   .clockTop {
     position: absolute;
-    z-index: 1;
+    z-index: 50;
     width: 0;
     height: 0;
     border-style: solid;
@@ -899,24 +899,69 @@ footer p {
     opacity: .8;
   }
 
+  .twocloud {
+    position: absolute;
+    top: 60%;
+    width: 100%;
+    height: 20%;
+    left: -4%;
+  }
+
+  .cloud6 {
+    .cloud-static;
+    background-image: url(/img/clouds/lowcloud5.svg);
+    top: 100%;
+    left: 5%;
+    z-index: 3000;
+    width: 30%;
+    height: 30%;
+  }
+
+  .cloud3 {
+    .cloud-static;
+    background-image: url(/img/clouds/highcloud6.svg);
+    top: 96%;
+    left: 66%;
+    height: 6%;
+  }
+
+  .cloud4 {
+    .cloud-static;
+    background-image: url(/img/clouds/lowcloud4.svg);
+    top: 70%;
+    z-index: 3000;
+    width: 60%;
+    height: 60%;
+  }
+
+  .cloud5 {
+    .cloud-static;
+    background-image: url(/img/clouds/lowcloud3.svg);
+    top: 70%;
+    left: 70%;
+    z-index: 3001;
+    width: 30%;
+    height: 30%;
+  }
+
   .driftCloud1 {
     .cloud-static;
     background-image: url(/img/clouds/lowcloud1.svg);
-    top: 40%;
+    top: 32%;
     opacity: .8;
     z-index: 3000;
-    width: 10%;
-    height: 10%;
+    width: 16%;
+    height: 16%;
   }
 
   .driftCloud2 {
     .cloud-static;
     background-image: url(/img/clouds/lowcloud2.svg);
-    top: 40%;
+    top: 32%;
     opacity: .8;
     z-index: 3000;
-    width: 10%;
-    height: 10%;
+    width: 16%;
+    height: 16%;
   }
 
   @media (min-width: 1500px) {

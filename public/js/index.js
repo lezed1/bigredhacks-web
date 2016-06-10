@@ -174,7 +174,7 @@ jQuery( document ).ready(function() {
 
     if (!(msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)))  // If not internet explorer, can generate rain
     {
-        generateRainDrops($);
+      //  generateRainDrops($);
     }
 
     skrollr.init({
