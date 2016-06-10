@@ -207,13 +207,13 @@ section {
   .bluebox {
     .container {
       position: relative;
-      left: -80px;
+      //left: -80px;
       width: 50%;
     }
   }
   .sustainable {
     .container {
-      width: 40%
+      width: 32.5%
     }
   }
 }
@@ -224,13 +224,9 @@ section {
   margin-right: calc(~"25% - 150px");
   padding: 0 0 60px 0;
     h2 {
-    //padding-left: 18%;
-    //width:75%;
     color: @sky-blue;
   }
   p{
-    //padding-left: 22%;
-    //width: 75%;
     color: @jasonblue;
   }
   h3,h4{
@@ -245,13 +241,26 @@ section {
 }
 
 .center-date {
-  width: 70%;
+  width: 80%;
   left: 30%;
+}
+
+.buttons{
+  //position: relative;
+  padding-left: 31%;
+  padding-right: 0;
+  margin-right: 0;
+  color: @jasonblue;
+  font-size: 40px;
+  text-transform: lowercase;
+  text-align: left;
 }
 
 .big-heading2 h2{
   //position: relative;
-  padding-left: 30%;
+  padding-left: 31%;
+  padding-right: 0;
+  margin-right: 0;
   color: @jasonblue;
   font-size: 40px;
   text-transform: lowercase;
@@ -326,7 +335,7 @@ section {
       margin-left: calc(~"25% - 150px");
       display: inline-block;
       padding-bottom: 0;
-      top: -75px;
+      top: -70px;
       float: left;
 
       .icon { top: -15px; }
@@ -438,13 +447,11 @@ section {
 
 
 .sustainable {
-  padding-top: 200px;
+  padding-top: 350px;
   padding-bottom: 250px;
   z-index: -2;
   position: relative;
   p, h2 {
-    //padding-left: @content-padding-left;
-    //width: @content-width;
     z-index: 50;
     color: #3c3c3c;
   }
@@ -583,22 +590,62 @@ footer p {
 }
 
 @media (max-width: 768px) {
-    .big-heading2 h2{
-      font-size: 10px;
-    }
 
+  .intro {
+    .intro-wrapper {
+      .h1container {
+        margin-left: 0;
+
+        .icon {
+          top: -19px;
+          height: 64px;
+          width: 64px;
+
+        }
+
+        h1 {
+          font-size: @main-header-size - 28pt;
+          line-height: @main-header-size;
+        }
+      }
+    }
+  }
 
   .intro {
     .slogan {
       h2 {
-        font-size: @main-header-size - 10pt;
+        font-size: @main-header-size - 50pt;
       }
     }
   }
-  
+
   .clockCircle p, .clockBody, .hill, .clockTop, .raindrop{
     visibility: hidden;
     display: none;
+  }
+
+  .center-date {
+    width: 100%;
+  }
+
+  .big-heading2 {
+  }
+
+  .buttons {
+    padding-left: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .btn {
+    &.btn-blue {
+      font-weight: @weight-bold;
+      width: 130px;
+    }
+    &.btn-light-blue {
+      font-weight: @weight-bold;
+      width: 130px;
+    }
   }
 
 }
@@ -624,6 +671,16 @@ footer p {
     padding-top: 0;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .big-heading2 h2{
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 0;
+    color: @jasonblue;
+    font-size: 5px;
+    text-transform: lowercase;
+    text-align: center;
   }
 
   section {
