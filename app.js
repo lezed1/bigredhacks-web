@@ -108,9 +108,11 @@ app.use('/', authRoute); //todo mount on separate route to allow use of noAuth w
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    // var err = new Error('Not Found');
+    // err.status = 404;
+    // next(err);
+    res.status(400);
+    res.render('404.jade', {title: '404: File Not Found'});
 });
 
 // error handlers
