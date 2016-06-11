@@ -334,8 +334,6 @@ module.exports = function (io) {
 
                 req.files = files;
                 var resume = files.resume[0];
-                //console.log(resume);
-                //console.log(resume.headers);
 
                 //todo reorder validations to be consistent with form
                 //application questions are removed

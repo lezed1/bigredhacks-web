@@ -123,6 +123,7 @@ helper.uploadFile = function uploadFile(file, options, callback) {
         ContentType: 'application/pdf'
     }, function (err, res) {
         if (err) {
+            console.error('Error uploading resume!');
             callback(err);
         }
         else {

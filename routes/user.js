@@ -125,9 +125,7 @@ module.exports = function (io) {
         req = validator.validate(req, [
             'passwordOptional', 'phonenumber', 'dietary', 'tshirt', 'yearDropdown', 'major', 'linkedin', 'q1', 'q2', 'anythingelse', 'hackathonsAttended'
         ]);
-        //console.log(req.validationErrors());
         var errors = req.validationErrors();
-        //console.log(errors);
         if (errors) {
             res.render('dashboard/edit_app', {
                 user: user,
@@ -249,14 +247,27 @@ module.exports = function (io) {
             helper.uploadFile(resume, options, function (err, file) {
                 if (err) {
                     console.log(err);
-                    req.flash('error', "File upload failed. :(");
+                    req.flash('error', "File upload failed.");
                 }
                 if (typeof file === "string") {
                     req.flash('error', file);
                 }
                 else {
                     req.flash('success', 'Resume successfully updated');
+
+                    // Actually update user's resume
+                    var user = req.user;
+                    console.log(user);
+                    if (user) {
+                        user.app.resume = file.filename; // TODO: We may need to validate before saving here
+                        user.save ( function (err, doc) {
+                           if (err) console.log(err);
+                        });
+                    } else {
+                        console.log('No user sent, can\'t update resume!');
+                    }
                 }
+
                 return res.redirect('/user/dashboard');
             })
         })
