@@ -42,7 +42,7 @@ var userSchema = new mongoose.Schema({
             q2: String,
             hardware: [String]
         },
-        hackathonsAttended: String,
+        hackathonsAttended: {type: String, enum: en.user.hackathonsAttended, required: true}
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},

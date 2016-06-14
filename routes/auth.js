@@ -239,9 +239,9 @@ module.exports = function (io) {
                                         "that we have received your application." + "</p><p>" +
                                         "You can log in to our website any time until the application deadline " +
                                         "to update your information or add team members." + "</p><p>" +
-                                        "If you haven't already, make sure to like us on Facebook and " +
-                                        "follow us on Twitter!" + "</p><p>" +
-                                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                                        "If you haven't already, make sure to like us on <a href='https://www.facebook.com/bigredhacks/' target='_blank'>Facebook</a> and " +
+                                        "follow us on <a href='https://twitter.com/bigredhacks'>Twitter</a>!" + "</p><p>" +
+                                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
 
                                     var config = {
                                         "subject": "BigRed//Hacks Registration Confirmation",
