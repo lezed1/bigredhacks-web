@@ -12,7 +12,18 @@ var engine3 = new Bloodhound({
             });
         }
     },
-    limit: 3
+    limit: 3,
+    sorter: function (a, b) {
+        if (a.indexOf('CS') > -1 && b.indexOf('CS' > -1)) {
+            return a.localeCompare(b);
+        } else if (b.indexOf('CS') > -1) {
+            return 1;
+        } else if (a.indexOf('CS') > -1) {
+            return -1;
+        } else {
+            return a.localeCompare(b);
+        }
+    }
 });
 
 engine3.initialize();
