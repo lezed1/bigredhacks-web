@@ -112,6 +112,35 @@ module.exports = function (io) {
         College.findOne({name: collegeName}, callback);
     }
 
+    /**
+     *
+     * @param req User submitted object from registration
+     * @returns {*} A validation object
+     */
+    function validateAll (req) {
+        //todo reorder validations to be consistent with form
+        return validator.validate(req, [
+            'email',
+            'password',
+            'firstname',
+            'lastname',
+            'phonenumber',
+            'major',
+            'genderDropdown',
+            'dietary',
+            'tshirt',
+            'linkedin',
+            'collegeid',
+            'q1',
+            'q2',
+            'anythingelse',
+            'hackathonsAttended',
+            'yearDropdown',
+            'hardware'
+        ]);
+
+    }
+
 
     /* POST register a new user */
     router.post('/register', middle.requireRegistrationOpen, function (req, res) {
@@ -127,24 +156,18 @@ module.exports = function (io) {
 
             req.files = files;
             var resume = files.resume[0];
-            //console.log(resume);
-            //console.log(resume.headers);
 
-            //todo reorder validations to be consistent with form
-            req = validator.validate(req, [
-                'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'hackathonsAttended', 'yearDropdown'
-            ]);
 
+            req = validateAll(req);
 
             var errors = req.validationErrors();
-            //console.log(errors);
             if (errors) {
                 var errorParams = errors.map(function (x) {
                     return x.param;
                 });
                 req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
                 console.log(errors);
-                req.flash('error', 'The following errors ocurred:');
+                req.flash('error', 'The following errors occurred:');
                 res.render('register_general', {
                     title: 'Register',
                     errors: errors,
@@ -201,7 +224,7 @@ module.exports = function (io) {
                         role: "user"
                     });
 
-                    //set user as admin if designated in config for easy setup
+                    // Set user as admin if designated in config for easy setup
                     if (newUser.email === config.admin.email) {
                         newUser.role = "admin";
                     }
@@ -336,13 +359,10 @@ module.exports = function (io) {
 
                 //todo reorder validations to be consistent with form
                 //application questions are removed
-                req = validator.validate(req, [
-                    'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'anythingelse', 'hackathonsAttended', 'yearDropdown'
-                ]);
+                req = validateAll(req);
 
 
                 var errors = req.validationErrors();
-                //console.log(errors);
                 if (errors) {
                     var errorParams = errors.map(function (x) {
                         return x.param;

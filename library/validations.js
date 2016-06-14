@@ -8,7 +8,7 @@
 var validator = function () {
     var validators = {
         email: function (req) {
-            req.assert('email', 'Email address is not valid.').isEmail();
+            req.assert('email', 'Email address is not valid.').isEmail().len(1,500);
         },
         password: function (req) {
             req.assert('password', "Password is not valid. 6 to 25 characters required.").len(6, 25);
@@ -17,10 +17,10 @@ var validator = function () {
             req.assert('password', "Password is not valid. 6 to 25 characters required.").optionalOrLen(6, 25);
         },
         firstname: function (req) {
-            req.assert('firstname', 'First name is required.').notEmpty();
+            req.assert('firstname', 'First name is required.').notEmpty().len(1,40);
         },
         lastname: function (req) {
-            req.assert('lastname', 'Last name is required.').notEmpty();
+            req.assert('lastname', 'Last name is required.').notEmpty().len(1,40);;
         },
         phonenumber: function (req) {
             req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
@@ -61,6 +61,9 @@ var validator = function () {
         },
         anythingelse: function(req) {
             req.assert('anythingelse', "Additional information must be less than 5000 characters.").optionalOrLen(0, 5000);
+        },
+        hardware: function(req) {
+            req.assert('hardware', "That's a bit too much hardware for us.").len(0,500);
         }
     };
 
@@ -75,7 +78,7 @@ var validator = function () {
 
         for (var i = 0; i < validations.length; i++) {
             if (!validators.hasOwnProperty(validations[i])) {
-                console.log("Error: validation", validations[i], "does not exist");
+                console.log("Error: validation ", validations[i], "does not exist");
                 continue;
             }
             validators[validations[i]](req);

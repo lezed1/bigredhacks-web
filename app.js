@@ -61,7 +61,7 @@ app.use(expressValidator({
         },
         optionalOrLen: function (value, min, max) {
             return !value || validator.isLength(value, min, max);
-        }
+        },
     }
 }));
 app.use(cookieParser());
