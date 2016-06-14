@@ -1,5 +1,5 @@
-var config = require("../config");
-var sendgrid = require("sendgrid")(config.setup.sendgrid_api_key);
+var global_config = require("../config");
+var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 
 /**
  * Asynchronously sends a transactional email
@@ -17,7 +17,7 @@ module.exports.sendEmail = function (body, config, callback) {
     email.setSubject(config.subject);
     email.setHtml(body);
     email.addFilter('templates', 'enable', 1);
-    email.addFilter('templates', 'template_id', '4f57dbf9-aafb-4c5c-9c51-cc1e6036b104');
+    email.addFilter('templates', 'template_id', global_config.sendgrid.sg_general);
 
     sendgrid.send(email, callback);
 };
