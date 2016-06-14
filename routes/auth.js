@@ -182,7 +182,6 @@ module.exports = function (io) {
                             anythingelse: req.body.anythingelse
                         },
                         school: {
-                            highSchool: req.body.highSchoolDropdown,
                             id: req.body.collegeid,
                             name: req.body.college,
                             year: req.body.yearDropdown,
@@ -250,7 +249,7 @@ module.exports = function (io) {
                                         "to": {
                                             "email": newUser.email,
                                             "name": newUser.name.first + " " + newUser.name.last,
-                                        },
+                                        }
                                     };
                                     email.sendEmail(email_body, config);
                                     res.redirect('/user/dashboard');
@@ -390,7 +389,6 @@ module.exports = function (io) {
                             },
                             school: {
                                 id: college._id,
-                                highSchool: req.body.highSchoolDropdown,
                                 name: college.display,
                                 year: req.body.yearDropdown,
                                 major: req.body.major

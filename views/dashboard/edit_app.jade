@@ -50,11 +50,6 @@ block append basic-information
 
 block append school
     .form-group
-        label(for='highSchoolDropdown') are you a high school student? *
-        select#highSchoolDropdown.form-control(name='highSchoolDropdown', readonly=true)
-            option(value='') select
-            +generateOptions(en.highSchool, {selected: (user.school.highSchool || "")})
-    .form-group
         label(for='college') full school name *
         br
         input#college.form-control.typeahead(type='text', name='college',value=user.school.name, readonly=true)

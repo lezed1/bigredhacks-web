@@ -1,15 +1,51 @@
 $('document').ready(function () {
 
+    $.CollegeTypeahead.enable();
+
     //File picker
     $(function () {
         $("input[type='file']").filepicker();
     });
 
+    var lastMajor = "";
+    var lastCollege = {id: "", name: ""};
+    $("#yearDropdown").on("change", function(e) {
+        const otherCollegeId = "x999999";
+        var selMajor = $("#major.typeahead");
+        var majorVal = selMajor.val();
+        if (majorVal != "Undecided") {
+            lastMajor = majorVal;
+        }
+
+        if ($("#collegeid").val() != otherCollegeId) {
+            lastCollege.id = $("#collegeid").val();
+            lastCollege.name = $("#college").val();
+        }
+
+       if ($(this).val() === "High School") {
+           $.CollegeTypeahead.disable();
+           //proper way to set value that works with typeahead
+           selMajor.typeahead("val","Undecided");
+           $("#collegeid").val(otherCollegeId);
+           $("#college").val("");
+
+       }
+        else {
+           $("#collegeid").val(lastCollege.id);
+           $("#college").val(lastCollege.name);
+           $.CollegeTypeahead.enable();
+           selMajor.typeahead("val",lastMajor);
+       }
+
+        //force revalidation only if selected major is not blank
+        if (selMajor.val() != "") {
+            selMajor.valid();
+        }
+    });
 
     /*
      * Validator
      */
-
     //check that two fields ae not simultaneously empty
     $.validator.addMethod("notEmpty", function (val, elem, params) {
         var f1 = $('#' + params[0]).val(),
@@ -19,13 +55,14 @@ $('document').ready(function () {
 
     $.validator.addMethod("validMajor", function (val, elem) {
         var val = $('#major').val();
-        if (val.indexOf("cs") >=0) {
+        if (val.toLowerCase().indexOf("cs") >= 0) {
             $('#major').val("Computer Science (CS)");
             val = "Computer Science (CS)";
         }
         return (engine3.get([val]).length != 0 || val.indexOf('Unlisted - ') == 0);
     }, 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed or "Undecided" if you do not have one.');
 
+    //high school given
     //valid linkedin url or optional
     $.validator.addMethod("linkedinURL", function (val, elem, params) {
         return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";
@@ -43,7 +80,7 @@ $('document').ready(function () {
         var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
         return (restrict.indexOf(val) == -1);
     }, notCornellText);
-    
+
     $('#registrationForm').validate({
         ignore: 'input:not([name])', //ignore unnamed input tags
         onfocusout: function (e, event) {
@@ -85,7 +122,7 @@ $('document').ready(function () {
             },
             major: {
                 required: true,
-                validMajor: [],
+                validMajor: []
             },
             resume: {
                 required: true,
@@ -109,7 +146,7 @@ $('document').ready(function () {
             },
             hardware: {
                 required: false,
-                maxlength: 1000     
+                maxlength: 1000
             }
         },
         messages: {
@@ -125,13 +162,16 @@ $('document').ready(function () {
                 minlength: "Your password must be at least 6 characters long",
                 equalTo: "Please enter the same password as above"
             },
+            highschool: {
+                required: "Please enter a high school"
+            },
             firstname: "Please enter your first name",
             lastname: "Please enter your last name",
             phonenumber: "Please provide a valid phone number",
             resume: "Please upload a valid .pdf",
             major: 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed, or "Undecided" if you do not have one.',
             linkedin: "Please provide a valid LinkedIn url",
-            hardware: "Please hit enter to add a hardware",
+            hardware: "Please hit enter to add a hardware"
         }
     });
 
@@ -144,19 +184,20 @@ $('document').ready(function () {
         if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer, return version number
         {
             alert("We have detected you are using Internet Explorer. While you can still register using Internet Explorer, it is " +
-                  "not officially supported. We recommend using Chrome or Firefox if you encounter any issues.");
+                "not officially supported. We recommend using Chrome or Firefox if you encounter any issues.");
         }
     })();
 
+    // Disable hitting enter to submit
+    $('#registrationForm ').on('keyup keypress', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
 });
 
 
-// Disable hitting enter to submit
-$('#registrationForm ').on('keyup keypress', function(e) {
-    var keyCode = e.keyCode || e.which;
-    if (keyCode === 13) {
-        e.preventDefault();
-        return false;
-    }
-});
+
