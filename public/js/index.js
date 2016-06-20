@@ -101,10 +101,6 @@ function generateRainDrops($) {
     const sponsorHeight = $('#sponsors').offset().top;
     const cloudHeight = $('.rainClouds').offset().top;
 
-    console.log(introHeight);
-
-    console.log(cloudHeight);
-
     // Raincloud width: 25%
     const cloudRight = $( window ).width() * .25;
     const cloudRealHeight = $( window ).height() * .15;
@@ -162,7 +158,6 @@ function generateRainDrops($) {
 (function ($) {
     const SEP_SIXTEEN = 1473984000;
     $timer = $('.counter');
-    console.log(Date.now());
     daysLeft = Math.floor( Math.abs( Date.now() / 1000 - SEP_SIXTEEN ) / 86400) + 1;
     $timer.text(daysLeft + '');
 })(jQuery);
