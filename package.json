@@ -50,5 +50,12 @@
   },
   "devDependencies": {
     "should": "^8.4.0"
+  },
+  "apidoc": {
+	  "name": "BigRedHacks",
+	  "version": "1.0.0",
+	  "description": "Confidential API for BigRed//Hacks developers only. Do not distribute.",
+	  "title": "BRH | API",
+	  "url" : ""
   }
 }
