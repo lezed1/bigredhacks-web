@@ -6,13 +6,15 @@ var async = require('async');
 
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
+var enums = require('../models/enum.js');
+var config = require('../config.js');
+var queryBuilder = require('../util/search_query_builder.js');
+
 var User = require('../models/user.js');
 var Team = require('../models/team.js');
 var Bus = require('../models/bus.js');
 var Reimbursements = require('../models/reimbursements.js');
-var enums = require('../models/enum.js');
-var config = require('../config.js');
-var queryBuilder = require('../util/search_query_builder.js');
+var TimeAnnotation = require('../models/time_annotation.js');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = { role: "user" };
@@ -446,6 +448,44 @@ router.get('/reimbursements', function (req, res, next) {
  */
 router.get('/checkin', function(req, res, next) {
     res.render('admin/checkin');
+});
+
+/**
+ * @api {GET} /admin/stats Stats page.
+ * @apiName Stats
+ * @apiGroup AdminAuth
+ */
+router.get('/stats', function (req, res, next) {
+    async.parallel([
+        function(callback) {
+            TimeAnnotation.find({}, function (err, ann) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    callback(null, ann);
+                }
+            });
+        },
+        function(callback) {
+            const projection = 'created_at';
+            User.find({}, projection, function (err,users) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    callback(null, users);
+                }
+            });
+        }
+
+    ], function(err, results) {
+            res.render('admin/stats', {
+                annotations: results[0],
+                users: results[1],
+            });
+    }
+
+    );
+
 });
 
 /**

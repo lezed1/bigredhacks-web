@@ -9,6 +9,7 @@ var Bus = require('../../models/bus.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
+var TimeAnnotation = require('../../models/time_annotation.js');
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
@@ -33,6 +34,8 @@ router.patch('/user/:pubid/setRSVP', setRSVP);
 
 router.patch('/user/:pubid/checkin', checkInUser);
 router.get('/users/checkin', getUsersPlanningToAttend);
+
+router.post('/annotate', annotate);
 
 
 /**
@@ -406,6 +409,33 @@ function getUsersPlanningToAttend (req, res, next) {
         }
     })
 }
+
+/**
+ * @api {POST} /api/admin/annotate Add an annotation to the timeline
+ * @apiName Annotate
+ * @apiGroup Admin
+ *
+ * @apiParam {String} annotation The message for the annotation
+ * @apiParam {Date} time (Optional) time of annotation
+ *
+ */
+function annotate (req, res, next) {
+    var newAnnotation = new TimeAnnotation({
+        time: (req.body.time) ? req.body.time : Date.now(),
+        info: req.body.annotation
+    });
+
+    newAnnotation.save(function (err, doc) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(500);
+        }
+        else {
+            return res.redirect('/admin/stats');
+        }
+    });
+}
+
 
 /**
  * Converts a bool/string to a bool. Otherwise returns the original var.
