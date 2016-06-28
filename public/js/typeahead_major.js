@@ -7,7 +7,6 @@ function tokenizerWhitespaceIgnoreParen(d) {
     var tokenized = Bloodhound.tokenizers.whitespace(d);
     return tokenized.map(function (x) {
         return x.replace(/\(|\)|&|-/gi, '');
-
     });
 }
 
