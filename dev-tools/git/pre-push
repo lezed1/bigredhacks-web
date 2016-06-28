@@ -3,11 +3,9 @@
 # Taken from https://gist.github.com/pixelhandler/5718585
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
-PUSH_COMMAND=`ps -ocommand= -p $PPID`
 PROTECTED_BRANCHES="^(master|develop|rc)"
-FORCE_PUSH="force|delete|-f"
 
-if [[ "$BRANCH" =~ $PROTECTED_BRANCHES && "$PUSH_COMMAND" =~ $FORCE_PUSH]]; then
+if [[ "$BRANCH" =~ $PROTECTED_BRANCHES]]; then
   echo "Never push directly to \"$BRANCH\" (Prevented push to protected branch by pre-push hook)"
   echo "If you really want to do this, use --no-verify to bypass this pre-push hook."
   exit 1
