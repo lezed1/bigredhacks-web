@@ -5,7 +5,7 @@
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 PROTECTED_BRANCHES="^(master|develop|rc)"
 
-if [[ "$BRANCH" =~ $PROTECTED_BRANCHES]]; then
+if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]; then
   echo "Never push directly to \"$BRANCH\" (Prevented push to protected branch by pre-push hook)"
   echo "If you really want to do this, use --no-verify to bypass this pre-push hook."
   exit 1
