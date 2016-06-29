@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var mongoose = require('mongoose');
-var io = require('socket.io')();
+var app = require('../../app');
 
 // Mongoose Models
 var Colleges = require('../../models/college.js');
@@ -437,7 +437,8 @@ function postAnnouncement (req, res, next) {
         }
         else {
             // Broadcast announcement
-            io.emit('announcement', { message: req.body.message });
+            var io = require('../../app').io;
+            io.emit('announcement', req.body.message);
             return res.redirect('/admin/dashboard');
         }
     });

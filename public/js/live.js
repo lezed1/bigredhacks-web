@@ -1,12 +1,5 @@
-$(function() {
-    var socket = io();
+var socket = io();
 
-    
-
-    socket.on('announcement', function(data) {
-        console.log('Announcement received');
-        window.alert(data.message);
-    });
-
-    console.log('live init');
+socket.on('announcement', function(data) {
+    window.alert(data);
 });
