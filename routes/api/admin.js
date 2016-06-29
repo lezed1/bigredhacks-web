@@ -19,6 +19,8 @@ var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
 
+var Twitter = require('twitter');
+
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
 router.patch('/team/:teamid/setStatus', setTeamStatus);
@@ -424,6 +426,10 @@ function getUsersPlanningToAttend (req, res, next) {
  * @apiGroup Announcements
  *
  * @apiParam {String} message Body of the message
+ * @apiParam web post to web
+ * @apiParam mobile post to mobile
+ * @apiParam facebook post to facebook
+ * @apiParam twitter post to twitter
  */
 function postAnnouncement (req, res, next) {
     console.log(req.body);
@@ -437,8 +443,54 @@ function postAnnouncement (req, res, next) {
         }
         else {
             // Broadcast announcement
-            var io = require('../../app').io;
-            io.emit('announcement', req.body.message);
+            // Todo: make parallel
+            if (req.body.web) {
+                var io = require('../../app').io;
+                io.emit('announcement', req.body.message);
+            }
+
+            if (req.body.mobile) {
+
+            }
+
+            if (req.body.facebook) {
+
+            }
+
+            if (req.body.twitter) {
+                var OAuth = require('oauth');
+
+                var OAuth2 = OAuth.OAuth2;
+                var oauth2 = new OAuth2(config.twitter.tw_consumer_key,
+                    config.twitter.tw_consumer_secret,
+                    'https://api.twitter.com/',
+                    null,
+                    'oauth2/token',
+                    null);
+                oauth2.getOAuthAccessToken(
+                    '',
+                    {'grant_type': 'client_credentials'},
+                    function (e, access_token, refresh_token, results) {
+                        if (e) {
+                            console.log('Twitter OAuth Error: ' + e);
+                        } else {
+                            var twitter_client = new Twitter({
+                                consumer_key: config.twitter.tw_consumer_key,
+                                consumer_secret: config.twitter.tw_consumer_secret,
+                                access_token_key: config.twitter.tw_access_token,
+                                access_token_secret: config.twitter.tw_token_secret
+                            });
+                            twitter_client.post('statuses/update', {status: req.body.message}, function (error, tweet, response) {
+                                if (error) {
+                                    console.log('Tweeting error: ' + error);
+                                    console.log(tweet);
+                                    console.log(response);
+                                }
+                            });
+                        }
+                    });
+            }
+
             return res.redirect('/admin/dashboard');
         }
     });

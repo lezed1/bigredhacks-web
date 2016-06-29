@@ -27,5 +27,11 @@
   "sendgrid": {
     "_comment": "Sendgrid template ids",
     "sg_general": ""
-  }
+  },
+  "twitter": {
+    "tw_consumer_key": "",
+    "tw_consumer_secret": "",
+    "tw_access_token": "",
+    "tw_token_secret": ""
+}
 }

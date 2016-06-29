@@ -59,6 +59,19 @@ block append admin_content
                 br
                 .form-group
                     input#announcementInput.form-control(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
+                    br
+                    label Web
+                        input#web.form-control(type='checkbox', name='web', value = input.web || 'true', checked='true')
+                    br
+                    label Mobile
+                        input#mobile.form-control(type='checkbox', name='mobile', value = input.mobile || 'true', checked='true')
+                    br
+                    label Facebook
+                        input#facebook.form-control(type='checkbox', name='facebook', value = input.facebook || 'true', checked='true')
+                    br
+                    label Twitter
+                        input#twitter.form-control(type='checkbox', name='twitter', value = input.twitter || 'true', checked='true')
+                    br
                 .form-group
                     button#announcementMake.btn.btn-blue(type='submit') Announce
         #messages.tab-pane(role='tabpanel') ...
