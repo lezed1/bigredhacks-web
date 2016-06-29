@@ -3,7 +3,8 @@
 
 extends _layout-admin
 block prepend header
-    link(href="/css/c3.min.css", rel="stylesheet")
+    link(href="/css/vendor/c3.css", rel="stylesheet")
+
 block append admin_content
     if !input
         - input = {}
@@ -17,8 +18,8 @@ block append admin_content
             button#resume-save.btn.btn-blue(type='submit') Add
     div#annotationlist
 
-block footer
-    script(src='https://d3js.org/d3.v3.min.js')
+block append footer
+    script(src='//d3js.org/d3.v3.min.js')
     script(src='/js/vendor/c3.min.js')
     script(type='text/javascript').
         var users =!{JSON.stringify(users)}

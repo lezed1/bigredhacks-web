@@ -38,6 +38,7 @@ function objectAndDefault (data, defaults) {
     //remap values to key,value pairs and fill defaults
     return _.defaults(_.object(_.map(data, _.values)), defaults);
 }
+
 var aggregate = {
     applicants: {
         //runs simple aggregation for applicants over a match criteria
@@ -85,14 +86,7 @@ var aggregate = {
         },
         gender: function () {
             return function (done) {
-                User.aggregate(
-                    [
-                        {$match: USER_FILTER},
-                        {$group: {
-                            _id: "$gender",
-                            total: {$sum: 1}
-                        }}
-                    ]
+                User.count( {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}
                 , function (err, totalRes) {
                     if (err) {
                         done(err);
@@ -109,11 +103,6 @@ var aggregate = {
                                     done(err);
                                 } else {
 
-                                    totalRes = objectAndDefault(totalRes, {
-                                        male: 0,
-                                        female: 0
-                                    });
-
                                     acceptedRes = objectAndDefault(acceptedRes, {
                                         male: 0,
                                         female: 0
@@ -121,8 +110,8 @@ var aggregate = {
 
 
                                     const res = {
-                                        male: 100.0 * acceptedRes.male / totalRes.male,
-                                        female: 100.0 * acceptedRes.female / totalRes.female,
+                                        male: 100.0 * acceptedRes.male / totalRes,
+                                        female: 100.0 * acceptedRes.female / totalRes,
                                     };
 
                                     done(null, res);
