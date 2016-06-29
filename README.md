@@ -2,6 +2,14 @@
 ==================
 The greatest hackathon management app of all time.
  
+###Dev Environment Setup
+1. To prevent accidental pushing to protected branches (master, develop, rc), install the git pre-push hook by running `dev-tools/configure.sh` (cmd if windows) *from within the dev-tools directory*.
+        cd dev-tools
+		./configure.sh
+
+### Dev Guidelines
+* New features should always go in a new branch. To push, run `git push <branch> HEAD`.
+
 ###Setup Instructions
 1. Make sure node.js and mongoDB are installed, with the latter running.
 1. Fetch all dependencies by running:
