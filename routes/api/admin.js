@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var mongoose = require('mongoose');
+var io = require('socket.io')();
 
 // Mongoose Models
 var Colleges = require('../../models/college.js');
@@ -435,6 +436,8 @@ function postAnnouncement (req, res, next) {
             res.sendStatus(500);
         }
         else {
+            // Broadcast announcement
+            io.emit('announcement', { message: req.body.message });
             return res.redirect('/admin/dashboard');
         }
     });

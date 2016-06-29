@@ -1,0 +1,19 @@
+extends _layout-unsecured
+
+
+block header
+    link(href="/css/index.css", rel="stylesheet")
+    link(rel="stylesheet", href="/css/login.css")
+
+block append main_content
+    .container
+        .announcements
+            h1 Announcements
+                ul.announcementList
+        .schedule
+            h1 Schedule
+
+block footer
+    script(src="https://code.jquery.com/jquery-1.10.2.min.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/live.js")
