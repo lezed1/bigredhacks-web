@@ -31,8 +31,9 @@ block append admin_content
             h2 Attendees
             span Out of #{applicants.accepted} we accepted:
                 ul
-                    li x accepted their invitations
-                    li x declined their invitations
+                    li #{rsvps.true} accepted their invitations
+                    li #{rsvps.false} declined their invitations
+                    li #{rsvps.null} have not responded
             h2 Announce Decisions
                 form#announcement-form(method='post', action='/api/admin/rollingDecision')
                     .form-group
