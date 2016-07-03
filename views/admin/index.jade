@@ -33,6 +33,10 @@ block append admin_content
                 ul
                     li x accepted their invitations
                     li x declined their invitations
+            h2 Announce Decisions
+                form#announcement-form(method='post', action='/api/admin/rollingDecision')
+                    .form-group
+                        button#announcementMake.btn.btn-blue(type='submit') Announce
         #top-schools.tab-pane(role='tabpanel')
             table.table.table-striped
                 tr
