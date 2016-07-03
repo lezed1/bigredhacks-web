@@ -16,20 +16,20 @@ const acceptedBody = "<p>Congratulations, you have been accepted to BigRed//Hack
 
 const waitlistedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons " +
                         "happening this year, we're honored that we were on your list.</p>" +
-                        "<p>We had a record number of applications, and a very limited amount of space. While we" +
-                        "aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon" +
+                        "<p>We had a record number of applications, and a very limited amount of space. While we " +
+                        "aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon " +
                         "as one becomes available. Last year, we were able to accept a lot of hackers from our waitlist, so check" +
                         " your email often!</p>" +
-                        "<p>If you aren't interested in coming to BigRed//Hacks at all anymore, then please check" +
-                        " the box below. We'll be sad, but it'll be super helpful.</p>" +
+                        "<p>If you aren't interested in coming to BigRed//Hacks at all anymore, then please" +
+                        " <a href='https://www.bigredhacks.com/user/dashboard'>let us know</a> by logging into your dashboard.</p>" +
                         "<p>All the best for the future, and keep on hacking!</p>" +
                         "<p>BigRed//Hacks Team</p>";
 
 const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons happening this year," +
                         "we're honored that we were on your list.</p>" +
-                        "<p>Unfortunately, we aren't able to offer you a spot at BigRed//Hacks "+year+". We had a" +
+                        "<p>Unfortunately, we aren't able to offer you a spot at BigRed//Hacks "+year+". We had a " +
                         "record number of applications, and a very limited amount of space. But know that we still think you're" +
-                        "awesome, and would love for you to apply again for BigRed//Hacks "+(year+1)+"!</p>" +
+                        " awesome, and would love for you to apply again for BigRed//Hacks "+(year+1)+"!</p>" +
                         "<p>All the best for the future, and keep on hacking!</p>" +
                         "<p>BigRed//Hacks Team</p>";
 
