@@ -72,7 +72,7 @@ h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pub
 
         h4 Admin
         .form-inline
-            .form-group.np-enabledd
+            .form-group.np-enabled
                 label(for="setRSVP") Going:&nbsp;
                 select#setRSVP.form-control(name="setRSVP")
                     option(value="") select
@@ -80,8 +80,8 @@ h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pub
         .text-center
             | Update user application decision:
             form.decision-radio.user.np-enabled
-                +generateInlineRadio(enums.virtual.status.long, {
+                +generateInlineRadio(enums.virtual.status.longWithPending, {
                 checked: user.internal.status, //set default value
                 name: "individualstatus", //name attr of each input
-                label: enums.virtual.status.long //label of the input different from actual input
+                label: enums.virtual.status.longWithPending //label of the input different from actual input
                 })
