@@ -2,15 +2,37 @@ var global_config = require("../config");
 var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 
 const year = "2016";
+
 const acceptedSubject = "You've been accepted to BigRed//Hacks "+year+"!";
-const waitlistedSubject = "BigRed//Hacks " + year + " decision status";
-const rejectectSubject = "BigRed//Hacks " + year + " decision status";
+
+const waitlistedSubject = "BigRed//Hacks " + year + " Decision Status";
+
+const rejectectSubject = "BigRed//Hacks " + year + " Decision Status";
+
 const acceptedBody = "<p>Congratulations, you have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>"; // TODO: Write
-const waitlistedBody = "<p> You've been waitlisted...</p>"; // TODO: Write
-const rejectedBody = "<p>You have not been accepted.</p>"; // TODO: Write
+
+const waitlistedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons " +
+                        "happening this year, we're honored that we were on your list.</p>" +
+                        "<p>We had a record number of applications, and a very limited amount of space. While we" +
+                        "aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon" +
+                        "as one becomes available. Last year, we were able to accept a lot of hackers from our waitlist, so check" +
+                        " your email often!</p>" +
+                        "<p>If you aren't interested in coming to BigRed//Hacks at all anymore, then please check" +
+                        " the box below. We'll be sad, but it'll be super helpful.</p>" +
+                        "<p>All the best for the future, and keep on hacking!</p>" +
+                        "<p>BigRed//Hacks Team</p>";
+
+const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons happening this year," +
+                        "we're honored that we were on your list.</p>" +
+                        "<p>Unfortunately, we aren't able to offer you a spot at BigRed//Hacks "+year+". We had a" +
+                        "record number of applications, and a very limited amount of space. But know that we still think you're" +
+                        "awesome, and would love for you to apply again for BigRed//Hacks "+(year+1)+"!</p>" +
+                        "<p>All the best for the future, and keep on hacking!</p>" +
+                        "<p>BigRed//Hacks Team</p>";
+
 const waitlistedToAcceptedBody = "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
