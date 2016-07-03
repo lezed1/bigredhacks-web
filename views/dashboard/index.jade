@@ -3,7 +3,7 @@
 
 extends _layout-dashboard
 block vars
-    - status = user.internal.status.toLowerCase();
+    - status = user.internal.notificationStatus.toLowerCase();
     - cornellian = user.internal.cornell_applicant;
 
 block dashboard_content

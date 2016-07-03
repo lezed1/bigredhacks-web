@@ -194,6 +194,7 @@ function makeRollingAnnouncement(req, res, next) {
 
 /**
  * @api {GET} /api/admin/rollingDecision Get the count of people who would be affected by making a rolling announcement
+ * TODO: This may not be used.
  */
 function getRollingAnnouncement(req, res, next) {
     User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {

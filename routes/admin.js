@@ -200,6 +200,14 @@ router.get('/dashboard', function (req, res, next) {
                 });
                 return done(err, res);
             })
+        },
+        decisionAnnounces: function(done) {
+            User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+                if (err) console.log(err);
+                else {
+                    return done(err, resu);
+                }
+            });
         }
     }, function (err, result) {
         if (err) {
@@ -210,7 +218,8 @@ router.get('/dashboard', function (req, res, next) {
             title: 'Admin Dashboard',
             applicants: result.applicants,
             schools: result.schools,
-            rsvps: result.rsvps
+            rsvps: result.rsvps,
+            decisionAnnounces: result.decisionAnnounces
         })
     });
 
