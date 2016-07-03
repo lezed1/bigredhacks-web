@@ -94,24 +94,7 @@ module.exports = function (io) {
                 title: "Dashboard"
             };
 
-
-            if (req.user.internal.cornell_applicant) {
-                return res.render('dashboard/results_released/index_cornell', {
-                    user: req.user,
-                    resumeLink: results.resumeLink,
-                    title: "Dashboard"
-                })
-            }
-
-            if (middle.helper.isDayof()) {
-                return res.render('dashboard/index_dayof', render_data);
-            } else if (middle.helper.isResultsReleased()) {
-                return res.render('dashboard/results_released/index_general', render_data);
-            }
-            else {
-                return res.render('dashboard/index', render_data);
-            }
-
+            return res.render('dashboard/index', render_data);
         })
     });
 
@@ -398,7 +381,7 @@ module.exports = function (io) {
      * @apiName RSVP
      * @apiGroup User
      */
-    router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
+    router.post('/rsvp', function (req, res) {
         var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
         form.parse(req, function (err, fields, files) {
@@ -458,23 +441,6 @@ module.exports = function (io) {
                     })
                 }
                 else {
-                    /*
-                     //remove user from bus
-                     //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
-                     _.omit(bus, 'message');
-                     /*bus.save(function (err, res) {
-                     if (err) {
-                     console.log(err);
-                     }
-                     req.flash('success', 'We have received your response!');
-                     req.user.save(function (err) {
-                     if (err) {
-                     console.log(err);
-                     }
-                     return res.redirect('/user/dashboard');
-                     });
-                     }) */
-
                     req.flash('success', 'We have received your response!');
                     req.user.save(function (err) {
                         if (err) {
@@ -492,7 +458,7 @@ module.exports = function (io) {
      * @apiName Travel
      * @apiGroup User
      */
-    router.get('/travel', middle.requireResultsReleased, function (req, res, next) {
+    router.get('/travel', middle.requireAccepted, function (req, res, next) {
         res.render('dashboard/travel', {
             title: "Travel Information"
         });

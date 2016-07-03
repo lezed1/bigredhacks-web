@@ -102,6 +102,16 @@ middle.requireDayof = function (req, res, next) {
     }
 };
 
+middle.requireAccepted = function (req, res, next) {
+    if (req.user && req.user.internal.status === "Accepted") {
+        return next();
+    }
+    else {
+        req.flash('error', 'You can\'t see this.');
+        return res.redirect('/login');
+    }
+};
+
 middle.helper = {
     isRegistrationOpen: _isRegistrationOpen,
     isCornellRegistrationOpen: _isCornellRegistrationOpen,
