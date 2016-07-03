@@ -185,7 +185,7 @@ function makeRollingAnnouncement(req, res, next) {
                     res.sendStatus(500);
                 } else {
                     console.log('All transactional decision emails successfully sent!');
-                    req.flash('All transactional decision emails successfully sent!');
+                    req.flash('success', 'All transactional decision emails successfully sent!');
                     return res.redirect('/admin/dashboard');
                 }
             });
@@ -471,7 +471,7 @@ function postAnnouncement(req, res, next) {
             // Broadcast announcement
             var io = require('../../app').io;
             io.emit('announcement', req.body.message);
-            req.flash('Announcement made!');
+            req.flash('success','Announcement made!');
             return res.redirect('/admin/dashboard');
         }
     });

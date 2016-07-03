@@ -5,6 +5,9 @@ extends _layout-admin
 
 block append admin_content
     +contentHeading("Dashboard")
+
+    +showMessages(messages)
+
     if !input
         - input = {}
 
