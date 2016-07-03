@@ -1,7 +1,7 @@
 var global_config = require("../config");
 var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 
-const year = "2016";
+const year = 2016;
 
 const acceptedSubject = "You've been accepted to BigRed//Hacks "+year+"!";
 
