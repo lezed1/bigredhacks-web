@@ -168,6 +168,7 @@ function makeRollingAnnouncement(req, res, next) {
                         callback(err);
                     } else {
                         usr.internal.notificationStatus = usr.internal.status;
+                        usr.internal.lastNotifiedAt = Date.now();
                         usr.save(function(err) {
                             if (err) {
                                 console.log(err);
