@@ -8,7 +8,9 @@ block admin_content
     // Nav tabs
     ul.nav.nav-tabs(role='tablist')
         li.active(role='presentation')
-            a(href='#roles', aria-controls='roles', role='tab', data-toggle='tab') Schools
+            a(href='#schools', aria-controls='schools', role='tab', data-toggle='tab') Schools
+        li(role='presentation')
+            a(href='#user', aria-controls='user', role='tab', data-toggle='tab') User Override
     // Tab panes
     .tab-content
         #schools.tab-pane.active(role='tabpanel')
@@ -21,7 +23,7 @@ block admin_content
                         th School Name
                         th Transportation Mode
                         th Reimbursement Amount
-                        th(width='210px')
+                        th(width='220px')
                     for rem in reimbursements
                         tr.school(data-collegeid=rem.college.id)
                             td= rem.college.name
@@ -58,6 +60,18 @@ block admin_content
                     .form-group
                         button#btn-add-school.btn.btn-success(type='button', disabled='')
                             | Create
+        #user.tab-pane(role='tabpanel')
+            h2 User Override
+            p Use this page to manage reimbursement overrides for individual users.
+            #overrideresults.col-md-12
+                p#override-count.text-right #{reimbursements.length} results found.
+                table#user-overrides.table.table-striped
+                    tr
+                        th Name
+                        th School Name
+                        th School Amt
+                        th Override Amt
+                        th(width='210px')
 
 
 block append footer
