@@ -79,6 +79,17 @@ module.exports = function (io) {
             },
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
+            },
+            days: function(done) {
+                var notified = req.user.internal.lastNotifiedAt;
+
+                if (notified) {
+                    var daysElapsed = Math.ceil( ((Date.now() - notified) / (1000 * 60 * 60 * 24)) );
+                    var timeLeft = 14 + 1 - daysElapsed; // TODO: Set number of RSVP days to a global constant
+                    return done(null, timeLeft);
+                }
+
+                return done(null, null);
             }
         }, function (err, results) {
             if (err) {
@@ -91,6 +102,7 @@ module.exports = function (io) {
                 team: results.members,
                 bus: results.bus,
                 reimbursement: results.reimbursement,
+                days: results.days,
                 title: "Dashboard"
             };
 

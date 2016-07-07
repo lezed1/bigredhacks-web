@@ -5,6 +5,7 @@ extends _layout-dashboard
 block vars
     - status = user.internal.notificationStatus.toLowerCase();
     - cornellian = user.internal.cornell_applicant;
+    - days = days;
 
 block dashboard_content
     unless input
@@ -60,11 +61,19 @@ block dashboard_content
             |  taking place on September 18-20 at Cornell University. You'll be one of 400 hackers from universities
             |  all across the U.S. coming together to hack, build, and learn.
         if !user.internal.cornell_applicant
-            p.long-text
-                | Because the event is fast approaching, <b>we're asking that all attendees RSVP by September 1, 2016,</b>
-                |  or you risk losing your spot. RSVPing involves two steps: confirming your mode of transportation
-                |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
-                |  Major League Hacking's code of conduct.
+            if (user.internal.going == null)
+                if (days > 0)
+                    p <b>You have #{days} day(s) left to RSVP before you risk losing your spot.</b>
+                else
+                    p
+                        | You have not responded within the two week window we requested. We may change your application
+                        |  status to rejected at any moment to make room for another applicant, but you may still RSVP
+                        |  until we do that if you still wish to attend.
+                p.long-text
+                    | Because the event is fast approaching, <b>you'll need to RSVP as soon as possible,</b>
+                    |  or you risk losing your spot. RSVPing involves two steps: confirming your mode of transportation
+                    |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
+                    |  Major League Hacking's code of conduct.
         p.long-text
             | We'll be sending lots more information as we get closer to the event, so stay tuned!
         p.long-text
@@ -155,7 +164,6 @@ block dashboard_content
                                 |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
                     .form-group
                         button#rsvp.btn.btn-red(type='submit', name='rsvpsubmit') submit
-        else
             if user.internal.going
                 p You told us that you are going to BigRed//Hacks.
                 p
