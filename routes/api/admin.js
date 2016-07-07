@@ -36,7 +36,7 @@ router.delete('/reimbursements/school', schoolReimbursementsDelete);
 
 router.patch('/user/:pubid/setRSVP', setRSVP);
 
-router.patch('/user/:pubid/checkin', checkInUser);
+router.patch('/user/:pubid/checkin', middle.requireDayof, checkInUser);
 router.get('/users/checkin', getUsersPlanningToAttend);
 
 router.post('/annotate', annotate);
