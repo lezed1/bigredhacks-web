@@ -3,6 +3,11 @@
 
 extends _layout-admin
 
+block prepend header
+    // Including index is bulky, but it makes the typeahead style correctly.
+    link(href='/css/index.css', rel='stylesheet')
+    link(href='/css/registration.css', rel='stylesheet')
+
 block admin_content
     +contentHeading("Bus Information")
     if buses.length == 0
@@ -84,3 +89,5 @@ block admin_content
 block append footer
     script(src="/js/vendor/typeahead.bundle.min.js")
     script(src="/js/typeahead_college.js")
+    script.
+        _tt_college_enable()
