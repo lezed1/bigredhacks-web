@@ -456,7 +456,7 @@ function postAnnouncement (req, res, next) {
 
             if (req.body.facebook) {
                 graph.post("/feed", { message: req.body.message }, function(err, res) {
-                    if (err) console.log('ERROR: ' + err);
+                    if (err) console.log('ERROR posting to Facebook: ' + err);
                     console.log(res);
                 });
             }
