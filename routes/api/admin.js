@@ -20,6 +20,8 @@ var middle = require('../middleware');
 var email = require('../../util/email');
 
 var Twitter = require('twitter');
+var graph = require('fbgraph');
+graph.setAccessToken(config.fb.access_token);
 
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
@@ -443,18 +445,20 @@ function postAnnouncement (req, res, next) {
         }
         else {
             // Broadcast announcement
-            // Todo: make parallel
             if (req.body.web) {
                 var io = require('../../app').io;
                 io.emit('announcement', req.body.message);
             }
 
             if (req.body.mobile) {
-
+                // TODO: Waiting on mobile API to implement this
             }
 
             if (req.body.facebook) {
-
+                graph.post("/feed", { message: req.body.message }, function(err, res) {
+                    if (err) console.log('ERROR: ' + err);
+                    console.log(res);
+                });
             }
 
             if (req.body.twitter) {

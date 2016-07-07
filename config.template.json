@@ -33,5 +33,8 @@
     "tw_consumer_secret": "",
     "tw_access_token": "",
     "tw_token_secret": ""
-}
+  },
+  "fb": {
+    "access_token": ""
+  }
 }
