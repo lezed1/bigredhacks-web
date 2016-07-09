@@ -398,7 +398,7 @@ module.exports = function (io) {
      * @apiName RSVP
      * @apiGroup User
      */
-    router.post('/rsvp', function (req, res) {
+    router.post('/rsvp', middle.requireAccepted,function (req, res) {
         var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
         form.parse(req, function (err, fields, files) {
