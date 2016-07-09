@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
+var moment = require("moment");
 
 var enums = require('../models/enum.js');
 var helper = require('../util/routes_helper.js');
@@ -80,13 +81,17 @@ module.exports = function (io) {
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
             },
-            days: function(done) {
+            deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
+                const rsvpTime = moment.duration(config.admin.days_to_rsvp, 'days');
+                const mNotified = moment(notified).add(rsvpTime);
 
                 if (notified) {
-                    var daysElapsed = Math.ceil( ((Date.now() - notified) / (1000 * 60 * 60 * 24)) );
-                    var timeLeft = 14 + 1 - daysElapsed; // TODO: Set number of RSVP days to a global constant
-                    return done(null, timeLeft);
+                    return done(null, {
+                        active: !mNotified.isBefore(),
+                        message: mNotified.fromNow(true),
+                        interval: rsvpTime.humanize()
+                    });
                 }
 
                 return done(null, null);
@@ -102,7 +107,7 @@ module.exports = function (io) {
                 team: results.members,
                 bus: results.bus,
                 reimbursement: results.reimbursement,
-                days: results.days,
+                deadline: results.deadline,
                 title: "Dashboard"
             };
 

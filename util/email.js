@@ -1,7 +1,9 @@
 var global_config = require("../config");
 var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
+var moment = require("moment");
 
 const year = new Date().getFullYear();
+const rsvpTime = moment.duration(global_config.admin.days_to_rsvp, 'days');
 
 const acceptedSubject = "You've been accepted to BigRed//Hacks "+year+"!";
 
@@ -12,7 +14,7 @@ const rejectectSubject = "BigRed//Hacks " + year + " Decision Status";
 const acceptedBody = "<p>Congratulations, you have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>We're trying to make sure that everyone who wants to come has the opportunity, so please head over to " +
-    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>two weeks</b> if you're able to make it, " +
+    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>" + rsvpTime.humanize() +"</b> if you're able to make it, " +
     "or we will have to offer your spot to someone else.</p>" +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>"; // TODO: Write
@@ -39,7 +41,7 @@ const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many 
 const waitlistedToAcceptedBody = "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>We're trying to make sure that everyone who wants to come has the opportunity, so please head over to " +
-    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>two weeks</b> if you're able to make it, " +
+    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>" + rsvpTime.humanize() + "</b> if you're able to make it, " +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>";
 

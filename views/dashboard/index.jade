@@ -5,7 +5,6 @@ extends _layout-dashboard
 block vars
     - status = user.internal.notificationStatus.toLowerCase();
     - cornellian = user.internal.cornell_applicant;
-    - days = days;
 
 block dashboard_content
     unless input
@@ -62,11 +61,11 @@ block dashboard_content
             |  all across the U.S. coming together to hack, build, and learn.
         if !user.internal.cornell_applicant
             if (user.internal.going == null)
-                if (days > 0)
-                    p <b>You have #{days} day(s) left to RSVP before you risk losing your spot.</b>
+                if (deadline.active)
+                    p <b>You have #{deadline.message} left to RSVP before you risk losing your spot.</b>
                 else
                     p
-                        | You have not responded within the two week window we requested. We may change your application
+                        | You have not responded within the window of #{deadline.interval} we requested. We may change your application
                         |  status to rejected at any moment to make room for another applicant, but you may still RSVP
                         |  until we do that if you still wish to attend.
                 p.long-text
