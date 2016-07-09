@@ -84,9 +84,10 @@ module.exports = function (io) {
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
                 const rsvpTime = moment.duration(config.admin.days_to_rsvp, 'days');
-                const mNotified = moment(notified).add(rsvpTime);
+
 
                 if (notified) {
+                    const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {
                         active: !mNotified.isBefore(),
                         message: mNotified.fromNow(true),
