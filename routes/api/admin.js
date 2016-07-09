@@ -149,30 +149,30 @@ function setUserRole(req, res, next) {
  * @api {PATCH} /api/admin/rollingDecision Publish decisions to all who have had one made and not received it yet.
  */
 function makeRollingAnnouncement(req, res, next) {
-    User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+    User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
-            async.each(resu, function(usr, callback) {
+            async.each(recipient, function(recip, callback) {
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
                     "to": {
-                        "email": usr.email,
-                        "name": usr.name.first + " " + usr.name.last
+                        "email": recip.email,
+                        "name": recip.name.first + " " + recip.name.last
                     }
                 };
 
-                email.sendDecisionEmail(usr.name.first, usr.internal.notificationStatus, usr.internal.status, config, function(err) {
+                email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
                     if (err)  {
                         console.log(err);
                         callback(err);
                     } else {
-                        usr.internal.notificationStatus = usr.internal.status;
-                        usr.internal.lastNotifiedAt = Date.now();
-                        usr.save(function(err) {
+                        recip.internal.notificationStatus = recip.internal.status;
+                        recip.internal.lastNotifiedAt = Date.now();
+                        recip.save(function(err) {
                             if (err) {
                                 console.log(err);
-                                console.log("ERROR: User with email " + usr.email + " has been informed of their new status, but that was not saved in the database!");
+                                console.log("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
                             } else {
                                 console.log('sent and saved');
                             }
