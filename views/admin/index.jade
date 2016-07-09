@@ -80,6 +80,6 @@ block append admin_content
                         | &nbsp;Twitter
                     br
                 .form-group
-                    button#announcementMake.btn.btn-blue(type='submit') Announce
+                    button#announcementMake.btn.btn-blue(onclick="return confirm('Are you sure?')") Announce
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
