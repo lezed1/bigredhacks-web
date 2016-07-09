@@ -28,9 +28,9 @@ block dashboard_content
             | Thank you for applying for BigRed//Hacks! With so many hackathons happening this year,
             |  we're honored that we were on your list.
         p.long-text
-            | Unfortunately, we aren't able to offer you a spot at BigRed//Hacks 2016. We had a
+            | Unfortunately, we aren't able to offer you a spot at BigRed//Hacks #{new Date().getFullYear()}. We had a
             |  record number of applications, and a very limited amount of space. But know that we still think you're
-            |  awesome, and would love for you to apply again for BigRed//Hacks 2017!
+            |  awesome, and would love for you to apply again for BigRed//Hacks #{new Date().getFullYear() + 1}!
         p.long-text All the best for the future, and keep on hacking!
         p BigRed//Hacks Team
 
@@ -56,7 +56,7 @@ block dashboard_content
 
     else if status == "accepted"
         p.long-text
-            | Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks 2016,
+            | Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks #{new Date().getFullYear()},
             |  taking place on September 18-20 at Cornell University. You'll be one of 400 hackers from universities
             |  all across the U.S. coming together to hack, build, and learn.
         if !user.internal.cornell_applicant
@@ -77,7 +77,7 @@ block dashboard_content
             | We'll be sending lots more information as we get closer to the event, so stay tuned!
         p.long-text
             | Please join our
-            a(href='https://www.facebook.com/groups/397005627168999/') BigRed//Hacks 2016 Hackers
+            a(href='https://www.facebook.com/groups/397005627168999/') BigRed//Hacks #{new Date().getFullYear()} Hackers
             |  Facebook group to find partners and plan travel with other students.
         p.long-text Looking forward to seeing you in Ithaca,
         p BigRed//Hacks Team

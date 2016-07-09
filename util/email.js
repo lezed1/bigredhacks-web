@@ -17,7 +17,7 @@ const acceptedBody = "<p>Congratulations, you have been accepted to BigRed//Hack
     "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>" + rsvpTime.humanize() +"</b> if you're able to make it, " +
     "or we will have to offer your spot to someone else.</p>" +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
-    "<p>BigRed//Hacks Team</p>"; // TODO: Write
+    "<p>BigRed//Hacks Team</p>";
 
 const waitlistedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons " +
                         "happening this year, we're honored that we were on your list.</p>" +
