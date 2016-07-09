@@ -541,3 +541,9 @@ $('document').ready(function () {
         return baseURL + "?" + newAdditionalURL + rows_txt;
     };
 });
+
+try {
+    _tt_college_enable();
+} catch (e){
+    // Some pages should not need this, so this error is expected.
+}

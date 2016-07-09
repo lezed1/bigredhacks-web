@@ -86,8 +86,6 @@ block admin_content
                     input#buscapacity.form-control(type='text', name='buscapacity', value='', placeholder='Enter Capacity Number')
                 #createbus
                     input.btn.btn-primary(type='submit', value='create bus', name='createbus')
-block append footer
+block prepend footer
     script(src="/js/vendor/typeahead.bundle.min.js")
     script(src="/js/typeahead_college.js")
-    script.
-        _tt_college_enable()
