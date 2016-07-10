@@ -147,7 +147,7 @@ router.get('/dashboard', function (req, res, next) {
         schools: function (done) {
             User.aggregate([
                 {$match: USER_FILTER},
-                {$group: {_id: {name: "$school.name", status: "$internal.status"}, total: {$sum: 1}}},
+                {$group: {_id: {name: "$school.name", schoolid: "$school.id", status: "$internal.status"}, total: {$sum: 1}}},
                 {
                     $project: {
                         accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
@@ -172,6 +172,7 @@ router.get('/dashboard', function (req, res, next) {
                     $project: {
                         _id: 0,
                         name: "$_id.name",
+                        schoolid: "$_id.schoolid",
                         accepted: "$accepted",
                         waitlisted: "$waitlisted",
                         rejected: "$rejected",
