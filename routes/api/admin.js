@@ -435,9 +435,18 @@ function getUsersPlanningToAttend (req, res, next) {
  */
 function postAnnouncement (req, res, next) {
     console.log(req.body);
+    const message = req.body.message;
+
     var newAnnouncement = new Announcement({
-        message: req.body.message
+        message: message
     });
+
+    if (message.length > 140 && req.body.twitter) {
+        console.log('Did not post: character length exceeded 140 and twitter was enabled');
+        req.flash('error', 'Character length exceeds 140 and you wanted to post to Twitter.');
+        return res.redirect('/admin/dashboard');
+    }
+
     newAnnouncement.save(function (err, doc) {
         if (err) {
             console.log(err);
