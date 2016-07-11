@@ -1,8 +1,8 @@
 
-.PHONY: apidoc config clean run
+.PHONY: apigen config clean run
 
 config:
-	cp config.template.json config.json
+	cp -n config.template.json config.json
 	cp dev-tools/git/pre-push .git/hooks/pre-push
 	npm install
 
