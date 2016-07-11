@@ -18,6 +18,7 @@ var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
+var io = require('../../app').io;
 
 var Twitter = require('twitter');
 var graph = require('fbgraph');
@@ -455,7 +456,6 @@ function postAnnouncement (req, res, next) {
         else {
             // Broadcast announcement
             if (req.body.web) {
-                var io = require('../../app').io;
                 io.emit('announcement', req.body.message);
             }
 
