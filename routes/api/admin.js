@@ -195,20 +195,6 @@ function makeRollingAnnouncement(req, res, next) {
 }
 
 /**
- * @api {GET} /api/admin/rollingDecision Get the count of people who would be affected by making a rolling announcement
- * TODO: This may not be used.
- */
-function getRollingAnnouncement(req, res, next) {
-    User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
-        if (err) console.log(err);
-        else {
-            console.log(resu);
-            res.send(200, resu);
-        }
-    });
-}
-
-/**
  * @api {GET} /api/np Checks whether a user is in no-participation mode
  * @apiName CheckNP
  * @apiGroup Admin
