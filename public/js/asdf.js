@@ -41,19 +41,16 @@ setInterval(function() {
                     setTimeout( dd, 2000);
                     setTimeout( dd, 3000);
                     setTimeout( d, 5000);
-                    setTimeout( d, 7000);
-                    setTimeout( d, 8000);
+                    setTimeout( dd, 6000);
+                    setTimeout( dd, 8000);
+                    setTimeout( d, 9000);
                     setTimeout( dd, 10000);
                     setTimeout( dd, 11000);
-                    setTimeout( d, 12000);
-                    setTimeout( d, 14000);
+                    setTimeout( d, 13000);
                     setTimeout( d, 15000);
-                    setTimeout( d, 16000);
+                    setTimeout( dd, 16000);
                     setTimeout( d, 17000);
-                    setTimeout( d, 19000);
-                    setTimeout( dd, 20000);
-                    setTimeout( d, 21000);
-                    setTimeout( d, 22000);
+                    setTimeout( d, 18000);
                 });
             }
         } else {
