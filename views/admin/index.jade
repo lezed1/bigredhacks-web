@@ -47,7 +47,7 @@ block append admin_content
                     - var done = (school.total == school.accepted + school.waitlisted + school.rejected);
                     tr
                         td(class=done ? "success": "")= i+1
-                        td: h: a.low-vis(href="/admin/search?collegeid="+school.schoolid+"&college="+school.name,target="_blank") #{school.name}
+                        td: h: a.low-vis(href="/admin/search?collegeid="+school.collegeid+"&college="+school.name,target="_blank") #{school.name}
                         td.text-center= school.total
                         td.text-center= school.accepted
                         td.text-center= school.waitlisted
