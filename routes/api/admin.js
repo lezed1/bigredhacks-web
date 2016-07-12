@@ -45,7 +45,6 @@ router.post('/announcements', postAnnouncement);
 router.delete('/announcements', deleteAnnouncement);
 
 router.post('/rollingDecision', makeRollingAnnouncement);
-router.get('/rollingDecision', getRollingAnnouncement);
 
 
 /**
