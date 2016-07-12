@@ -5,6 +5,8 @@ extends _layout-admin
 
 block append admin_content
     +contentHeading("Dashboard")
+    if !input
+        - input = {}
 
     //- Nav tabs
     ul.nav.nav-tabs(role='tablist')
@@ -12,6 +14,8 @@ block append admin_content
             a(href='#summary', aria-controls='summary', role='tab', data-toggle='tab') Summary
         li(role='presentation')
             a(href='#top-schools', aria-controls='top-schools', role='tab', data-toggle='tab') Top Schools
+        li(role='presentation')
+            a(href='#announcements', aria-controls='announcements', role='tab', data-toggle='tab') Announcements
 
     //- Tab panes
     .tab-content
@@ -49,5 +53,13 @@ block append admin_content
                         td.text-center= school.waitlisted
                         td.text-center= school.rejected
                         td.text-center= school.pending
+        #announcements.tab-pane(role='tabpanel')
+            form#announcement-form(method='post', action='/api/admin/announcements')
+                label post a new announcement to website, mobile, and social media
+                br
+                .form-group
+                    input#announcementInput.form-control(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
+                .form-group
+                    button#announcementMake.btn.btn-blue(type='submit') Announce
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
