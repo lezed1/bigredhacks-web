@@ -161,7 +161,7 @@ router.get('/dashboard', function (req, res, next) {
                 },
                 {
                     $group: {
-                        _id: {name: "$_id.name"},
+                        _id: {name: "$_id.name", schoolid: "$_id.schoolid"},
                         accepted: {$sum: "$accepted"},
                         waitlisted: {$sum: "$waitlisted"},
                         rejected: {$sum: "$rejected"},

@@ -1,4 +1,4 @@
-//
+//-
    Admin index page
 
 extends _layout-admin
@@ -37,7 +37,7 @@ block append admin_content
             table.table.table-striped
                 tr
                     th Rank
-                    th: a.low-vis(href="/admin/search?collegeid="+collegeid+"&college="+college) School Name
+                    th School Name
                     th.text-center Applicants
                     th.text-center Accepted
                     th.text-center Waitlisted
@@ -47,7 +47,7 @@ block append admin_content
                     - var done = (school.total == school.accepted + school.waitlisted + school.rejected);
                     tr
                         td(class=done ? "success": "")= i+1
-                        td= school.name
+                        td: h: a.low-vis(href="/admin/search?collegeid="+school.schoolid+"&college="+school.name,target="_blank") #{school.name}
                         td.text-center= school.total
                         td.text-center= school.accepted
                         td.text-center= school.waitlisted
