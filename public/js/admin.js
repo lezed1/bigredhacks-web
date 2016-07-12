@@ -162,6 +162,26 @@ $('document').ready(function () {
         });
     });
 
+    $("#setCheckedIn").on("change", function () {
+        var _this = $(this);
+        var pubid = $("#pubid").text();
+        $(this).attr("disabled", true);
+        var newChecked = $(this).val();
+        $.ajax({
+            type: "PATCH",
+            url: "/api/admin/user/" + pubid + "/checkIn",
+            data: {
+                checkedin: newChecked
+            },
+            success: function (data) {
+                _this.attr("disabled", false);
+            },
+            error: function (e) {
+                console.log("CheckedIn update failed", e);
+            }
+        });
+    });
+
 
     /******************
      * SEARCH PAGE ****

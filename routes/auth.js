@@ -504,7 +504,7 @@ module.exports = function (io) {
                                                 var template_content =
                                                     "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                                     "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                    "that you're registered for BigRed//Hacks 2015! " +
+                                                    "that you're registered for BigRed//Hacks 2016! " +
                                                     "We'll be sending a lot more logistical information soon." + "</p><p>" +
                                                     "You can log in to our website any time to update your resume " +
                                                     "and view logistic information as we post it." + "</p><p>" +
