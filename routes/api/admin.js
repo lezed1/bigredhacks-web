@@ -19,6 +19,7 @@ var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
 var io = require('../../app').io;
+var OAuth = require('oauth');
 
 var Twitter = require('twitter');
 var graph = require('fbgraph');
@@ -471,8 +472,6 @@ function postAnnouncement (req, res, next) {
             }
 
             if (req.body.twitter) {
-                var OAuth = require('oauth');
-
                 var OAuth2 = OAuth.OAuth2;
                 var oauth2 = new OAuth2(config.twitter.tw_consumer_key,
                     config.twitter.tw_consumer_secret,
