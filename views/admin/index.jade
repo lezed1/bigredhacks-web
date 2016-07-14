@@ -56,7 +56,7 @@ block append admin_content
                 for school, i in schools
                     - var done = (school.total == school.accepted + school.waitlisted + school.rejected);
                     tr
-                        td(class=done ? "success": "")= i+1
+                        td(class=done ? "success" : "")= i + 1
                         td= school.name
                         td.text-center= school.total
                         td.text-center= school.accepted
@@ -65,11 +65,31 @@ block append admin_content
                         td.text-center= school.pending
         #announcements.tab-pane(role='tabpanel')
             form#announcement-form(method='post', action='/api/admin/announcements')
-                label post a new announcement to website, mobile, and social media
-                br
+                h2 Make an Announcement
+                p Post a new announcement to website, mobile, and social media.
                 .form-group
-                    input#announcementInput.form-control(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
-                .form-group.np-enabled
-                    button#announcementMake.btn.btn-blue(type='submit') Announce
+                    label Announcement to post
+                    input.form-control#announcementInput(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
+                .form-group
+                    label Channels to announce on
+                    br
+                    label
+                        input#web(type='checkbox', name='web', value='true', checked=true)
+                        | &nbsp;Web
+                    br
+                    label
+                        input#mobile(type='checkbox', name='mobile', value='true', checked=true)
+                        | &nbsp;Mobile
+                    br
+                    label
+                        input#facebook(type='checkbox', name='facebook', value='true', checked=false)
+                        | &nbsp;Facebook
+                    br
+                    label
+                        input#twitter(type='checkbox', name='twitter', value='true', checked=false)
+                        | &nbsp;Twitter
+                    br
+                .form-group
+                    button#announcementMake.btn.btn-blue(onclick="return confirm('Are you sure?')") Announce
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
