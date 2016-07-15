@@ -184,6 +184,30 @@ router.get('/dashboard', function (req, res, next) {
             ], function (err, res) {
                 return done(err, res);
             })
+        },
+        rsvps: function(done) {
+            User.aggregate([
+                { $match: { $and: [USER_FILTER, {"internal.status" : "Accepted"}] } },
+                {$group: {
+                    _id: "$internal.going",
+                    count: {$sum: 1}
+                }}
+            ], function (err, res) {
+                res = objectAndDefault(res, {
+                    true: 0,
+                    false: 0,
+                    null: 0
+                });
+                return done(err, res);
+            })
+        },
+        decisionAnnounces: function(done) {
+            User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+                if (err) console.log(err);
+                else {
+                    return done(err, resu);
+                }
+            });
         }
     }, function (err, result) {
         if (err) {
@@ -193,7 +217,9 @@ router.get('/dashboard', function (req, res, next) {
         res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,
-            schools: result.schools
+            schools: result.schools,
+            rsvps: result.rsvps,
+            decisionAnnounces: result.decisionAnnounces
         })
     });
 

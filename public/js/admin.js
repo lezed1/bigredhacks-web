@@ -103,7 +103,7 @@ $('document').ready(function () {
     //disable non-participation enabled items
     var toggleNp = function (state) {
         $(".np-enabled").children().prop("disabled", state);
-        $(".np-enabled input[type=radio],input[type=checkbox]").prop("disabled", state);
+        $(".np-enabled input[type=radio],.np-enabled input[type=checkbox]").prop("disabled", state);
     };
 
     npCheckbox.on('switchChange.bootstrapSwitch', function (event, state) {
@@ -158,6 +158,26 @@ $('document').ready(function () {
             },
             error: function (e) {
                 console.log("RSVP update failed", e);
+            }
+        });
+    });
+
+    $("#setCheckedIn").on("change", function () {
+        var _this = $(this);
+        var pubid = $("#pubid").text();
+        $(this).attr("disabled", true);
+        var newChecked = $(this).val();
+        $.ajax({
+            type: "PATCH",
+            url: "/api/admin/user/" + pubid + "/checkIn",
+            data: {
+                checkedin: newChecked
+            },
+            success: function (data) {
+                _this.attr("disabled", false);
+            },
+            error: function (e) {
+                console.log("CheckedIn update failed", e);
             }
         });
     });
