@@ -64,5 +64,15 @@ router.get('/live', middle.requireDayof,function (req, res, next) {
     });
 });
 
+/**
+ * @api {GET} /wayel 2016 puzzle page.
+ * @apiName Wayel
+ * @apiGroup Index
+ */
+router.get('/wayel', function (req, res, next) {
+    res.render('wayel', {
+        title: 'Cornell\'s Ultimate Hackathon\'s Ultimate Puzzle'
+    });
+});
 
 module.exports = router;
