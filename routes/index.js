@@ -54,6 +54,17 @@ router.post('/cornell/subscribe', function (req, res, next) {
 });
 
 /**
+ * @api {GET} /live Day-of information page.
+ * @apiName DayOf
+ * @apiGroup Index
+ */
+router.get('/live', middle.requireDayof,function (req, res, next) {
+    res.render('live', {
+        title: 'BigRed//Hacks | Live'
+    });
+});
+
+/**
  * @api {GET} /wayel 2016 puzzle page.
  * @apiName Wayel
  * @apiGroup Index

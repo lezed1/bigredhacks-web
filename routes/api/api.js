@@ -4,6 +4,8 @@ var router = express.Router();
 var Colleges = require('../../models/college.js');
 var Hardware = require('../../models/hardware.js');
 var User = require('../../models/user.js');
+var Announcement = require ('../../models/announcement.js');
+
 var middle = require('../middleware');
 
 /**
@@ -91,5 +93,29 @@ router.patch('/rsvp/cornellstudent', middle.requireResultsReleased, function (re
     }
     else res.sendStatus(500);
 });
+
+/**
+ * @api {GET} /api/announcements Get a list of all announcements made
+ * @apiName GETAnnouncements
+ * @apiGroup Announcements
+ *
+ * @apiSuccess {Object[]} announcements
+ * @apiSuccess {String} announcements.message Body of the message
+ * @apiSuccess {Date} announcements.time Time the announcement was made
+ *
+ */
+router.get('/announcements', function (req, res, next) {
+    Announcement.find({}, "message time", function (err, ann) {
+        if (err) {
+            console.error(err);
+        } else {
+            res.send({
+                announcements: ann
+            });
+        }
+    });
+});
+
+
 
 module.exports = router;

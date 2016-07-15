@@ -3,19 +3,23 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var mongoose = require('mongoose');
+var app = require('../../app');
 
+// Mongoose Models
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
 var TimeAnnotation = require('../../models/time_annotation.js');
+var Announcement = require('../../models/announcement.js');
+
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
 
-// All routers
+// All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
 router.patch('/team/:teamid/setStatus', setTeamStatus);
 router.patch('/user/:email/setRole', setUserRole);
@@ -36,6 +40,9 @@ router.patch('/user/:pubid/checkin', checkInUser);
 router.get('/users/checkin', getUsersPlanningToAttend);
 
 router.post('/annotate', annotate);
+
+router.post('/announcements', postAnnouncement);
+router.delete('/announcements', deleteAnnouncement);
 
 
 /**
@@ -409,6 +416,53 @@ function getUsersPlanningToAttend (req, res, next) {
         }
     })
 }
+
+
+/**
+ * @api {POST} /api/admin/announcements Create a new announcement and posts it to (TODO) website, mobile, facebook, and twitter
+ * @apiName POSTAnnouncements
+ * @apiGroup Announcements
+ *
+ * @apiParam {String} message Body of the message
+ */
+function postAnnouncement (req, res, next) {
+    console.log(req.body);
+    var newAnnouncement = new Announcement({
+        message: req.body.message
+    });
+    newAnnouncement.save(function (err, doc) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(500);
+        }
+        else {
+            // Broadcast announcement
+            var io = require('../../app').io;
+            io.emit('announcement', req.body.message);
+            return res.redirect('/admin/dashboard');
+        }
+    });
+}
+
+
+/**
+ * @api {DELETE} /api/admin/announcements Delete an announcement
+ * @apiName DELETEAnnouncements
+ * @apiGroup Announcements
+ *
+ * @apiParam {String} _id The unique mongo id for the announcement
+ */
+function deleteAnnouncement (req, res, next) {
+    Announcement.remove({_id: req.body._id}, function (err) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+        else return res.sendStatus(200);
+    });
+}
+
+
 
 /**
  * @api {POST} /api/admin/annotate Add an annotation to the timeline
