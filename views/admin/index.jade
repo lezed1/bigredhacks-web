@@ -5,6 +5,9 @@ extends _layout-admin
 
 block append admin_content
     +contentHeading("Dashboard")
+
+    +showMessages(messages)
+
     if !input
         - input = {}
 
@@ -31,8 +34,15 @@ block append admin_content
             h2 Attendees
             span Out of #{applicants.accepted} we accepted:
                 ul
-                    li x accepted their invitations
-                    li x declined their invitations
+                    li #{rsvps.true} accepted their invitations
+                    li #{rsvps.false} declined their invitations
+                    li #{rsvps.null} have not responded
+            h2 Notify Decisions
+            p Send an email notifying application decisions to all who have not received their latest decision.
+            form#notify-form(method='post', action='/api/admin/rollingDecision')
+                .form-group.np-enabled
+                    button#notifyMake.btn.btn-blue(type='submit') Announce
+            span Will affect #{decisionAnnounces} people.
         #top-schools.tab-pane(role='tabpanel')
             table.table.table-striped
                 tr
@@ -55,11 +65,31 @@ block append admin_content
                         td.text-center= school.pending
         #announcements.tab-pane(role='tabpanel')
             form#announcement-form(method='post', action='/api/admin/announcements')
-                label post a new announcement to website, mobile, and social media
-                br
+                h2 Make an Announcement
+                p Post a new announcement to website, mobile, and social media.
                 .form-group
-                    input#announcementInput.form-control(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
+                    label Announcement to post
+                    input.form-control#announcementInput(type='text', name='message', placeholder='ex: Soylent is about to give a tech talk in Uris G01!', value = input.message || '', required=true)
                 .form-group
-                    button#announcementMake.btn.btn-blue(type='submit') Announce
+                    label Channels to announce on
+                    br
+                    label
+                        input#web(type='checkbox', name='web', value='true', checked=true)
+                        | &nbsp;Web
+                    br
+                    label
+                        input#mobile(type='checkbox', name='mobile', value='true', checked=true)
+                        | &nbsp;Mobile
+                    br
+                    label
+                        input#facebook(type='checkbox', name='facebook', value='true', checked=false)
+                        | &nbsp;Facebook
+                    br
+                    label
+                        input#twitter(type='checkbox', name='twitter', value='true', checked=false)
+                        | &nbsp;Twitter
+                    br
+                .form-group
+                    button#announcementMake.btn.btn-blue(onclick="return confirm('Are you sure?')") Announce
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
