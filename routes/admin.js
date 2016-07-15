@@ -147,7 +147,7 @@ router.get('/dashboard', function (req, res, next) {
         schools: function (done) {
             User.aggregate([
                 {$match: USER_FILTER},
-                {$group: {_id: {name: "$school.name", status: "$internal.status"}, total: {$sum: 1}}},
+                {$group: {_id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"}, total: {$sum: 1}}},
                 {
                     $project: {
                         accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
@@ -161,7 +161,7 @@ router.get('/dashboard', function (req, res, next) {
                 },
                 {
                     $group: {
-                        _id: {name: "$_id.name"},
+                        _id: {name: "$_id.name", collegeid: "$_id.collegeid"},
                         accepted: {$sum: "$accepted"},
                         waitlisted: {$sum: "$waitlisted"},
                         rejected: {$sum: "$rejected"},
@@ -172,6 +172,7 @@ router.get('/dashboard', function (req, res, next) {
                     $project: {
                         _id: 0,
                         name: "$_id.name",
+                        collegeid: "$_id.collegeid",
                         accepted: "$accepted",
                         waitlisted: "$waitlisted",
                         rejected: "$rejected",
@@ -184,6 +185,30 @@ router.get('/dashboard', function (req, res, next) {
             ], function (err, res) {
                 return done(err, res);
             })
+        },
+        rsvps: function(done) {
+            User.aggregate([
+                { $match: { $and: [USER_FILTER, {"internal.status" : "Accepted"}] } },
+                {$group: {
+                    _id: "$internal.going",
+                    count: {$sum: 1}
+                }}
+            ], function (err, res) {
+                res = objectAndDefault(res, {
+                    true: 0,
+                    false: 0,
+                    null: 0
+                });
+                return done(err, res);
+            })
+        },
+        decisionAnnounces: function(done) {
+            User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+                if (err) console.log(err);
+                else {
+                    return done(err, resu);
+                }
+            });
         }
     }, function (err, result) {
         if (err) {
@@ -193,7 +218,9 @@ router.get('/dashboard', function (req, res, next) {
         res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,
-            schools: result.schools
+            schools: result.schools,
+            rsvps: result.rsvps,
+            decisionAnnounces: result.decisionAnnounces
         })
     });
 
