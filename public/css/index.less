@@ -428,10 +428,12 @@ section {
   position: relative;
   p, h2 {
     position: relative;
-    //padding-left: @content-padding-left;
-    //width: @content-width;
     color: @black;
     z-index: 999;
+  }
+  .container p, h2{
+    //background-color: blue;
+    z-index: 9999999;
   }
 }*/
 
@@ -458,6 +460,7 @@ section {
   background: @white;
   .content {
     padding-top: 100px;
+
   }
 }
 
@@ -1006,6 +1009,13 @@ footer p {
     .whale:hover {
       background-image: url(/img/whale_happy.svg);
     }
+
+    .whale-happy {
+      z-index: 499;
+      height: 300px;
+      width: 700px;
+      top: -220px;
+    }
   }
 
     .whale {
@@ -1028,7 +1038,21 @@ footer p {
     }
 
     .whale:hover {
+      opacity: 0;
+      //background-image: url(/img/whale_happy.svg);
+    }
+    .whale-happy {
       background-image: url(/img/whale_happy.svg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: 499;
+      position: absolute;
+      height: 150px;
+      width: 350px;
+      top: -110px;
+      left: 35%;
+      margin-left: auto;
+      margin-right: auto;
     }
 
 
