@@ -9,6 +9,7 @@ h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pub
             li Gender: #{user.gender}
             li Email: #{user.email}
             li Phone: #{user.phone}
+            li Hackathons attended: #{user.app.hackathonsAttended}
     .col-sm-3.col-md-3
         h4 Education
         ul
@@ -57,14 +58,16 @@ h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pub
         div: embed.center-block(src="//files.bigredhacks.com/resume/"+user.app.resume, width="75%", height="400",type='application/pdf')
         br
         br
-        div First hackathon?
-            p= user.app.experience
+
         br
         div Tell us something interesting about yourself.
             p= user.app.questions.q1
         br
         div What's a cool project that you've worked on?
             p= user.app.questions.q2
+        br
+        div Types of hardware hacks:
+            p= user.app.questions.hardware
         br
         div Is there anything else you'd like to tell us?
             p= user.logistics.anythingelse
