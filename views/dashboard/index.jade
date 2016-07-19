@@ -77,7 +77,7 @@ block dashboard_content
             | We'll be sending lots more information as we get closer to the event, so stay tuned!
         p.long-text
             | Please join our
-            a(href='https://www.facebook.com/groups/397005627168999/')&#0020; BigRed//Hacks #{new Date().getFullYear()} Hackers
+            a(href='https://www.facebook.com/groups/397005627168999/')&nbsp;BigRed//Hacks #{new Date().getFullYear()} Hackers
             |  Facebook group to find partners and plan travel with other students.
         p.long-text Looking forward to seeing you in Ithaca,
         p BigRed//Hacks Team
@@ -100,7 +100,7 @@ block dashboard_content
                     |  violations.
                 p
                     | Please send any questions or concerns to
-                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&#0020;  info@bigredhacks.com
+                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
                     | .
             else
                 p= bus.message
@@ -114,10 +114,10 @@ block dashboard_content
                                     li(data-collegeid=stop.collegeid)
                                         span.collegename= stop.collegename
                         li.currentnumber(data-currentnumber=bus.members.length)
-                            b Current Number on Bus:
+                            b Current Number on Bus:&nbsp;
                             | #{bus.members.length}
                         li.maxcapacity
-                            b Max Capacity:
+                            b Max Capacity:&nbsp;
                             span.maxcapacitynumber= bus.capacity
                         if user.internal.busid == bus.id
                             li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
@@ -168,13 +168,13 @@ block dashboard_content
                 p You told us that you are going to BigRed//Hacks.
                 p
                     | If you can't make it, please let us know at
-                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&#0020;  info@bigredhacks.com
+                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
                     | .
             else
                 p
                     | You told us that you weren't going to BigRed//Hacks.  If your
                     | plans have changed, please let us know as know at
-                    a(href='mailto:info@bigredhacks.com?subject=Transportation')&#0020;  info@bigredhacks.com
+                    a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
                     | .
             br
     else
