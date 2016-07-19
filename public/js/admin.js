@@ -325,7 +325,14 @@ $('document').ready(function () {
     //add college to list of bus stops
     $('#addcollege').on('click', function () {
         //FIXME: highly error-prone implementation
-        //college id is added in typeahead, modify both in this function instead
+        // College ID
+        var currentidlist = $("#collegeidlist").val();
+        if (currentidlist != "") {
+            $("#collegeidlist").val(currentidlist + "," + collegeDatum.id);
+        }
+        else {
+            $("#collegeidlist").val(collegeDatum.id);
+        }
         var newCollege = $("#college").val();
         var currentBusStops = $("#busstops").val();
         var currentBusStopsDisplay = $("#busstops-display").text();
