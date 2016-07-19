@@ -123,10 +123,15 @@ block dashboard_content
                             li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
                         else
                             li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
-                        if (buscaptain != null)
                             li.buscaptain
-                                b Bus Captain
-                                |  #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
+                                if (buscaptain != null)
+                                    b Bus Captain
+                                    |  #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
+                                else
+                                    b
+                                    | We need a bus captain for your route! Email
+                                    a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                                    |  if you'd like to help out.
                     .busselection
                         input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
