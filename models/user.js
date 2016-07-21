@@ -53,7 +53,8 @@ var userSchema = new mongoose.Schema({
         travel_receipt: {type: String, default: null},
         not_interested: {type: Boolean, default: null}, //waitlisted - if true, they forfeit their spot
         cornell_applicant: {type: Boolean, default: false},
-        checkedin: {type: Boolean, default: false}
+        checkedin: {type: Boolean, default: false},
+        reimbursement_override: {type: Number}
     },
     passwordtoken: String,
     created_at: {type: Date, default: Date.now},
