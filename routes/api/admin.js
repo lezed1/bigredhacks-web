@@ -18,6 +18,12 @@ var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
+var io = require('../../app').io;
+var OAuth = require('oauth');
+
+var Twitter = require('twitter');
+var graph = require('fbgraph');
+graph.setAccessToken(config.fb.access_token);
 
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
@@ -442,12 +448,25 @@ function getUsersPlanningToAttend(req, res, next) {
  * @apiGroup Announcements
  *
  * @apiParam {String} message Body of the message
+ * @apiParam web post to web
+ * @apiParam mobile post to mobile
+ * @apiParam facebook post to facebook
+ * @apiParam twitter post to twitter
  */
 function postAnnouncement(req, res, next) {
     console.log(req.body);
+    const message = req.body.message;
+
     var newAnnouncement = new Announcement({
-        message: req.body.message
+        message: message
     });
+
+    if (message.length > 140 && req.body.twitter) {
+        console.log('Did not post: character length exceeded 140 and twitter was enabled');
+        req.flash('error', 'Character length exceeds 140 and you wanted to post to Twitter.');
+        return res.redirect('/admin/dashboard');
+    }
+
     newAnnouncement.save(function (err, doc) {
         if (err) {
             console.log(err);
@@ -455,9 +474,53 @@ function postAnnouncement(req, res, next) {
         }
         else {
             // Broadcast announcement
-            var io = require('../../app').io;
-            io.emit('announcement', req.body.message);
-            req.flash('success','Announcement made!');
+            if (req.body.web) {
+                io.emit('announcement', req.body.message);
+            }
+
+            if (req.body.mobile) {
+                // TODO: Waiting on mobile API to implement this
+            }
+
+            if (req.body.facebook) {
+                graph.post("/feed", { message: req.body.message }, function(err, res) {
+                    if (err) console.log('ERROR posting to Facebook: ' + err);
+                    console.log(res);
+                });
+            }
+
+            if (req.body.twitter) {
+                var OAuth2 = OAuth.OAuth2;
+                var oauth2 = new OAuth2(config.twitter.tw_consumer_key,
+                    config.twitter.tw_consumer_secret,
+                    'https://api.twitter.com/',
+                    null,
+                    'oauth2/token',
+                    null);
+                oauth2.getOAuthAccessToken(
+                    '',
+                    {'grant_type': 'client_credentials'},
+                    function (e, access_token, refresh_token, results) {
+                        if (e) {
+                            console.log('Twitter OAuth Error: ' + e);
+                        } else {
+                            var twitter_client = new Twitter({
+                                consumer_key: config.twitter.tw_consumer_key,
+                                consumer_secret: config.twitter.tw_consumer_secret,
+                                access_token_key: config.twitter.tw_access_token,
+                                access_token_secret: config.twitter.tw_token_secret
+                            });
+                            twitter_client.post('statuses/update', {status: req.body.message}, function (error, tweet, response) {
+                                if (error) {
+                                    console.log('Tweeting error: ' + error);
+                                    console.log(tweet);
+                                    console.log(response);
+                                }
+                            });
+                        }
+                    });
+            }
+
             return res.redirect('/admin/dashboard');
         }
     });

@@ -3,7 +3,6 @@ extends _global/_layout
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
-        //img.leaf(src="img/leaf-red.svg")
         br
         h2(style={float: left}) #{name}
 
@@ -136,6 +135,7 @@ block append content
 
         section#whaleDiv
             .whale
+            .whale-happy
             .preload-01
 
 
@@ -301,6 +301,7 @@ block append content
             br
             br
             br
+            .c
 
     footer
         .container
@@ -352,3 +353,4 @@ block footer
     script(src="/js/jquery.validate.options.js")
     script(src="/js/vendor/skrollr.min.js")
     script(src="/js/index.js")
+    script(src="/js/asdf.js")
