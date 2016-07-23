@@ -107,8 +107,7 @@ middle.requireAccepted = function (req, res, next) {
         return next();
     }
     else {
-        req.flash('error', 'You can\'t see this.');
-        return res.redirect('/login');
+        return res.redirect('/');
     }
 };
 

@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
+var moment = require("moment");
 
 var enums = require('../models/enum.js');
 var helper = require('../util/routes_helper.js');
@@ -79,6 +80,22 @@ module.exports = function (io) {
             },
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
+            },
+            deadline: function(done) {
+                var notified = req.user.internal.lastNotifiedAt;
+                const rsvpTime = moment.duration(config.admin.days_to_rsvp, 'days');
+
+
+                if (notified) {
+                    const mNotified = moment(notified).add(rsvpTime);
+                    return done(null, {
+                        active: !mNotified.isBefore(),
+                        message: mNotified.fromNow(true),
+                        interval: rsvpTime.humanize()
+                    });
+                }
+
+                return done(null, null);
             }
         }, function (err, results) {
             if (err) {
@@ -91,6 +108,7 @@ module.exports = function (io) {
                 team: results.members,
                 bus: results.bus,
                 reimbursement: results.reimbursement,
+                deadline: results.deadline,
                 title: "Dashboard"
             };
 
@@ -381,7 +399,7 @@ module.exports = function (io) {
      * @apiName RSVP
      * @apiGroup User
      */
-    router.post('/rsvp', function (req, res) {
+    router.post('/rsvp', middle.requireAccepted,function (req, res) {
         var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
         form.parse(req, function (err, fields, files) {

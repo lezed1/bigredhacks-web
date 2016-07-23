@@ -21,10 +21,20 @@
     "reg_open": true,
     "cornell_reg_open": true,
     "cornell_auto_accept": 150,
-    "dayof": true
+    "dayof": true,
+    "days_to_rsvp": 14
   },
   "sendgrid": {
     "_comment": "Sendgrid template ids",
     "sg_general": ""
+  },
+  "twitter": {
+    "tw_consumer_key": "",
+    "tw_consumer_secret": "",
+    "tw_access_token": "",
+    "tw_token_secret": ""
+  },
+  "fb": {
+    "access_token": ""
   }
 }

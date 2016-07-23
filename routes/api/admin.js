@@ -18,6 +18,12 @@ var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
+var io = require('../../app').io;
+var OAuth = require('oauth');
+
+var Twitter = require('twitter');
+var graph = require('fbgraph');
+graph.setAccessToken(config.fb.access_token);
 
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
@@ -36,7 +42,7 @@ router.delete('/reimbursements/school', schoolReimbursementsDelete);
 
 router.patch('/user/:pubid/setRSVP', setRSVP);
 
-router.patch('/user/:pubid/checkin', checkInUser);
+router.patch('/user/:pubid/checkin', middle.requireDayof, checkInUser);
 router.get('/users/checkin', getUsersPlanningToAttend);
 
 router.post('/annotate', annotate);
@@ -45,7 +51,6 @@ router.post('/announcements', postAnnouncement);
 router.delete('/announcements', deleteAnnouncement);
 
 router.post('/rollingDecision', makeRollingAnnouncement);
-router.get('/rollingDecision', getRollingAnnouncement);
 
 
 /**
@@ -149,29 +154,30 @@ function setUserRole(req, res, next) {
  * @api {PATCH} /api/admin/rollingDecision Publish decisions to all who have had one made and not received it yet.
  */
 function makeRollingAnnouncement(req, res, next) {
-    User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+    User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
-            async.each(resu, function(usr, callback) {
+            async.each(recipient, function(recip, callback) {
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
                     "to": {
-                        "email": usr.email,
-                        "name": usr.name.first + " " + usr.name.last
+                        "email": recip.email,
+                        "name": recip.name.first + " " + recip.name.last
                     }
                 };
 
-                email.sendDecisionEmail(usr.name.first, usr.internal.notificationStatus, usr.internal.status, config, function(err) {
+                email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
                     if (err)  {
                         console.log(err);
                         callback(err);
                     } else {
-                        usr.internal.notificationStatus = usr.internal.status;
-                        usr.save(function(err) {
+                        recip.internal.notificationStatus = recip.internal.status;
+                        recip.internal.lastNotifiedAt = Date.now();
+                        recip.save(function(err) {
                             if (err) {
                                 console.log(err);
-                                console.log("ERROR: User with email " + usr.email + " has been informed of their new status, but that was not saved in the database!");
+                                console.log("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
                             } else {
                                 console.log('sent and saved');
                             }
@@ -189,20 +195,6 @@ function makeRollingAnnouncement(req, res, next) {
                     return res.redirect('/admin/dashboard');
                 }
             });
-        }
-    });
-}
-
-/**
- * @api {GET} /api/admin/rollingDecision Get the count of people who would be affected by making a rolling announcement
- * TODO: This may not be used.
- */
-function getRollingAnnouncement(req, res, next) {
-    User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
-        if (err) console.log(err);
-        else {
-            console.log(resu);
-            res.send(200, resu);
         }
     });
 }
@@ -456,12 +448,25 @@ function getUsersPlanningToAttend(req, res, next) {
  * @apiGroup Announcements
  *
  * @apiParam {String} message Body of the message
+ * @apiParam web post to web
+ * @apiParam mobile post to mobile
+ * @apiParam facebook post to facebook
+ * @apiParam twitter post to twitter
  */
 function postAnnouncement(req, res, next) {
     console.log(req.body);
+    const message = req.body.message;
+
     var newAnnouncement = new Announcement({
-        message: req.body.message
+        message: message
     });
+
+    if (message.length > 140 && req.body.twitter) {
+        console.log('Did not post: character length exceeded 140 and twitter was enabled');
+        req.flash('error', 'Character length exceeds 140 and you wanted to post to Twitter.');
+        return res.redirect('/admin/dashboard');
+    }
+
     newAnnouncement.save(function (err, doc) {
         if (err) {
             console.log(err);
@@ -469,9 +474,53 @@ function postAnnouncement(req, res, next) {
         }
         else {
             // Broadcast announcement
-            var io = require('../../app').io;
-            io.emit('announcement', req.body.message);
-            req.flash('success','Announcement made!');
+            if (req.body.web) {
+                io.emit('announcement', req.body.message);
+            }
+
+            if (req.body.mobile) {
+                // TODO: Waiting on mobile API to implement this
+            }
+
+            if (req.body.facebook) {
+                graph.post("/feed", { message: req.body.message }, function(err, res) {
+                    if (err) console.log('ERROR posting to Facebook: ' + err);
+                    console.log(res);
+                });
+            }
+
+            if (req.body.twitter) {
+                var OAuth2 = OAuth.OAuth2;
+                var oauth2 = new OAuth2(config.twitter.tw_consumer_key,
+                    config.twitter.tw_consumer_secret,
+                    'https://api.twitter.com/',
+                    null,
+                    'oauth2/token',
+                    null);
+                oauth2.getOAuthAccessToken(
+                    '',
+                    {'grant_type': 'client_credentials'},
+                    function (e, access_token, refresh_token, results) {
+                        if (e) {
+                            console.log('Twitter OAuth Error: ' + e);
+                        } else {
+                            var twitter_client = new Twitter({
+                                consumer_key: config.twitter.tw_consumer_key,
+                                consumer_secret: config.twitter.tw_consumer_secret,
+                                access_token_key: config.twitter.tw_access_token,
+                                access_token_secret: config.twitter.tw_token_secret
+                            });
+                            twitter_client.post('statuses/update', {status: req.body.message}, function (error, tweet, response) {
+                                if (error) {
+                                    console.log('Tweeting error: ' + error);
+                                    console.log(tweet);
+                                    console.log(response);
+                                }
+                            });
+                        }
+                    });
+            }
+
             return res.redirect('/admin/dashboard');
         }
     });
