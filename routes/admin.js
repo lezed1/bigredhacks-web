@@ -454,6 +454,7 @@ router.get('/reimbursements', function (req, res, next) {
         overrides: function(done) {
             User.find({"internal.reimbursement_override": {$gt: 0}})
                 .select("pubid name email school.name internal.reimbursement_override")
+                .sort("name")
                 .exec(done)
         }
     }, function (err, result) {
@@ -465,8 +466,6 @@ router.get('/reimbursements', function (req, res, next) {
             overrides: result.overrides
         });
     })
-
-
 });
 
 /**

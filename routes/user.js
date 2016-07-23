@@ -72,7 +72,10 @@ module.exports = function (io) {
                         if (req.user.internal.reimbursement_override > 0) {
                             return done(err, { amount: req.user.internal.reimbursement_override });
                         } else {
-                            if (err) console.log(err);
+                            if (err) {
+                                console.log(err);
+                            }
+                            
                             var default_rem = {};
                             default_rem.amount = 150;
                             return done(err, default_rem);
@@ -80,7 +83,6 @@ module.exports = function (io) {
                     }
 
                     return done(err, rem);
-
                 })
             },
             bus: function (done) {
