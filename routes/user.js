@@ -76,7 +76,6 @@ module.exports = function (io) {
                             var default_rem = {};
                             default_rem.amount = 150;
                             return done(err, default_rem);
-
                         }
                     }
 

@@ -460,7 +460,6 @@ router.get('/reimbursements', function (req, res, next) {
         if (err) {
             console.error(err);
         }
-        console.log(result.overrides);
         res.render('admin/reimbursements', {
             reimbursements: result.reimbursements,
             overrides: result.overrides
