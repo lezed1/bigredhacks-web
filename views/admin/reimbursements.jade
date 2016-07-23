@@ -3,6 +3,9 @@
 
 extends _layout-admin
 
+block prepend header
+    link(href='/css/registration.css', rel='stylesheet')
+
 block admin_content
     +contentHeading("Reimbursement Settings")
     // Nav tabs
@@ -43,7 +46,7 @@ block admin_content
                                 button.btn.btn-success.btn-save.reimbursements(disabled=true,type="button") save
                                 button.btn.btn-danger.btn-remove.reimbursements remove
                 br
-                form#new-reimbursement.form-inline
+                form#new-reimbursement
                     .form-group
                         label Add a School:
                     input#new-collegeid.form-control(type='hidden', name='collegeid', value='', required='')
@@ -57,14 +60,14 @@ block admin_content
                         .input-group
                             .input-group-addon $
                             input#new-amount.amount.form-control(type='number', name='amount', placeholder='amount')
-                    .form-group
-                        button#btn-add-school.btn.btn-success(type='button', disabled='')
+                    .form-group.np-enabled
+                        button#btn-add-school.btn.btn-success(type='button')
                             | Create
         #user.tab-pane(role='tabpanel')
             h2 User Override
             p Use this page to manage reimbursement overrides for individual users.
             #overrideresults.col-md-12
-                p#override-count.text-right #{reimbursements.length} results found.
+                p#override-count.text-right #{overrides.length} results found.
                 table#user-overrides.table.table-striped
                     tr
                         th Name
@@ -72,15 +75,34 @@ block admin_content
                         th School Amt
                         th Override Amt
                         th(width='210px')
+                    for student in overrides
+                        tr.student(data-student=student.email)
+                            td= student.name.first + " " + student.name.last
+                            td= student.school.name
+                            td= "Unimplemented"
+                            td= "$ " + student.internal.reimbursement_override
+                            td.np-enabled
+                                button.btn.btn-danger.btn-remove.deleteStudent remove
+            #addOverride
+                form#addStudent.np-enabled
+                    p Add a custom override for a student
+                    .form-group
+                        label Email
+                            input#addEmail.form-control(type='text', name='email', placeholder='student@university.edu')
+                    .form-group
+                        label Amount
+                            input#addAmount.form-control(type='number', name='amount', placeholder='amount')
+                    .form-group.np-enabled
+                        button#submitStudent.btn.btn-success(type='button') Add
 
 
-block append footer
+block prepend footer
     script.
         //- todo fix in refactor
         //prevent form submission
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $("#btn-add-user").click();
-        });
+        //$('form').submit(function (e) {
+        //    e.preventDefault();
+        //    $("#btn-add-user").click();
+        //});
     script(src='/js/vendor/typeahead.bundle.min.js')
     script(src='/js/typeahead_college.js')

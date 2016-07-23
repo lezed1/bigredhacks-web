@@ -39,6 +39,8 @@ router.put('/updateBus', updateBus);
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
 router.delete('/reimbursements/school', schoolReimbursementsDelete);
+router.post('/reimbursements/student', studentReimbursementsPost);
+router.delete('/reimbursements/student', studentReimbursementsDelete);
 
 router.patch('/user/:pubid/setRSVP', setRSVP);
 
@@ -567,6 +569,63 @@ function annotate(req, res, next) {
         }
         else {
             return res.redirect('/admin/stats');
+        }
+    });
+}
+
+/**
+ * @api {POST} /api/admin/reimbursements/student Update or set a student reimbursement
+ * @apiName PostReimbursement
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email
+ * @apiParam {Number} amount
+ */
+function studentReimbursementsPost(req, res, next) {
+    User.findOne( { email: req.body.email }, function (err, user) {
+        if (err || !req.body.amount || req.body.amount < 0) {
+            console.log('Reimbursement Error: ' + err); // If null, check amount
+            res.sendStatus(500);
+        } else {
+            user.internal.reimbursement_override = req.body.amount;
+            user.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(500);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+        }
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/reimbursements/student Reset a student reimbursement to school default
+ * @apiName DeleteReimbursement
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email
+ */
+function studentReimbursementsDelete(req, res, next) {
+    if (!req.body.email) {
+        res.sendStatus(500);
+    }
+    
+    User.findOne( { email: req.body.email }, function (err, user) {
+        if (err) {
+            console.log('ERROR on delete: ' + err);
+            res.sendStatus(500);
+        } else {
+            user.internal.reimbursement_override = 0;
+            user.save(function (err) {
+                if (err) {
+                    console.log('Error saving user: ' + err);
+                    res.sendStatus(500);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
         }
     });
 }

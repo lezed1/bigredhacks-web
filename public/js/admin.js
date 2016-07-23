@@ -438,6 +438,45 @@ $('document').ready(function () {
     /********************************
      *** Reimbursement Management****
      ********************************/
+    // Add Student Override
+    $("#submitStudent").on('click', function() {
+        (function submitRequest(that) {
+            $.ajax({
+                method: "POST",
+                url: "/api/admin/reimbursements/student",
+                data: {
+                    email: $("#addEmail").val(),
+                    amount: $("#addAmount").val()
+                },
+                error: function (e) {
+                    console.error(e);
+                },
+                success: function (res) {
+                    location.reload();
+                }
+            });}
+        )(this);
+    });
+
+    // Delete Student Override
+    $(".deleteStudent").on('click', function() {
+        var dat = $(this).parents("tr");
+        (function deleteRequest(that) {
+            $.ajax({
+                method: "DELETE",
+                url: "/api/admin/reimbursements/student",
+                data: {
+                    email: dat[0].dataset.student
+                },
+                error: function (e) {
+                    console.error(e);
+                },
+                success: function (res) {
+                    $(that).parents("tr").remove();
+                }
+            });
+        })(this);
+    });
 
         //disable amount for charter bus
     $("#new-travel, .modeDropdown").on('change', function () {
