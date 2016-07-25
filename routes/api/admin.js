@@ -36,6 +36,9 @@ router.post('/np/set', setNoParticipation);
 router.delete('/removeBus', removeBus);
 router.put('/updateBus', updateBus);
 
+router.put('/busCaptain', setBusCaptain);
+router.delete('/busCaptain', deleteBusCaptain);
+
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
 router.delete('/reimbursements/school', schoolReimbursementsDelete);
@@ -267,6 +270,79 @@ function updateBus(req, res, next) {
             else return res.sendStatus(200);
         });
     });
+}
+
+/**
+ * @api {POST} /api/admin/busCaptain Set the captain of a bus.
+ * @apiName SetBusCaptain
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the captain.
+ * @apiParam {String} routeName The name of the bus route.
+ */
+function setBusCaptain(req, res, next) {
+    const email = req.body.email;
+    const routeName = req.body.routeName;
+
+    if (!email || !routeName) {
+        return res.sendStatus(500);
+    }
+
+    User.findOne({"email" : email}, function(err,captain) {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(500);
+        } else {
+            Bus.findOne({ "name" : routeName}, function(err, bus) {
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(500);
+                } else {
+                    if (bus.buscaptain.name) {
+                        console.log('ERROR: Bus already has captain.');
+                        res.sendStatus(500);
+                    } else if (captain.internal.busid != bus.id){
+                        console.log('ERROR: User has not signed up for that bus!');
+                        res.sendStatus(500);
+                    } else {
+                        bus.buscaptain.name = captain.name.first + " " + captain.name.last;
+                        bus.buscaptain.email = captain.email;
+                        bus.buscaptain.college = captain.school.name;
+                        bus.buscaptain.id = captain.id;
+
+                        captain.internal.busCaptain = true;
+
+                        bus.save(function(err) {
+                            if (err) {
+                                console.error(err);
+                                res.sendStatus(500);
+                            } else {
+                                captain.save(function(err) {
+                                    if (err) {
+                                        console.error(err);
+                                        res.sendStatus(500);
+                                    } else {
+                                        res.sendStatus(200);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/busCaptain Unset the captain of a bus.
+ * @apiName UnsetBusCaptain
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the captain.
+ */
+function deleteBusCaptain(req, res, next) {
+
 }
 
 /**

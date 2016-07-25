@@ -14,7 +14,13 @@ var busSchema = new mongoose.Schema({
         name: String,
         college: String,
         id: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true}
-    }]
+    }],
+    captain: {
+        name: String,
+        email: String,
+        college: String,
+        id: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
+    }
 });
 
 
