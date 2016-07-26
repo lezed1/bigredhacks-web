@@ -85,13 +85,11 @@ block admin_content
                                 button.btn.btn-danger.btn-remove.deleteStudent remove
             #addOverride
                 form#addStudent.np-enabled.form-inline
-                    p Add a custom override for a student
                     .form-group
-                        label Email&nbsp;
-                            input#addEmail.form-control(type='text', name='email', placeholder='student@university.edu')
-                    br
+                        label Add a student override:
                     .form-group
-                        label Amount&nbsp;
+                        input#addEmail.form-control(type='text', name='email', placeholder='student@university.edu')
+                    .form-group
                         .input-group
                             .input-group-addon $
                             input#addAmount.form-control(type='number', name='amount', placeholder='amount')
