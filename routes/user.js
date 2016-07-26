@@ -311,7 +311,7 @@ module.exports = function (io) {
      * @apiName BusDecision
      * @apiGroup User
      */
-    router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
+    router.post('/busdecision', middle.requireAccepted, function (req, res) {
         var user = req.user;
         if (req.body.decision == "signup") {
             Bus.findOne({_id: req.body.busid}, function (err, bus) {
@@ -324,13 +324,13 @@ module.exports = function (io) {
                     });
                     bus.save(function (err) {
                         if (err) {
-                            console.log(err);
+                            console.log('Bus Save Error: ' + err);
                             return res.sendStatus(500);
                         }
                         else {
                             user.save(function (err) {
                                 if (err) {
-                                    console.log(err);
+                                    console.log('User Save Error: ' + err);
                                     return res.sendStatus(500);
                                 }
                                 else {

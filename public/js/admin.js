@@ -434,6 +434,24 @@ $('document').ready(function () {
         });
     });
 
+    // Unset bus captain
+    $('#unsetCaptain').on('click', function () {
+        var em = $('#removeEmail').val();
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/busCaptain",
+                data: {
+                    email: em
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("Couldn't remove the bus captain: " + e);
+                }
+            });
+    });
+
 
     /********************************
      *** Reimbursement Management****

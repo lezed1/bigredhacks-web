@@ -50,10 +50,10 @@ block admin_content
                                     input.edit-maxcapacity.form-control(type='number', name='maxcapacitynumber', value='', placeholder='capacity')
                         li.buscaptain
                             b Bus Captain:&nbsp;
-                            if bus.buscaptain == null
+                            if bus.captain.name == null
                                 span No bus captain assigned at the moment.
                             else
-                                span #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
+                                span #{bus.captain.name} (#{bus.captain.email})
                     .modifybus.display-group
                         button.btn.btn-success.editbus(type='button', name='editbus') edit
                         button.btn.btn-danger.removebus(type='button', name='removebus') remove
@@ -86,6 +86,30 @@ block admin_content
                     input#buscapacity.form-control(type='text', name='buscapacity', value='', placeholder='Enter Capacity Number')
                 #createbus
                     input.btn.btn-primary(type='submit', value='create bus', name='createbus')
+
+    div
+        h2 Set captain for a Bus
+            form#addCaptain.np-enabled(action='/api/admin/busCaptain', method='POST')
+                #addCaptainArea
+                    .form-group
+                        h4 Email&nbsp;
+                            input#addEmail.form-control(type='text', name='email', placeholder='student@university.edu')
+                    br
+                    .form-group
+                        h4 Bus Route Name&nbsp;
+                            input#addAmount.form-control(type='text', name='routeName', placeholder='route')
+                    .form-group.np-enabled
+                        button#submitStudent.btn.btn-success(type='submit') Set Captain
+    br
+    div
+        h2 Unset a Bus Captain
+            form#removeCaptain.np-enabled
+                #removeCaptainArea
+                    .form-group
+                        h4 Email&nbsp;
+                            input#removeEmail.form-control(type='text', name='email', placeholder='student@university.edu')
+                    .form-group.np-enabled
+                        button#unsetCaptain.btn.btn-success(type='button') Unset Captain
 block prepend footer
     script(src="/js/vendor/typeahead.bundle.min.js")
     script(src="/js/typeahead_college.js")

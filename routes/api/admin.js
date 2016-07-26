@@ -36,7 +36,7 @@ router.post('/np/set', setNoParticipation);
 router.delete('/removeBus', removeBus);
 router.put('/updateBus', updateBus);
 
-router.put('/busCaptain', setBusCaptain);
+router.post('/busCaptain', setBusCaptain);
 router.delete('/busCaptain', deleteBusCaptain);
 
 router.post('/reimbursements/school', schoolReimbursementsPost);
@@ -288,46 +288,52 @@ function setBusCaptain(req, res, next) {
         return res.sendStatus(500);
     }
 
-    User.findOne({"email" : email}, function(err,captain) {
+    async.series({
+        captain: function (callback) {
+            User.findOne({"email": email}, callback);
+        },
+        bus: function (callback){
+            Bus.findOne({"name": routeName}, callback);
+        }
+    }, function assignCaptain(err, results) {
         if (err) {
-            console.log(err);
+            console.error(err);
             return res.sendStatus(500);
+        }
+
+        var captain = results.captain;
+        var bus = results.bus;
+
+        if (bus.captain.name) {
+            console.log('ERROR: Bus already has captain.');
+            res.sendStatus(500);
+        } else if (captain.internal.busid != bus.id){
+            console.log(captain.internal.busid);
+            console.log(bus.id);
+            console.log('ERROR: User has not signed up for that bus!');
+            res.sendStatus(500);
         } else {
-            Bus.findOne({ "name" : routeName}, function(err, bus) {
+            bus.captain.name = captain.name.first + " " + captain.name.last;
+            bus.captain.email = captain.email;
+            bus.captain.college = captain.school.name;
+            bus.captain.id = captain.id;
+
+            captain.internal.busCaptain = true;
+
+            bus.save(function(err) {
                 if (err) {
-                    console.log(err);
-                    return res.sendStatus(500);
+                    console.error(err);
+                    res.sendStatus(500);
                 } else {
-                    if (bus.buscaptain.name) {
-                        console.log('ERROR: Bus already has captain.');
-                        res.sendStatus(500);
-                    } else if (captain.internal.busid != bus.id){
-                        console.log('ERROR: User has not signed up for that bus!');
-                        res.sendStatus(500);
-                    } else {
-                        bus.buscaptain.name = captain.name.first + " " + captain.name.last;
-                        bus.buscaptain.email = captain.email;
-                        bus.buscaptain.college = captain.school.name;
-                        bus.buscaptain.id = captain.id;
-
-                        captain.internal.busCaptain = true;
-
-                        bus.save(function(err) {
-                            if (err) {
-                                console.error(err);
-                                res.sendStatus(500);
-                            } else {
-                                captain.save(function(err) {
-                                    if (err) {
-                                        console.error(err);
-                                        res.sendStatus(500);
-                                    } else {
-                                        res.sendStatus(200);
-                                    }
-                                });
-                            }
-                        });
-                    }
+                    captain.save(function(err) {
+                        if (err) {
+                            console.error(err);
+                            res.sendStatus(500);
+                        } else {
+                            console.log('success!');
+                            res.redirect('/admin/businfo');
+                        }
+                    });
                 }
             });
         }
@@ -342,7 +348,57 @@ function setBusCaptain(req, res, next) {
  * @apiParam {String} email The email of the captain.
  */
 function deleteBusCaptain(req, res, next) {
+    const email = req.body.email;
 
+    if (!email) {
+        return res.sendStatus(500);
+    }
+
+    async.series({
+        captain: function (callback) {
+            User.findOne({"email": email}, callback);
+        },
+        bus: function (callback){
+            Bus.findOne({"captain.email": email}, callback);
+        }
+    }, function removeCaptain(err, results) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!results.bus || !results.captain) {
+            console.error('ERROR: Could not find bus or captain!');
+            return res.sendStatus(500);
+        }
+
+        var captain = results.captain;
+        var bus = results.bus;
+
+        bus.captain.name = null;
+        bus.captain.email = null;
+        bus.captain.college = null;
+        bus.captain.id = null;
+
+        captain.internal.busCaptain = false;
+
+        bus.save(function(err) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            } else {
+                captain.save(function(err) {
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    } else {
+                        console.log('success!');
+                        return res.sendStatus(200);
+                    }
+                });
+            }
+        });
+    });
 }
 
 /**
