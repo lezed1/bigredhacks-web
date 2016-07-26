@@ -123,7 +123,7 @@ block dashboard_content
                             li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
                         else
                             li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
-                        if (bus.captain.name != null)
+                        if (bus.captain != null && bus.captain.name != null)
                             li.buscaptain
                                 b Bus Captain:
                                 |  #{bus.captain.name} (#{bus.captain.email})
