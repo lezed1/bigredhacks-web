@@ -127,6 +127,18 @@ block dashboard_content
                             li.buscaptain
                                 b Bus Captain:
                                 |  #{bus.captain.name} (#{bus.captain.email})
+                            if (user.internal.busCaptain)
+                                h3 You are the bus captain for this route. Here is the current list of riders for your route:
+                                table.table.table-striped
+                                    tr
+                                        th Name
+                                        th Email
+                                        th University
+                                    for memb in bus.members
+                                        tr
+                                            td #{memb.name}
+                                            td #{memb.email}
+                                            td #{memb.college}
                     .busselection
                         input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         input#optout.btn.btn-danger(type='button', value='opt out', name='optout')

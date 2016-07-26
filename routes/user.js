@@ -320,6 +320,7 @@ module.exports = function (io) {
                     bus.members.push({
                         name: user.name.last + ", " + user.name.first,
                         college: user.school.name,
+                        email: user.email,
                         id: user.id
                     });
                     bus.save(function (err) {
