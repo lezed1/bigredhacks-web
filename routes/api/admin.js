@@ -583,9 +583,11 @@ function annotate(req, res, next) {
  */
 function studentReimbursementsPost(req, res, next) {
     User.findOne( { email: req.body.email }, function (err, user) {
-        if (err || !req.body.amount || req.body.amount < 0) {
+        if (err) {
             console.log('Reimbursement Error: ' + err); // If null, check amount
-            res.sendStatus(500);
+            res.status(500).send('Reimbursement Error: ' + err);
+        } else if (!req.body.amount || req.body.amount < 0) {
+            res.status(500).send("Missing amount or amount is less than zero");
         } else if (!user){
             res.status(500).send("No such user");
         } else {
@@ -593,7 +595,7 @@ function studentReimbursementsPost(req, res, next) {
             user.save(function (err) {
                 if (err) {
                     console.log(err);
-                    res.sendStatus(500);
+                    res.status(500).error("Could not save user");
                 } else {
                     res.sendStatus(200);
                 }
@@ -617,7 +619,7 @@ function studentReimbursementsDelete(req, res, next) {
     User.findOne( { email: req.body.email }, function (err, user) {
         if (err) {
             console.log('ERROR on delete: ' + err);
-            res.sendStatus(500);
+            res.status(500).send("Error on delete: " + err)
         } else if (!user) {
             res.status(500).send("No such user");
         } else {
@@ -625,7 +627,7 @@ function studentReimbursementsDelete(req, res, next) {
             user.save(function (err) {
                 if (err) {
                     console.log('Error saving user: ' + err);
-                    res.sendStatus(500);
+                    res.status(500).send('Error saving user: ' + err);
                 } else {
                     res.sendStatus(200);
                 }
