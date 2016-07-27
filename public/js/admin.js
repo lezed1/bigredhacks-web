@@ -607,8 +607,8 @@ try {
     // Some pages should not need this, so this error is expected.
 }
 
-function overrideFormDefault(target) {
-    $('form').submit(function (e) {
+function overrideFormDefault(form, target) {
+    $(form).submit(function (e) {
         e.preventDefault();
         $(target).click();
     });
