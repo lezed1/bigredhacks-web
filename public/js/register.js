@@ -147,6 +147,9 @@ $('document').ready(function () {
             hardware: {
                 required: false,
                 maxlength: 1000
+            },
+            CoC: {
+                required: true
             }
         },
         messages: {
