@@ -450,6 +450,7 @@ $('document').ready(function () {
             },
             error: function (e) {
                 console.error(e);
+                alert(e.responseText);
             },
             success: function (res) {
                 location.reload();
@@ -469,6 +470,7 @@ $('document').ready(function () {
             },
             error: function (e) {
                 console.error(e);
+                alert(e);
             },
             success: function (res) {
                 $(that).parents("tr").remove();
@@ -603,4 +605,11 @@ try {
     _tt_college_enable();
 } catch (e){
     // Some pages should not need this, so this error is expected.
+}
+
+function overrideFormDefault(target) {
+    $('form').submit(function (e) {
+        e.preventDefault();
+        $(target).click();
+    });
 }

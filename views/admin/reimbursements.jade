@@ -98,14 +98,10 @@ block admin_content
                     .form-group.np-enabled
                         button#submitStudent.btn.btn-success(type='button') Add
 
-
 block prepend footer
-    script.
-        //- todo fix in refactor
-        //prevent form submission
-        //$('form').submit(function (e) {
-        //    e.preventDefault();
-        //    $("#btn-add-user").click();
-        //});
     script(src='/js/vendor/typeahead.bundle.min.js')
     script(src='/js/typeahead_college.js')
+        
+block append footer
+    script.
+        overrideFormDefault("#btn-add-user");

@@ -586,6 +586,8 @@ function studentReimbursementsPost(req, res, next) {
         if (err || !req.body.amount || req.body.amount < 0) {
             console.log('Reimbursement Error: ' + err); // If null, check amount
             res.sendStatus(500);
+        } else if (!user){
+            res.status(500).send("No such user");
         } else {
             user.internal.reimbursement_override = req.body.amount;
             user.save(function (err) {
@@ -609,13 +611,15 @@ function studentReimbursementsPost(req, res, next) {
  */
 function studentReimbursementsDelete(req, res, next) {
     if (!req.body.email) {
-        res.sendStatus(500);
+        return res.status(500).send("Email required");
     }
     
     User.findOne( { email: req.body.email }, function (err, user) {
         if (err) {
             console.log('ERROR on delete: ' + err);
             res.sendStatus(500);
+        } else if (!user) {
+            res.status(500).send("No such user");
         } else {
             user.internal.reimbursement_override = 0;
             user.save(function (err) {
