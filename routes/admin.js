@@ -386,13 +386,12 @@ router.get('/businfo', function (req, res, next) {
         var _buses = [];
         async.each(buses, function (bus, callback) {
             async.each(bus.members, function (member, callback2) {
+                // Confirm that all riding users are valid when returning results
                 User.findOne({_id: member.id}, function (err, user) {
                     if (err) {
                         console.log(err);
                     }
-                    else if (user.role == "bus captain") {
-                        bus.buscaptain = user;
-                    }
+
                     callback2();
                 });
             }, function (err) {
