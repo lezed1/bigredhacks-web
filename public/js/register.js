@@ -207,6 +207,7 @@ $('document').ready(function () {
                 return;
             }
     });
+    //- FIXME: Refactor this to be a bootstrap error
 
 });
 
