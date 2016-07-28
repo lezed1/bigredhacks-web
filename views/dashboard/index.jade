@@ -126,7 +126,7 @@ block dashboard_content
                         if (bus.captain != null && bus.captain.name != null)
                             li.buscaptain
                                 b Bus Captain:
-                                |  #{bus.captain.name} (#{bus.captain.email})
+                                |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
                             if (user.internal.busCaptain)
                                 h3 You are the bus captain for this route. Here is the current list of riders for your route:
                                 table.table.table-striped
@@ -139,6 +139,11 @@ block dashboard_content
                                             td #{memb.name}
                                             td #{memb.email}
                                             td #{memb.college}
+                        else
+                            b
+                            | We need a bus captain for your route! Email
+                            a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                            |  if you'd like to help out.
                     .busselection
                         input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         input#optout.btn.btn-danger(type='button', value='opt out', name='optout')

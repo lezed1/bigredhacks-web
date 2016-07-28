@@ -3,9 +3,7 @@
 
 extends _layout-admin
 
-block prepend header
-    // Including index is bulky, but it makes the typeahead style correctly.
-    link(href='/css/index.css', rel='stylesheet')
+block append header
     link(href='/css/registration.css', rel='stylesheet')
 
 block admin_content
