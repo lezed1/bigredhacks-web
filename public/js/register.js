@@ -199,6 +199,14 @@ $('document').ready(function () {
             return false;
         }
     });
+        $("#resume").change(function(){
+        var filesize = document.getElementById('resume').files[0].size;
+        if (filesize > 10000000) // 
+            {
+                alert("File size must under 10 mb!");
+                return;
+            }
+    });
 
 });
 
