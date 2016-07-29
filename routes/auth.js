@@ -14,7 +14,7 @@ var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
 var middle = require('./middleware');
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
-var MAX_FILE_SIZE = 1024 * 1024 * 5;
+var MAX_FILE_SIZE = 1024 * 1024 * 15;
 
 var config = require('../config.js');
 var email = require('../util/email');
