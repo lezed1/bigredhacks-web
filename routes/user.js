@@ -77,7 +77,7 @@ module.exports = function (io) {
                             }
                             
                             var default_rem = {};
-                            default_rem.amount = 150;
+                            default_rem.amount = config.admin.default_reimbursement;
                             return done(err, default_rem);
                         }
                     }
