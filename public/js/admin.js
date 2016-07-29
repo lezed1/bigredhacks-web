@@ -448,10 +448,7 @@ $('document').ready(function () {
                 email: $("#addEmail").val(),
                 amount: $("#addAmount").val()
             },
-            error: function (e) {
-                console.error(e);
-                alert(e.responseText);
-            },
+            error: alertErrorHandler,
             success: function (res) {
                 location.reload();
             }
@@ -468,10 +465,7 @@ $('document').ready(function () {
             data: {
                 email: dat[0].dataset.student
             },
-            error: function (e) {
-                console.error(e);
-                alert(e);
-            },
+            error: alertErrorHandler,
             success: function (res) {
                 $(that).parents("tr").remove();
             }
@@ -612,4 +606,12 @@ function overrideFormDefault(form, target) {
         e.preventDefault();
         $(target).click();
     });
+}
+
+// Generic error handler, alerting the error thrown to the user.
+function alertErrorHandler(jqXHR, textStatus, errorThrown ) {
+    var resp = textStatus + ' (' + errorThrown + ')';
+    if (jqXHR.responseText)
+        resp += ': ' + jqXHR.responseText;
+    alert(resp);
 }

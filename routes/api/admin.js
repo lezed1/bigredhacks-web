@@ -595,7 +595,7 @@ function studentReimbursementsPost(req, res, next) {
             user.save(function (err) {
                 if (err) {
                     console.log(err);
-                    res.status(500).error("Could not save user");
+                    res.status(500).send("Could not save user");
                 } else {
                     res.sendStatus(200);
                 }
