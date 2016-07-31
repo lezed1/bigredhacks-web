@@ -35,18 +35,17 @@ var builder = function queryBuilder(query, schema) {
             var path;
             if (typeof searchItem.path == "undefined") {
                 path = searchItem.alias;
+            } else  {
+                path = searchItem.path;
             }
-            else path = searchItem.path;
             path = path.split(" "); //path must be array
 
-            //fuzzy search
             var valToMatch;
-            if (searchItem.fuzzytext) {
-                //todo spaces at end of string break this
-                valToMatch = _toTextMatch(v.split(" "));
+            if (searchItem.fuzzytext) { // Convert to tokens by word (fuzzy search)
+                valToMatch = _toTextMatch(v.trim().split(" "));
             }
             else {
-                //convert string to bool, only possible when not fuzzy
+                // Convert string to bool, only possible when not fuzzy
                 valToMatch = normalize_bool(v);
             }
 
