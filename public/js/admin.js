@@ -459,6 +459,46 @@ $('document').ready(function () {
             });
     });
 
+    $('.confirmroute').on('click', function () {
+        var _this = this;
+        var c = confirm("Are you sure you want to enable this bus route?");
+        if (c) {
+            $.ajax({
+                type: "POST",
+                url: "/api/admin/confirmBus",
+                data: {
+                    busid: $(_this).parents(".businfobox").data("busid")
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("Couldn't confirm the bus!");
+                }
+            });
+        }
+    });
+
+    $('.unconfirmroute').on('click', function () {
+        var _this = this;
+        var c = confirm("Are you sure you want to disable this bus route?");
+        if (c) {
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/confirmBus",
+                data: {
+                    busid: $(_this).parents(".businfobox").data("busid")
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("Couldn't unconfirm the bus!");
+                }
+            });
+        }
+    });
+
 
     /********************************
      *** Reimbursement Management****

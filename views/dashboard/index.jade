@@ -104,6 +104,13 @@ block dashboard_content
                     | .
             else
                 p= bus.message
+                if (!bus.confirmed)
+                    h3
+                        | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
+                        | whether to send this bus.
+                else
+                    p
+                        | This bus route has been <b>confirmed</b>. Keep an eye out for more information on how to get on!
                 .businfobox(data-busid=bus.id)
                     .busname
                     ul.businfo

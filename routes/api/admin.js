@@ -20,6 +20,7 @@ var middle = require('../middleware');
 var email = require('../../util/email');
 var io = require('../../app').io;
 var OAuth = require('oauth');
+var util = require('../../util/util.js');
 
 var Twitter = require('twitter');
 var graph = require('fbgraph');
@@ -38,6 +39,9 @@ router.put('/updateBus', updateBus);
 
 router.post('/busCaptain', setBusCaptain);
 router.delete('/busCaptain', deleteBusCaptain);
+
+router.post('/confirmBus', confirmBus);
+router.delete('/confirmBus', unconfirmBus);
 
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
@@ -241,6 +245,57 @@ function removeBus(req, res, next) {
             return res.sendStatus(500);
         }
         else return res.sendStatus(200);
+    });
+}
+
+/**
+ * @api {POST} /api/admin/confirmBus Set a route to confirmed.
+ * @apiName ConfirmBus
+ * @apiGroup Admin
+ *
+ * @apiParam {String} busid
+ * @apiError (500) BusDoesntExist
+ */
+function confirmBus(req, res, next) {
+    Bus.findOne({_id: req.body.busid}, function (err, bus) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!bus) {
+            return res.status(500).send('Bus not found!');
+        }
+
+        bus.confirmed = true;
+
+        bus.save(util.dbSaveCallback(res));
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/confirmBus Set a route back to tentative.
+ * @apiName UnconfirmBus
+ * @apiGroup Admin
+ *
+ * @apiParam {String} busid
+ * @apiError (500) BusDoesntExist
+ */
+function unconfirmBus(req, res, next) {
+    console.log('boop');
+    Bus.findOne({_id: req.body.busid}, function (err, bus) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!bus) {
+            return res.status(500).send('Bus not found!');
+        }
+
+        bus.confirmed = false;
+
+        bus.save(util.dbSaveCallback(res));
     });
 }
 

@@ -46,6 +46,17 @@ block admin_content
                                     span.maxcapacitynumber #{bus.capacity}
                                 .form-group.edit-group
                                     input.edit-maxcapacity.form-control(type='number', name='maxcapacitynumber', value='', placeholder='capacity')
+                        li.confirmStatus
+                            if (!bus.confirmed)
+                                b Status: Tentative
+                                br
+                                .edit-group
+                                    button.btn.btn-success.confirmroute(type='button') confirm
+                            else
+                                b Status: Confirmed
+                                br
+                                .edit-group
+                                    button.btn.btn-success.unconfirmroute(type='button') unconfirm
                         li.buscaptain
                             b Bus Captain:&nbsp;
                             if bus.captain.name == null
@@ -58,6 +69,7 @@ block admin_content
                     .modifybus.edit-group
                         button.btn.btn-success.update(type='button') update
                         button.btn.btn-danger.cancel(type='button') cancel
+
     div
         h2  Add New Bus
         form(action='/admin/businfo', method='POST')

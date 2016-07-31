@@ -5,6 +5,7 @@ var User = require('./user');
 
 var busSchema = new mongoose.Schema({
     name: {type: String, required: true, index: true}, //bus route name
+    confirmed: {type: Boolean}, // True if the route is no longer tentative and will have a bus
     stops: [{
         collegeid: {type: String, ref: "College", index: true},
         collegename: String
