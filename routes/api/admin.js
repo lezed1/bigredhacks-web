@@ -43,6 +43,9 @@ router.delete('/busCaptain', deleteBusCaptain);
 router.post('/confirmBus', confirmBus);
 router.delete('/confirmBus', unconfirmBus);
 
+router.put('/busOverride', setBusOverride);
+router.delete('/busOverride', deleteBusOverride);
+
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
 router.delete('/reimbursements/school', schoolReimbursementsDelete);
@@ -453,6 +456,92 @@ function deleteBusCaptain(req, res, next) {
                 });
             }
         });
+    });
+}
+
+/**
+ * @api {PUT} /api/admin/busOverride Override the bus associated with a rider. If the rider is already signed up for a bus,
+ *                                   this will remove the rider from that bus in the process.
+ * @apiName SetBusOverride
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the rider.
+ * @apiParam {String} routeName The name of the new route for the user
+ */
+function setBusOverride(req, res, next) {
+    const email = req.body.email;
+
+    if (!email || !routeName) {
+        return res.status(500).send('Missing email or route name');
+    }
+
+    User.findOne( {"email" : email}, function(err,user) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!user) {
+            return res.status(500).send('No such user');
+        }
+
+        if (user.internal.busid) {
+            // User has already RSVP'd for a bus, undo this
+            util.removeUserFromBus(req, res, user);
+        }
+
+        // Confirm bus exists
+        Bus.findOne({name: req.body.routeName}, function(err,bus){
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+
+            if (!bus) {
+                return res.status(500).send('No such bus route');
+            }
+
+            user.internal.busOverride = bus._id;
+
+            user.save(util.dbSaveCallback(res));
+        });
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/busOverride Unset the override for a bus rider. If the rider is already signed up for a bus,
+ *                                      this will remove the rider from that bus in the process.
+ *
+ * @apiName UnsetBusOverride
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the rider.
+ */
+function deleteBusOverride(req, res, next) {
+    const email = req.body.email;
+
+    if (!email) {
+        return res.status(500).send('Missing email');
+    }
+
+    User.findOne( {"email" : email}, function(err,user) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!user) {
+            return res.status(500).send('No such user');
+        }
+
+        if (user.internal.busid) {
+            // User has already RSVP'd for a bus, undo this
+            util.removeUserFromBus(req, res, user);
+        }
+
+            user.internal.busOverride = null;
+
+            user.save(util.dbSaveCallback(res));
     });
 }
 

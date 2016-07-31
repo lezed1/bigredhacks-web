@@ -347,54 +347,14 @@ module.exports = function (io) {
             });
         }
         else if (req.body.decision == "optout") {
-            Bus.findOne({_id: req.body.busid}, function (err, bus) {
-                if (user.internal.busid == req.body.busid) {
-                    user.internal.busid = null;
-                    var newmembers = [];
-                    async.each(bus.members, function (member, callback) {
-                        if (member.id != user.id) {
-                            newmembers.push(member);
-                        }
-                        callback()
-                    }, function (err) {
-                        bus.members = newmembers;
-                        bus.save(function (err) {
-                            if (err) {
-                                console.log(err);
-                                return res.sendStatus(500);
-                            }
-                            else {
-                                user.save(function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                        return res.sendStatus(500);
-                                    }
-                                    else {
-                                        return res.sendStatus(200);
-                                    }
-                                });
-                            }
-                        })
-                    });
-                }
-                else {
-                    user.internal.busid = null;
-                    user.save(function (err) {
-                        if (err) {
-                            return res.sendStatus(500);
-                        }
-                        else {
-                            return res.sendStatus(200);
-                        }
-                    });
-                }
-            });
+            util.removeUserFromBus(req,res,user);
         }
         else {
             return res.sendStatus(500);
         }
     });
 
+    
     /**
      * @api {POST} /user/rsvp Provide decision to RSVP
      * @apiName RSVP
@@ -446,7 +406,6 @@ module.exports = function (io) {
                             req.flash('error', file);
                         }
                         else {
-                            //console.log(file);
                             req.flash('success', 'We have received your response!');
                             req.user.internal.travel_receipt = file.filename;
                             req.user.save(function (err) {
@@ -456,7 +415,6 @@ module.exports = function (io) {
                                 return res.redirect('/user/dashboard');
                             });
                         }
-                        return res.redirect('/user/dashboard');
                     })
                 }
                 else {
