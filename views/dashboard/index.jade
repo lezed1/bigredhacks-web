@@ -83,8 +83,7 @@ block dashboard_content
         p BigRed//Hacks Team
         br
 
-
-        if (user.internal.going && !cornellian)
+        if (!cornellian)
             +sectionHeading("Transportation")
 
             if bus == null
@@ -119,17 +118,21 @@ block dashboard_content
                         li.maxcapacity
                             b Max Capacity:&nbsp;
                             span.maxcapacitynumber= bus.capacity
-                        if user.internal.busid == bus.id
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
-                        else
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
-                        if (buscaptain != null)
-                            li.buscaptain
-                                b Bus Captain
-                                |  #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
-                    .busselection
-                        input#signup.btn.btn-success(type='button', value='sign up', name='signup')
-                        input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                            if user.internal.busid == bus.id
+                                li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
+                            else
+                                li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
+                            if (user.internal.going)
+                                if (buscaptain != null)
+                                    li.buscaptain
+                                        b Bus Captain
+                                        |  #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
+                            else
+                                p You must RSVP before you can sign up for the bus.
+                    if (user.internal.going)
+                        .busselection
+                            input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                            input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
 
         +sectionHeading("RSVP")
         if (user.internal.going == null)
