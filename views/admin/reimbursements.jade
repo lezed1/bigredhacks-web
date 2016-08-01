@@ -82,19 +82,19 @@ block admin_content
                             td= "Unimplemented"
                             td= "$ " + student.internal.reimbursement_override
                             td.np-enabled
-                                button.btn.btn-danger.btn-remove.deleteStudent remove
-            #addOverride
-                form#addStudent.np-enabled.form-inline
+                                button.btn.btn-danger.btn-remove.delete-student remove
+            #add-override
+                form#add-student.np-enabled.form-inline
                     .form-group
                         label Add a student override:
                     .form-group
-                        input#addEmail.form-control(type='text', name='email', placeholder='student@university.edu')
+                        input#add-email.form-control(type='text', name='email', placeholder='student@university.edu')
                     .form-group
                         .input-group
                             .input-group-addon $
-                            input#addAmount.form-control(type='number', name='amount', placeholder='amount')
+                            input#add-amount.form-control(type='number', name='amount', placeholder='amount')
                     .form-group.np-enabled
-                        button#submitStudent.btn.btn-success(type='button') Add
+                        button#submit-student.btn.btn-success(type='button') Add
 
 block prepend footer
     script(src='/js/vendor/typeahead.bundle.min.js')
@@ -102,5 +102,5 @@ block prepend footer
         
 block append footer
     script.
-        overrideFormDefault("#addStudent","#submitStudent");
+        overrideFormDefault("#add-student","#submit-student");
         overrideFormDefault("#new-reimbursement","#btn-add-school");
