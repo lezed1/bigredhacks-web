@@ -450,7 +450,6 @@ function deleteBusCaptain(req, res, next) {
                         console.error(err);
                         return res.sendStatus(500);
                     } else {
-                        console.log('success!');
                         return res.sendStatus(200);
                     }
                 });
@@ -470,6 +469,7 @@ function deleteBusCaptain(req, res, next) {
  */
 function setBusOverride(req, res, next) {
     const email = req.body.email;
+    const routeName = req.body.routeName;
 
     if (!email || !routeName) {
         return res.status(500).send('Missing email or route name');
@@ -487,7 +487,8 @@ function setBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            util.removeUserFromBus(req, res, user);
+            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a dumb identity function
+            util.removeUserFromBus(Bus, req, fakeRes, user);
         }
 
         // Confirm bus exists
@@ -536,7 +537,7 @@ function deleteBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            util.removeUserFromBus(req, res, user);
+            util.removeUserFromBus(Bus, req, res, user);
         }
 
             user.internal.busOverride = null;

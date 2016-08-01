@@ -499,6 +499,40 @@ $('document').ready(function () {
         }
     });
 
+    // Bus route override
+    $("#submit-student-route").on('click', function() {
+        var that = this;
+        $.ajax({
+            method: "PUT",
+            url: "/api/admin/busOverride",
+            data: {
+                email: $("#route-override-email").val(),
+                routeName: $("#route-override-name").val()
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete Student Bus Route Override
+    $(".delete-student-route").on('click', function() {
+        var dat = $(this).parents("tr");
+        var that = this;
+        $.ajax({
+            method: "DELETE",
+            url: "/api/admin/busOverride",
+            data: {
+                email: dat[0].dataset.student
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                $(that).parents("tr").remove();
+            }
+        });
+    });
+
 
     /********************************
      *** Reimbursement Management****
@@ -631,4 +665,12 @@ try {
     _tt_college_enable();
 } catch (e){
     // Some pages should not need this, so this error is expected.
+}
+
+// Generic error handler, alerting the error thrown to the user.
+function alertErrorHandler(jqXHR, textStatus, errorThrown ) {
+    var resp = textStatus + ' (' + errorThrown + ')';
+    if (jqXHR.responseText)
+        resp += ': ' + jqXHR.responseText;
+    alert(resp);
 }

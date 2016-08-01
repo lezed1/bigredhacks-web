@@ -399,9 +399,35 @@ router.get('/businfo', function (req, res, next) {
                 callback();
             });
         }, function (err) {
-            res.render('admin/businfo', {
-                title: 'Admin Dashboard - Bus Information',
-                buses: _buses
+            User.find({"internal.busOverride" : {$ne : null}}, function(err, users) {
+                if (err) {
+                    console.error(err);
+                }
+
+                var overrideUsers = [];
+                // Setup an array of users with bus overrides
+                users.forEach(function(user) {
+                    var info = {};
+                    info.name = user.name.first + " " + user.name.last;
+                    info.school = user.school.name;
+                    info.email = user.email;
+                    info.route = "error";
+
+                    for (var i = 0; i < _buses.length; i++) {
+                        var route = _buses[i];
+                        if (route._id + "" == user.internal.busOverride + "") { // FIXME: For some reason I need to coerce these to strings to have equality
+                            info.route = route.name;
+                            break;
+                        }
+                    }
+
+                    overrideUsers.push(info);
+                });
+                res.render('admin/businfo', {
+                    title: 'Admin Dashboard - Bus Information',
+                    buses: _buses,
+                    overrides: overrideUsers
+                });
             });
         });
     });

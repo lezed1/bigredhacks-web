@@ -152,8 +152,10 @@ block dashboard_content
                             a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
                             |  if you'd like to help out.
                     .busselection
-                        input#signup.btn.btn-success(type='button', value='sign up', name='signup')
-                        input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                        if user.internal.busid == bus.id
+                            input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                        else
+                            input#signup.btn.btn-success(type='button', value='sign up', name='signup')
 
         +sectionHeading("RSVP")
         if (user.internal.going == null)

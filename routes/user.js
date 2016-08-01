@@ -11,6 +11,7 @@ var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
 var middle = require('../routes/middleware.js');
+var util = require('../util/util.js');
 
 var Bus = require('../models/bus.js');
 var User = require('../models/user.js');
@@ -347,7 +348,7 @@ module.exports = function (io) {
             });
         }
         else if (req.body.decision == "optout") {
-            util.removeUserFromBus(req,res,user);
+            return util.removeUserFromBus(Bus, req, res, user);
         }
         else {
             return res.sendStatus(500);
@@ -719,71 +720,83 @@ module.exports = function (io) {
     function _findAssignedOrNearestBus(req, done) {
         var userbus = null;
         var closestdistance = null;
-        Bus.find({}).exec(function (err, buses) {
-            if (err) {
-                console.log(err);
-            }
-            //todo optimize this (see if it's possible to perform this operation in a single aggregation
-            async.each(buses, function (bus, callback) {
-                async.each(bus.stops, function (stop, inner_callback) {
-                    College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
-                        function (err, colleges) {
-                            //The case when the query returns only one college because the college of the bus's stop
-                            //is the same as the user's college
-                            if (colleges.length == 1) {
-                                userbus = bus;
-                                userbus.message = "a bus stops at your school:";
-                                closestdistance = 0;
-                            }
-                            //The other case when the query returns two colleges because the college of the bus's
-                            //stop is not the same as the user's college.
-                            else if (colleges.length == 2) {
-                                //find the distance between two colleges
-                                var distanceBetweenColleges = _distanceBetweenPointsInMiles(
-                                    colleges[0].loc.coordinates, colleges[1].loc.coordinates);
-                                if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
-                                    if (closestdistance == null || distanceBetweenColleges < closestdistance) {
-                                        userbus = bus;
-                                        //properly round to two decimal points
-                                        var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                            100) / 100;
-                                        userbus.message = "a bus stops near your school at " + stop.collegename +
-                                        " (roughly " + roundedDistance + " miles away):";
-                                        closestdistance = distanceBetweenColleges;
-                                    }
-                                }
-                            }
-                            inner_callback(err);
-                        });
-                }, function (err) {
-                    callback(err);
-                });
-            }, function (err) {
+        if (req.user.internal.busOverride) {
+            Bus.findOne({_id : req.user.internal.busOverride }, function (err,bus) {
+                if (err) {
+                    console.error(err);
+                } else if (bus) {
+                    done(null, bus);
+                } else {
+                    console.error('ERROR: Missing bus on an overrided user');
+                }
+            });
+        } else {
+            Bus.find({}).exec(function (err, buses) {
                 if (err) {
                     console.log(err);
                 }
-                done(null, userbus);
-                //temporarily disable
-                //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
-                //todo consider storing bus captain info in bus
-                //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
-                /*
-                 async.each(userbus.members, function (member, finalcallback) {
-                 User.findOne({_id: member.id}, function (err, user) {
-                 if (err) {
-                 console.log(err);
-                 }
-                 else if (user.role == "bus captain") {
-                 userbus.buscaptain = user;
-                 }
-                 finalcallback();
-                 });
-                 }, function (err) {
-                 return done(null, userbus);
-                 });
-                 */
+                //todo optimize this (see if it's possible to perform this operation in a single aggregation
+                async.each(buses, function (bus, callback) {
+                    async.each(bus.stops, function (stop, inner_callback) {
+                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                            function (err, colleges) {
+                                //The case when the query returns only one college because the college of the bus's stop
+                                //is the same as the user's college
+                                if (colleges.length == 1) {
+                                    userbus = bus;
+                                    userbus.message = "a bus stops at your school:";
+                                    closestdistance = 0;
+                                }
+                                //The other case when the query returns two colleges because the college of the bus's
+                                //stop is not the same as the user's college.
+                                else if (colleges.length == 2) {
+                                    //find the distance between two colleges
+                                    var distanceBetweenColleges = _distanceBetweenPointsInMiles(
+                                        colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                    if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                        if (closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                            userbus = bus;
+                                            //properly round to two decimal points
+                                            var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
+                                                    100) / 100;
+                                            userbus.message = "a bus stops near your school at " + stop.collegename +
+                                                " (roughly " + roundedDistance + " miles away):";
+                                            closestdistance = distanceBetweenColleges;
+                                        }
+                                    }
+                                }
+                                inner_callback(err);
+                            });
+                    }, function (err) {
+                        callback(err);
+                    });
+                }, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    done(null, userbus);
+                    //temporarily disable
+                    //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
+                    //todo consider storing bus captain info in bus
+                    //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
+                    /*
+                     async.each(userbus.members, function (member, finalcallback) {
+                     User.findOne({_id: member.id}, function (err, user) {
+                     if (err) {
+                     console.log(err);
+                     }
+                     else if (user.role == "bus captain") {
+                     userbus.buscaptain = user;
+                     }
+                     finalcallback();
+                     });
+                     }, function (err) {
+                     return done(null, userbus);
+                     });
+                     */
+                });
             });
-        });
+        }
     }
 
     return router;

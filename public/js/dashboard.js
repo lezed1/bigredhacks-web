@@ -59,7 +59,12 @@ $(document).ready(function () {
             },
             error: function (e) {
                 console.log("Couldn't sign up or opt out of bus.");
-                alert('The bus is full! Please contact us at info@bigredhacks.com')
+                if (decision == "optout") {
+                    alert('Error opting out! Please contact us at info@bigredhacks.com');
+                }
+                else{
+                    alert('The bus is full! Please contact us at info@bigredhacks.com');
+                }
             }
         });
     };

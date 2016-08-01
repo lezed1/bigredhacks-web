@@ -3,6 +3,8 @@
  * Common helper functions
  */
 
+var async = require('async');
+
 var util = {};
 
 // Callback for most saves
@@ -21,27 +23,28 @@ util.dbSaveCallback = function (res) {
  * Removes user from its current bus, factored out for reuse
  * @param user
  */
-util.removeUserFromBus = function (req, res,user) {
+util.removeUserFromBus = function (Bus, req, res,user) {
     Bus.findOne({_id: req.body.busid}, function (err, bus) {
         if (user.internal.busid == req.body.busid) {
             user.internal.busid = null;
             var newmembers = [];
-            async.each(bus.members, function (member, callback) {
+            async.each(bus.members, function (member, callback) { // Remake user list without the user being removed included
                 if (member.id != user.id) {
                     newmembers.push(member);
                 }
-                callback()
+
+                callback();
             }, function (err) {
                 bus.members = newmembers;
                 bus.save(function (err) {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                         return res.sendStatus(500);
                     }
                     else {
                         user.save(function (err) {
                             if (err) {
-                                console.log(err);
+                                console.error(err);
                                 return res.sendStatus(500);
                             }
                             else {
