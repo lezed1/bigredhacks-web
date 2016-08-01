@@ -439,14 +439,14 @@ $('document').ready(function () {
      *** Reimbursement Management****
      ********************************/
     // Add Student Override
-    $("#submitStudent").on('click', function() {
+    $("#submit-student").on('click', function() {
         var that = this;
         $.ajax({
             method: "POST",
             url: "/api/admin/reimbursements/student",
             data: {
-                email: $("#addEmail").val(),
-                amount: $("#addAmount").val()
+                email: $("#add-email").val(),
+                amount: $("#add-amount").val()
             },
             error: alertErrorHandler,
             success: function (res) {
@@ -456,7 +456,7 @@ $('document').ready(function () {
     });
 
     // Delete Student Override
-    $(".deleteStudent").on('click', function() {
+    $(".delete-student").on('click', function() {
         var dat = $(this).parents("tr");
         var that = this;
         $.ajax({
