@@ -8,8 +8,8 @@ var mcapi = require('mailchimp-api');
 
 var config = require('../config.js');
 
-var MAX_RESUME_SIZE = 1024 * 1024 * 5;
-var MAX_RECEIPT_SIZE = 1024 * 1024 * 10;
+var MAX_RESUME_SIZE = 1024 * 1024 * 10; // 10 mb limit
+var MAX_RECEIPT_SIZE = 1024 * 1024 * 15; // 15 mb limit
 
 var RESUME_DEST = 'resume/';
 var RECEIPT_DEST = 'travel/';
