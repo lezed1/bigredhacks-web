@@ -363,13 +363,9 @@ function setBusCaptain(req, res, next) {
         var bus = results.bus;
 
         if (bus.captain.name) {
-            console.log('ERROR: Bus already has captain.');
-            res.sendStatus(500);
+            res.status(500).send('Bus already has a captain');
         } else if (captain.internal.busid != bus.id){
-            console.log(captain.internal.busid);
-            console.log(bus.id);
-            console.log('ERROR: User has not signed up for that bus!');
-            res.sendStatus(500);
+            res.status(500).send('User has not signed up for that bus');
         } else {
             bus.captain.name = captain.name.first + " " + captain.name.last;
             bus.captain.email = captain.email;
@@ -426,8 +422,7 @@ function deleteBusCaptain(req, res, next) {
         }
 
         if (!results.bus || !results.captain) {
-            console.error('ERROR: Could not find bus or captain!');
-            return res.sendStatus(500);
+            return res.status(500).send('Could not find bus or captain');
         }
 
         var captain = results.captain;
