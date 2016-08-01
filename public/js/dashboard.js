@@ -62,7 +62,7 @@ $(document).ready(function () {
                 if (decision == "optout") {
                     alert('Error opting out! Please contact us at info@bigredhacks.com');
                 }
-                else{
+                else {
                     alert('The bus is full! Please contact us at info@bigredhacks.com');
                 }
             }

@@ -453,9 +453,7 @@ $('document').ready(function () {
                 success: function (data) {
                     location.reload();
                 },
-                error: function (e) {
-                    console.log("Couldn't remove the bus captain: " + e);
-                }
+                error: alertErrorHandler
             });
     });
 
@@ -472,9 +470,7 @@ $('document').ready(function () {
                 success: function (data) {
                     location.reload();
                 },
-                error: function (e) {
-                    console.log("Couldn't confirm the bus!");
-                }
+                error: alertErrorHandler
             });
         }
     });
@@ -492,9 +488,7 @@ $('document').ready(function () {
                 success: function (data) {
                     location.reload();
                 },
-                error: function (e) {
-                    console.log("Couldn't unconfirm the bus!");
-                }
+                error: alertErrorHandler
             });
         }
     });

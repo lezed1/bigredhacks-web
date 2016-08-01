@@ -384,7 +384,6 @@ function setBusCaptain(req, res, next) {
                             console.error(err);
                             res.sendStatus(500);
                         } else {
-                            console.log('success!');
                             res.redirect('/admin/businfo');
                         }
                     });
@@ -405,7 +404,7 @@ function deleteBusCaptain(req, res, next) {
     const email = req.body.email;
 
     if (!email) {
-        return res.sendStatus(500);
+        return res.status(500).send('Missing email');
     }
 
     async.series({
