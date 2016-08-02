@@ -287,7 +287,6 @@ function confirmBus(req, res, next) {
  * @apiError (500) BusDoesntExist
  */
 function unconfirmBus(req, res, next) {
-    console.log('boop');
     Bus.findOne({_id: req.body.busid}, function (err, bus) {
         if (err) {
             console.error(err);
