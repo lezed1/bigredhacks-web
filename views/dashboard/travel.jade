@@ -9,11 +9,14 @@ block dashboard_content
     +contentHeading("Dashboard")
 
     .container-fluid
+        p
+            | Note that the linked TCAT schedules are from fall 2015.
+            |  We will update this page with any changes as soon as the 2016 schedules are released.
         +sectionHeading("Location")
         p.long-text
             | BigRed//Hacks will take place on Cornell University's campus.
             | The hacking/main events will take place at the
-            a(href='https://www.google.com/maps/place/Physical+Sciences+Bldg', target='_blank')  Physical Sciences Building (PSB)
+            a(href='https://www.google.com/maps/place/Physical+Sciences+Building,+245+East+Ave,+Ithaca,+NY/', target='_blank')  Physical Sciences Building (PSB)
             | , and the location of the opening ceremonies is to be announced.
         +sectionHeading("Bus Information")
         p.long-text
@@ -31,40 +34,32 @@ block dashboard_content
             a(href='http://tcat.nextinsight.com/pdfpics/30_fall2015.pdf', target='_blank')  30 outbound
             |  or
             a(href='http://tcat.nextinsight.com/pdfpics/32_fall2015.pdf', target='_blank')  32 outbound
-            |  , getting on at the
-            em  Collegetown @ Dryden
-            |  stop (42°26'30.8"N 76°29'07.1"W) and getting off
-            |  at the
-            em  Rockefeller Hall
+            |  , getting on at the #[em Collegetown @ Dryden]
+            |  stop (42°26'30.8"N 76°29'07.1"W) and getting off at the #[em Rockefeller Hall]
             |  stop. The TCAT fare is $1.50.
         h3 Traveling by Greyhound
         p.long-text
             | The Greyhound bus will drop you off at the downtown Ithaca terminal. The most
-            |  convenient option would
-            |  be to take a taxi. Some taxi options include
+            |  convenient option would be to take a taxi. Some taxi options include
             a(href='http://www.ithacataxi.biz/', target='_blank')  Ithaca Dispatch
             |  and
-            a(href='http://collegetowncab.com/')  Collegetown Cab
-            | . Alternatively, you can take the TCAT
-            |                     routes
+            a(href='http://collegetowncab.com/', target='_blank')  Collegetown Cab
+            | . Alternatively, you can take the TCAT routes
             a(href='http://tcat.nextinsight.com/pdfpics/30_fall2015.pdf', target='_blank')  30 outbound
             |  or
             a(href='http://tcat.nextinsight.com/pdfpics/32_fall2015.pdf', target='_blank')  32 outbound
-            | , getting on at the
-            em  Green St @ Commons
-            |  stop (42°26'18.8"N 76°29'51.5"W). It is a 15 minute walk from the Greyhound terminal to the Green St @ Commons stop. Get off at
-            em  Rockefeller Hall
-            | . The TCAT fare is $1.50.
+            | , getting on at the #[em Green St @ Commons]
+            |  stop (42°26'18.8"N 76°29'51.5"W). It is a 15 minute walk from the Greyhound terminal to the Green St @ Commons stop.
+            |  Get off at #[em Rockefeller Hall]. The TCAT fare is $1.50.
         h3 Traveling by Car
         p.long-text
-            | If you are traveling by car, you can park your car at
-            a(href='https://www.google.com/maps/place/A+Lot/@42.4481187,-76.4829308,10.26z/data=!4m5!1m2!2m1!1sA+Lot!3m1!1s0x0000000000000000:0x83c1e76e6ceea578')
-                |  A Lot
+            | If you are traveling by car, you can park your car at&nbsp;
+            a(href='https://www.google.com/maps/place/A+Lot,+Ithaca,+NY+14850/@42.4584572,-76.4777676,18z/' target='_blank') A Lot
             | . You will not need a parking permit to park there after 5pm on Friday
             |  through Sunday; however, if you plan on staying longer, you will need a temporary permit
-            |  starting 7:30AM on Monday. More details can be found on the
+            |  starting 7:30AM on Monday. More details can be found on the&nbsp;
             a(href='http://transportation.fs.cornell.edu/parking/campusparking/visitors/shortterm.cfm', target='_blank')
-                |  Cornell Commuter and Parking Services Website
+                | Cornell Commuter and Parking Services Website
             | . We are not responsible for any fines for parking violations.
         p.long-text
             | If A Lot is filled, there are several garages in the Commons that are inexpensive
@@ -73,33 +68,29 @@ block dashboard_content
             a(href='http://tcat.nextinsight.com/pdfpics/30_fall2015.pdf', target='_blank')  30 outbound
             |  or
             a(href='http://tcat.nextinsight.com/pdfpics/32_fall2015.pdf', target='_blank')  32 outbound
-            |  , getting on at the
-            em  Green St @ Commons
-            |  stop (42°26'18.8"N 76°29'51.5"W). Get off at
-            em  Rockefeller Hall
-            | . The TCAT fare is $1.50.
+            |  , getting on at the #[em  Green St @ Commons] stop (42°26'18.8"N 76°29'51.5"W). Get off at
+            | #[em  Rockefeller Hall]. The TCAT fare is $1.50.
         h3 Traveling by Plane
         p.long-text
             | The most straightforward flight is directly to Ithaca's own airport, the Ithaca Tompkins Area Airport.
-            | If you are flying in to this airport, you can take a
-            a(href='http://flyithaca.com/ground/', target='_blank')  taxi
-            |  (~$15-$20) to campus. Alternatively, you can take the TCAT route
-            a(href='http://tcat.nextinsight.com/pdfpics/32_fall2015.pdf')  32 inbound
-            |  and get off at
-            em  Goldwin Smith Hall.
-         p.long-text
+            | If you are flying in to this airport, you can take a&nbsp;
+            a(href='http://flyithaca.com/ground/', target='_blank') taxi
+            |  (~$15-$20) to campus. Alternatively, you can take the TCAT route&nbsp;
+            a(href='http://tcat.nextinsight.com/pdfpics/32_fall2015.pdf') 32 inbound
+            |  and get off at #[em  Goldwin Smith Hall].
+        p.long-text
             | A few other options are flying to either the Syracuse Hancock International Airport or
             | an airport from New York City and then taking a bus to Cornell. 
             a(href='https://www.wanderu.com/en/bus-tickets/us-ny/syracuse/us-ny/ithaca/', target='_blank')  Buses
             |  from Syracuse to Ithaca are around $20 and stop at the Greyhound terminal in downtown Ithaca.
             | See 'Traveling by Greyhound' above for more information.
-         p.long-text
+        p.long-text
             |  We are considering chartering a bus from NYC departing around 12:30 pm, but if we decide not to offer this,
             |  or you cannot find a flight in that time frame,
-            |  buses from New York City to Ithaca are around $50-$90. Some bus options include
-            a(href='http://sales.coachusa.com/home.aspx?pid=5', target='_blank')  Coach Shortline 
+            |  buses from New York City to Ithaca are around $50-$90. Some bus options include&nbsp;
+            a(href='http://sales.coachusa.com/home.aspx?pid=5', target='_blank') Coach Shortline
             |  and 
             a(href='https://c2cbus.ipp.cornell.edu/', target='_blank')  Campus to Campus
-            |. For the Shortline bus, see 'Traveling by Shortline' above for more information. For  
+            | . For the Shortline bus, see 'Traveling by Shortline' above for more information. For
             | Campus to Campus, you can select to be dropped off at Sage Hall. Due to construction,
             | the actual drop off site will be Uris Hall.
