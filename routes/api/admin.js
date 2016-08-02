@@ -40,8 +40,8 @@ router.put('/updateBus', updateBus);
 router.post('/busCaptain', setBusCaptain);
 router.delete('/busCaptain', deleteBusCaptain);
 
-router.post('/confirmBus', confirmBus);
-router.delete('/confirmBus', unconfirmBus);
+router.post('/confirmBus', busConfirmationHandler(true));
+router.delete('/confirmBus', busConfirmationHandler(false));
 
 router.put('/busOverride', setBusOverride);
 router.delete('/busOverride', deleteBusOverride);
@@ -260,25 +260,7 @@ function removeBus(req, res, next) {
  *
  * @apiParam {String} busid
  * @apiError (500) BusDoesntExist
- */
-function confirmBus(req, res, next) {
-    Bus.findOne({_id: req.body.busid}, function (err, bus) {
-        if (err) {
-            console.error(err);
-            return res.sendStatus(500);
-        }
-
-        if (!bus) {
-            return res.status(500).send('Bus not found!');
-        }
-
-        bus.confirmed = true;
-
-        bus.save(util.dbSaveCallback(res));
-    });
-}
-
-/**
+ *
  * @api {DELETE} /api/admin/confirmBus Set a route back to tentative.
  * @apiName UnconfirmBus
  * @apiGroup Admin
@@ -286,21 +268,20 @@ function confirmBus(req, res, next) {
  * @apiParam {String} busid
  * @apiError (500) BusDoesntExist
  */
-function unconfirmBus(req, res, next) {
-    Bus.findOne({_id: req.body.busid}, function (err, bus) {
-        if (err) {
-            console.error(err);
-            return res.sendStatus(500);
-        }
+function busConfirmationHandler(confirm) {
+    return function (req, res, next) {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            } else if (!bus) {
+                return res.status(500).send('Bus not found!');
+            }
 
-        if (!bus) {
-            return res.status(500).send('Bus not found!');
-        }
-
-        bus.confirmed = false;
-
-        bus.save(util.dbSaveCallback(res));
-    });
+            bus.confirmed = confirm;
+            bus.save(util.dbSaveCallback(res));
+        });
+    };
 }
 
 /**
@@ -474,9 +455,7 @@ function setBusOverride(req, res, next) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
-        }
-
-        if (!user) {
+        } else if (!user) {
             return res.status(500).send('No such user');
         }
 
@@ -491,14 +470,11 @@ function setBusOverride(req, res, next) {
             if (err) {
                 console.error(err);
                 return res.sendStatus(500);
-            }
-
-            if (!bus) {
+            } else if (!bus) {
                 return res.status(500).send('No such bus route');
             }
 
             user.internal.busOverride = bus._id;
-
             user.save(util.dbSaveCallback(res));
         });
     });
@@ -524,9 +500,7 @@ function deleteBusOverride(req, res, next) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
-        }
-
-        if (!user) {
+        } else if (!user) {
             return res.status(500).send('No such user');
         }
 
@@ -535,9 +509,8 @@ function deleteBusOverride(req, res, next) {
             util.removeUserFromBus(Bus, req, res, user);
         }
 
-            user.internal.busOverride = null;
-
-            user.save(util.dbSaveCallback(res));
+        user.internal.busOverride = null;
+        user.save(util.dbSaveCallback(res));
     });
 }
 

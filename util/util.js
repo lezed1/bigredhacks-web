@@ -28,7 +28,8 @@ util.removeUserFromBus = function (Bus, req, res,user) {
         if (user.internal.busid == req.body.busid) {
             user.internal.busid = null;
             var newmembers = [];
-            async.each(bus.members, function (member, callback) { // Remake user list without the user being removed included
+            // Remake user list without the user being removed included
+            async.each(bus.members, function (member, callback) {
                 if (member.id != user.id) {
                     newmembers.push(member);
                 }
@@ -40,14 +41,12 @@ util.removeUserFromBus = function (Bus, req, res,user) {
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);
-                    }
-                    else {
+                    } else {
                         user.save(function (err) {
                             if (err) {
                                 console.error(err);
                                 return res.sendStatus(500);
-                            }
-                            else {
+                            } else {
                                 return res.sendStatus(200);
                             }
                         });
@@ -66,6 +65,6 @@ util.removeUserFromBus = function (Bus, req, res,user) {
             });
         }
     });
-}
+};
 
 module.exports = util;

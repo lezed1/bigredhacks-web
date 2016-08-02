@@ -408,14 +408,15 @@ router.get('/businfo', function (req, res, next) {
                 // Setup an array of users with bus overrides
                 users.forEach(function(user) {
                     var info = {};
-                    info.name = user.name.first + " " + user.name.last;
+                    info.name = user.name.full;
                     info.school = user.school.name;
                     info.email = user.email;
                     info.route = "error";
 
                     for (var i = 0; i < _buses.length; i++) {
                         var route = _buses[i];
-                        if (route._id + "" == user.internal.busOverride + "") { // FIXME: For some reason I need to coerce these to strings to have equality
+                        // _id has a non-string type, so coercing is required here
+                        if (route._id + "" == user.internal.busOverride + "") {
                             info.route = route.name;
                             break;
                         }

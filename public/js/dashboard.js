@@ -58,8 +58,7 @@ $(document).ready(function () {
                 callback(data);
             },
             error: function (e) {
-                console.log("Couldn't sign up or opt out of bus.");
-                if (decision == "optout") {
+                if (decision.toLowerCase() == "optout") {
                     alert('Error opting out! Please contact us at info@bigredhacks.com');
                 }
                 else {

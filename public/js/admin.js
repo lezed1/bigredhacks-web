@@ -457,45 +457,32 @@ $('document').ready(function () {
             });
     });
 
-    $('.confirmroute').on('click', function () {
-        var _this = this;
-        var c = confirm("Are you sure you want to enable this bus route?");
-        if (c) {
-            $.ajax({
-                type: "POST",
-                url: "/api/admin/confirmBus",
-                data: {
-                    busid: $(_this).parents(".businfobox").data("busid")
-                },
-                success: function (data) {
-                    location.reload();
-                },
-                error: alertErrorHandler
-            });
-        }
-    });
+    function busRouteConfirmationAjax(type, message) {
+        return function() {
+            var id = $(this).parents(".businfobox").data("busid");
+            var c = confirm(message);
+            if (c) {
+                $.ajax({
+                    type: type,
+                    url: "/api/admin/confirmBus",
+                    data: {
+                        busid: id
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: alertErrorHandler
+                });
+            }
+        };
+    }
 
-    $('.unconfirmroute').on('click', function () {
-        var _this = this;
-        var c = confirm("Are you sure you want to disable this bus route?");
-        if (c) {
-            $.ajax({
-                type: "DELETE",
-                url: "/api/admin/confirmBus",
-                data: {
-                    busid: $(_this).parents(".businfobox").data("busid")
-                },
-                success: function (data) {
-                    location.reload();
-                },
-                error: alertErrorHandler
-            });
-        }
-    });
+    $('.confirmroute').on('click', busRouteConfirmationAjax('POST', 'Are you sure you want to enable this bus route?'));
+    $('.unconfirmroute').on('click', busRouteConfirmationAjax('DELETE', 'Are you sure you want to disable this bus route?'));
+
 
     // Bus route override
     $("#submit-student-route").on('click', function() {
-        var that = this;
         $.ajax({
             method: "PUT",
             url: "/api/admin/busOverride",

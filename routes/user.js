@@ -318,6 +318,8 @@ module.exports = function (io) {
      * @api {POST} /user/busdecision Riding bus signup
      * @apiName BusDecision
      * @apiGroup User
+     *
+     * @apiParam {String} decision Either signup or optout
      */
     router.post('/busdecision', middle.requireAccepted, function (req, res) {
         var user = req.user;
@@ -354,7 +356,7 @@ module.exports = function (io) {
                 }
             });
         }
-        else if (req.body.decision == "optout") {
+        else if (req.body.decision.toLowerCase() == "optout") {
             return util.removeUserFromBus(Bus, req, res, user);
         }
         else {
@@ -362,7 +364,6 @@ module.exports = function (io) {
         }
     });
 
-    
     /**
      * @api {POST} /user/rsvp Provide decision to RSVP
      * @apiName RSVP
@@ -734,7 +735,7 @@ module.exports = function (io) {
                 } else if (bus) {
                     done(null, bus);
                 } else {
-                    console.error('ERROR: Missing bus on an overrided user');
+                    console.error('ERROR: Missing bus on an overridden user');
                 }
             });
         } else {
@@ -780,7 +781,7 @@ module.exports = function (io) {
                 }, function (err) {
                     if (err) {
                         console.log(err);
-                        done(err);
+                        done(err, userbus);
                     } else {
                         done(null, userbus);
                     }
