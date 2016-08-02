@@ -62,17 +62,19 @@ block dashboard_content
         if !user.internal.cornell_applicant
             if (user.internal.going == null)
                 if (deadline.active)
-                    //p <b>You have #{deadline.message} left to RSVP before you risk losing your spot.</b>
+                    p.long-text
+                        | Because the event is fast approaching, <b style="color: #4a90e2">you'll need to RSVP within #{deadline.message},</b>
+                        |  or you risk losing your spot.
                 else
                     p
                         | You have not responded within the window of #{deadline.interval} we requested. We may change your application
                         |  status to rejected at any moment to make room for another applicant, but you may still RSVP
                         |  until we do that if you still wish to attend.
                 p.long-text
-                    | Because the event is fast approaching, <b style="color: #4a90e2">you'll need to RSVP within #{deadline.interval},</b>
-                    |  or you risk losing your spot. RSVPing involves two steps: confirming your mode of transportation
-                    |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
-                    |  Major League Hacking's code of conduct.
+                        | RSVPing involves two steps: confirming your mode of transportation
+                        |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
+                        |  Major League Hacking's code of conduct.
+
         p.long-text
             | We'll be sending lots more information as we get closer to the event, so stay tuned!
         p.long-text
