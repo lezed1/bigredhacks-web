@@ -159,7 +159,9 @@ function makeRollingAnnouncement(req, res, next) {
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
-            async.each(recipient, function(recip, callback) {
+            const maxRequestsAtATime = 3; // Do not want to overload by doing too many requests, so this will limit the async
+            async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
+                console.log('beginning email tranaction for ' + recip.email); // TODO: Remove once we are more confident about this code
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -171,17 +173,17 @@ function makeRollingAnnouncement(req, res, next) {
 
                 email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
                     if (err)  {
-                        console.log(err);
+                        console.error('ERROR in sending decision emails: ' + err);
                         callback(err);
                     } else {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
                         recip.save(function(err) {
                             if (err) {
-                                console.log(err);
-                                console.log("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
+                                console.error(err);
+                                console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
                             } else {
-                                console.log('sent and saved');
+                                console.log(recip.email + ' has successfully been sent their new decision'); // TODO: Do not log this once we are more confident about this code
                             }
                         });
                         callback();
@@ -189,10 +191,9 @@ function makeRollingAnnouncement(req, res, next) {
                 })
             }, function(err) {
                 if (err) {
-                    console.log(err);
+                    console.error('An error occurred with decision emails. Decision sending was terminated. See the log for remediation: ' + err);
                     res.sendStatus(500);
                 } else {
-                    console.log('All transactional decision emails successfully sent!');
                     req.flash('success', 'All transactional decision emails successfully sent!');
                     return res.redirect('/admin/dashboard');
                 }
