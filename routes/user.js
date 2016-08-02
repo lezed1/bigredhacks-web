@@ -69,14 +69,21 @@ module.exports = function (io) {
             },
             reimbursement: function (done) {
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
-                    if (err || rem == null) {
-                        console.log(err);
-                        var default_rem = {};
-                        default_rem.amount = 150;
-                        return done(err, default_rem);
+                    if (rem == null) {
+                        if (req.user.internal.reimbursement_override > 0) {
+                            return done(err, { amount: req.user.internal.reimbursement_override });
+                        } else {
+                            if (err) {
+                                console.log(err);
+                            }
+                            
+                            var default_rem = {};
+                            default_rem.amount = config.admin.default_reimbursement;
+                            return done(err, default_rem);
+                        }
                     }
-                    return done(err, rem);
 
+                    return done(err, rem);
                 })
             },
             bus: function (done) {

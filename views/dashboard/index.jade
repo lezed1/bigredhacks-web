@@ -83,8 +83,7 @@ block dashboard_content
         p BigRed//Hacks Team
         br
 
-
-        if (user.internal.going && !cornellian)
+        if (!cornellian)
             +sectionHeading("Transportation")
 
             if bus == null
@@ -130,32 +129,35 @@ block dashboard_content
                             li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
                         else
                             li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
-                        if (bus.captain != null && bus.captain.name != null)
-                            li.buscaptain
-                                b Bus Captain:
-                                |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
-                            if (user.internal.busCaptain)
-                                h3 You are the bus captain for this route. Here is the current list of riders for your route:
-                                table.table.table-striped
-                                    tr
-                                        th Name
-                                        th Email
-                                        th University
-                                    for memb in bus.members
+                        if (user.internal.going)
+                            if (bus.captain != null && bus.captain.name != null)
+                                li.buscaptain
+                                    b Bus Captain:
+                                    |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
+                                if (user.internal.busCaptain)
+                                    h3 You are the bus captain for this route. Here is the current list of riders for your route:
+                                    table.table.table-striped
                                         tr
-                                            td #{memb.name}
-                                            td #{memb.email}
-                                            td #{memb.college}
+                                            th Name
+                                            th Email
+                                            th University
+                                        for memb in bus.members
+                                            tr
+                                                td #{memb.name}
+                                                td #{memb.email}
+                                                td #{memb.college}
+                            else
+                                b
+                                | We need a bus captain for your route! Email
+                                a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                                |  if you'd like to help out.
+                            .busselection
+                                if user.internal.busid == bus.id
+                                    input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                else
+                                    input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         else
-                            b
-                            | We need a bus captain for your route! Email
-                            a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
-                            |  if you'd like to help out.
-                    .busselection
-                        if user.internal.busid == bus.id
-                            input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
-                        else
-                            input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                            p You must RSVP before you can sign up for the bus.
 
         +sectionHeading("RSVP")
         if (user.internal.going == null)
