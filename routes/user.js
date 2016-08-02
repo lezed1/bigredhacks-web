@@ -66,24 +66,21 @@ module.exports = function (io) {
                     return done(err, members);
                 })
             },
+            // Priority is user-override, then school-override, then default
             reimbursement: function (done) {
+                if (req.user.internal.reimbursement_override > 0) {
+                    return done(null, { amount: req.user.internal.reimbursement_override });
+                }
+
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                     if (rem == null) {
-                        if (req.user.internal.reimbursement_override > 0) {
-                            return done(err, { amount: req.user.internal.reimbursement_override });
-                        } else {
-                            if (err) {
-                                console.log(err);
-                            }
-                            
-                            var default_rem = {};
-                            default_rem.amount = config.admin.default_reimbursement;
-                            return done(err, default_rem);
-                        }
+                        var default_rem = {};
+                        default_rem.amount = config.admin.default_reimbursement;
+                        return done(err, default_rem);
                     }
 
                     return done(err, rem);
-                })
+                });
             },
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
@@ -104,7 +101,8 @@ module.exports = function (io) {
             }
         }, function (err, results) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                return res.sendStatus(500);
             }
 
             var render_data = {
