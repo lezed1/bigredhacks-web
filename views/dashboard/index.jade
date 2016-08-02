@@ -29,7 +29,7 @@ block dashboard_content
             |  we're honored that we were on your list.
         p.long-text
             | Unfortunately, we aren't able to offer you a spot at BigRed//Hacks #{new Date().getFullYear()}. We had a
-            |  record number of applications, and a very limited amount of space. But know that we still think you're
+            |  record number of applications and a very limited amount of space. But know that we still think you're
             |  awesome, and would love for you to apply again for BigRed//Hacks #{new Date().getFullYear() + 1}!
         p.long-text All the best for the future, and keep on hacking!
         p BigRed//Hacks Team
@@ -62,17 +62,20 @@ block dashboard_content
         if !user.internal.cornell_applicant
             if (user.internal.going == null)
                 if (deadline.active)
-                    p <b>You have #{deadline.message} left to RSVP before you risk losing your spot.</b>
+                    p.long-text
+                        | Because the event is fast approaching, <b style="color: #4a90e2">you'll need to RSVP within #{deadline.message},</b>
+                        |  or you risk losing your spot.
                 else
                     p
                         | You have not responded within the window of #{deadline.interval} we requested. We may change your application
                         |  status to rejected at any moment to make room for another applicant, but you may still RSVP
                         |  until we do that if you still wish to attend.
                 p.long-text
-                    | Because the event is fast approaching, <b>you'll need to RSVP as soon as possible,</b>
-                    |  or you risk losing your spot. RSVPing involves two steps: confirming your mode of transportation
+                    | RSVPing involves two steps: confirming your mode of transportation
                     |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
                     |  Major League Hacking's code of conduct.
+                    |  Take a look at our #[a(href="/user/travel") travel guide] if you need travel suggestions.
+
         p.long-text
             | We'll be sending lots more information as we get closer to the event, so stay tuned!
         p.long-text
@@ -91,7 +94,7 @@ block dashboard_content
                 p.long-text
                     | Allowances are based on the general cost of inexpensive transportation in your area. You may select any method
                     |  of transportation, but we will only reimburse you up to the amount above. If you believe that this amount is unfair,
-                    |  then please reach out to us and we'll make adjustements as necessary.
+                    |  then please reach out to us and we'll make adjustments as necessary.
                 p.long-text
                     | Notes for drivers: We ask that you make every effort to carpool with as many students
                     |  as possible in your school. We will provide a Facebook page for you to find others in your area. Parking
@@ -145,7 +148,7 @@ block dashboard_content
                 #coming-only(style='display:none')
                     if bus == null
                         .form-group
-                            label(for='receipt') Travel Receipt (.pdf, max: 10MB) *
+                            label(for='receipt') Travel Receipt (.pdf, max: 15MB) *
                             p
                                 | Upload a copy of receipt for a roundtrip ticket. If you
                                 |  are driving, then include a screenshot of your route on Google Maps.
