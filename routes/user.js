@@ -90,13 +90,7 @@ module.exports = function (io) {
             },
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
-                if (!config.admin.days_to_rsvp) {
-                    console.error('ERROR Days to rsvp not properly configured!'); // Debug for an environment issue, TODO: Remove when fixed
-                }
-                
                 const rsvpTime = moment.duration(Number(config.admin.days_to_rsvp), 'days');
-
-
                 if (notified) {
                     const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {
