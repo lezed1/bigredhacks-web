@@ -72,10 +72,6 @@ module.exports = function (io) {
                 }
 
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
-                    if (err) {
-                        console.error(err);
-                    }
-
                     if (rem == null) {
                         var default_rem = {};
                         default_rem.amount = config.admin.default_reimbursement;
@@ -104,7 +100,8 @@ module.exports = function (io) {
             }
         }, function (err, results) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                return res.sendStatus(500);
             }
 
             var render_data = {
