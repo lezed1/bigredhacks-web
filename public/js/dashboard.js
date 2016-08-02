@@ -1,9 +1,10 @@
+var max_receipt_mb = 15
+
 $(document).ready(function () {
 
     /************************************
      *** Dashboard Home Functionality****
      ************************************/
-    var max_receipt_mb = 15
         //Update resume
     $("#resume-update").on('click', function (e) {
         e.preventDefault();
