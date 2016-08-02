@@ -66,7 +66,8 @@ module.exports = function (io) {
                     return done(err, members);
                 })
             },
-            reimbursement: function (done) { // Priority is user-override, then school-override, then default
+            // Priority is user-override, then school-override, then default
+            reimbursement: function (done) {
                 if (req.user.internal.reimbursement_override > 0) {
                     return done(null, { amount: req.user.internal.reimbursement_override });
                 }
