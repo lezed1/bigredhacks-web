@@ -445,22 +445,23 @@ module.exports = function (io) {
                         if (err) {
                             console.log(err);
                             req.flash('error', "File upload failed. :(");
+                            return res.redirect('/user/dashboard');
                         }
+
                         if (typeof file === "string") {
                             req.flash('error', file);
-                        }
-                        else {
-                            //console.log(file);
+                            return res.redirect('/user/dashboard');
+                        } else {
                             req.flash('success', 'We have received your response!');
                             req.user.internal.travel_receipt = file.filename;
                             req.user.save(function (err) {
                                 if (err) {
                                     console.log(err);
                                 }
+
                                 return res.redirect('/user/dashboard');
                             });
                         }
-                        return res.redirect('/user/dashboard');
                     })
                 }
                 else {
