@@ -39,6 +39,8 @@ router.put('/updateBus', updateBus);
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
 router.delete('/reimbursements/school', schoolReimbursementsDelete);
+router.post('/reimbursements/student', studentReimbursementsPost);
+router.delete('/reimbursements/student', studentReimbursementsDelete);
 
 router.patch('/user/:pubid/setRSVP', setRSVP);
 
@@ -567,6 +569,69 @@ function annotate(req, res, next) {
         }
         else {
             return res.redirect('/admin/stats');
+        }
+    });
+}
+
+/**
+ * @api {POST} /api/admin/reimbursements/student Update or set a student reimbursement
+ * @apiName PostReimbursement
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email
+ * @apiParam {Number} amount
+ */
+function studentReimbursementsPost(req, res, next) {
+    User.findOne( { email: req.body.email }, function (err, user) {
+        if (err) {
+            console.log('Reimbursement Error: ' + err); // If null, check amount
+            res.status(500).send('Reimbursement Error: ' + err);
+        } else if (!req.body.amount || req.body.amount < 0) {
+            res.status(500).send("Missing amount or amount is less than zero");
+        } else if (!user){
+            res.status(500).send("No such user");
+        } else {
+            user.internal.reimbursement_override = req.body.amount;
+            user.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send("Could not save user");
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+        }
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/reimbursements/student Reset a student reimbursement to school default
+ * @apiName DeleteReimbursement
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email
+ */
+function studentReimbursementsDelete(req, res, next) {
+    if (!req.body.email) {
+        return res.status(500).send("Email required");
+    }
+    
+    User.findOne( { email: req.body.email }, function (err, user) {
+        if (err) {
+            console.log('ERROR on delete: ' + err);
+            res.status(500).send("Error on delete: " + err)
+        } else if (!user) {
+            res.status(500).send("No such user");
+        } else {
+            user.internal.reimbursement_override = 0;
+            user.save(function (err) {
+                if (err) {
+                    console.log('Error saving user: ' + err);
+                    res.status(500).send('Error saving user: ' + err);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
         }
     });
 }

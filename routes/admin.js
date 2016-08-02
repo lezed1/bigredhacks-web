@@ -355,7 +355,7 @@ router.get('/review', function (req, res, next) {
                     overall: aggregate.applicants.byMatch(USER_FILTER),
                     school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
                     bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
-                    gender: aggregate.applicants.gender(),
+                    gender: aggregate.applicants.gender()
                 }, function (err, stats) {
                     if (err) {
                         console.error(err);
@@ -447,12 +447,23 @@ router.post('/businfo', function (req, res, next) {
  * @apiGroup AdminAuth
  */
 router.get('/reimbursements', function (req, res, next) {
-    Reimbursements.find({}, function (err, reimbursements) {
+    async.parallel({
+        reimbursements: function(done) {
+            Reimbursements.find({},done)
+        },
+        overrides: function(done) {
+            User.find({"internal.reimbursement_override": {$gt: 0}})
+                .select("pubid name email school.name internal.reimbursement_override")
+                .sort("name.first")
+                .exec(done)
+        }
+    }, function (err, result) {
         if (err) {
             console.error(err);
         }
         res.render('admin/reimbursements', {
-            reimbursements: reimbursements
+            reimbursements: result.reimbursements,
+            overrides: result.overrides
         });
     })
 });

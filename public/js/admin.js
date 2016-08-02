@@ -438,6 +438,39 @@ $('document').ready(function () {
     /********************************
      *** Reimbursement Management****
      ********************************/
+    // Add Student Override
+    $("#submit-student").on('click', function() {
+        var that = this;
+        $.ajax({
+            method: "POST",
+            url: "/api/admin/reimbursements/student",
+            data: {
+                email: $("#add-email").val(),
+                amount: $("#add-amount").val()
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete Student Override
+    $(".delete-student").on('click', function() {
+        var dat = $(this).parents("tr");
+        var that = this;
+        $.ajax({
+            method: "DELETE",
+            url: "/api/admin/reimbursements/student",
+            data: {
+                email: dat[0].dataset.student
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                $(that).parents("tr").remove();
+            }
+        });
+    });
 
         //disable amount for charter bus
     $("#new-travel, .modeDropdown").on('change', function () {
@@ -566,4 +599,19 @@ try {
     _tt_college_enable();
 } catch (e){
     // Some pages should not need this, so this error is expected.
+}
+
+function overrideFormDefault(form, target) {
+    $(form).submit(function (e) {
+        e.preventDefault();
+        $(target).click();
+    });
+}
+
+// Generic error handler, alerting the error thrown to the user.
+function alertErrorHandler(jqXHR, textStatus, errorThrown ) {
+    var resp = textStatus + ' (' + errorThrown + ')';
+    if (jqXHR.responseText)
+        resp += ': ' + jqXHR.responseText;
+    alert(resp);
 }

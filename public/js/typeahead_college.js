@@ -1,7 +1,6 @@
 /*
  * Typeahead
  */
-
 var _tt_college_enabled = false; //whether the typeahead is enabled
 
 var engine = new Bloodhound({
@@ -49,7 +48,7 @@ var _tt_college_enable = function() {
         return;
     }
 
-    $('#college').typeahead({
+    $('#college,#new-college').typeahead({
         hint: true,
         highlight: true,
         autoselect: false,
