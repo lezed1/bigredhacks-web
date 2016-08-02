@@ -20,7 +20,7 @@ var uid = require('uid2');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
 
-var MAX_FILE_SIZE = 1024 * 1024 * 10;
+var MAX_FILE_SIZE = 1024 * 1024 * 15;
 var MAX_BUS_PROXIMITY = 50; //miles
 
 module.exports = function (io) {
