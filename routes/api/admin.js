@@ -461,7 +461,7 @@ function setBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a dumb identity function
+            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
             util.removeUserFromBus(Bus, req, fakeRes, user);
         }
 
@@ -506,7 +506,8 @@ function deleteBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            util.removeUserFromBus(Bus, req, res, user);
+            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
+            util.removeUserFromBus(Bus, req, fakeRes, user);
         }
 
         user.internal.busOverride = null;
