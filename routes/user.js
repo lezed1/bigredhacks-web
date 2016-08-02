@@ -780,8 +780,10 @@ module.exports = function (io) {
                 }, function (err) {
                     if (err) {
                         console.log(err);
+                        done(err);
+                    } else {
+                        done(null, userbus);
                     }
-                    done(null, userbus);
                     //temporarily disable
                     //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
                     //todo consider storing bus captain info in bus
