@@ -29,13 +29,14 @@ block admin_content
                 li Pending #{stats.school.pending}
         .col-md-3
             h4 Assigned to bus:
-            ul
-                li Accepted #{stats.bus_expl.accepted}
-                li Waitlisted #{stats.bus_expl.waitlisted}
-                li Rejected #{stats.bus_expl.rejected}
-                li Pending #{stats.bus_expl.pending}
-                if user.internal.busid === null
-                    span *no bus
+            if user.internal.busid === null
+                span *no bus
+            else
+                ul
+                    li Accepted #{stats.bus_expl.accepted}
+                    li Waitlisted #{stats.bus_expl.waitlisted}
+                    li Rejected #{stats.bus_expl.rejected}
+                    li Pending #{stats.bus_expl.pending}
         .col-md-3
             h4 Proximity to bus:
             ul

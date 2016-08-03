@@ -106,6 +106,13 @@ block dashboard_content
                     | .
             else
                 p= bus.message
+                if (!bus.confirmed)
+                    h3
+                        | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
+                        | whether to send this bus.
+                else
+                    p
+                        | This bus route has been <b>confirmed</b>. Keep an eye out for more information on how to get on!
                 .businfobox(data-busid=bus.id)
                     .busname
                     ul.businfo
@@ -121,21 +128,39 @@ block dashboard_content
                         li.maxcapacity
                             b Max Capacity:&nbsp;
                             span.maxcapacitynumber= bus.capacity
-                            if user.internal.busid == bus.id
-                                li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
+                        if user.internal.busid == bus.id
+                            li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
+                        else
+                            li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
+                        if (user.internal.going)
+                            if (bus.captain != null && bus.captain.name != null)
+                                li.buscaptain
+                                    b Bus Captain:
+                                    |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
+                                if (user.internal.busCaptain)
+                                    h3 You are the bus captain for this route. Here is the current list of riders for your route:
+                                    table.table.table-striped
+                                        tr
+                                            th Name
+                                            th Email
+                                            th University
+                                        for memb in bus.members
+                                            tr
+                                                td #{memb.name}
+                                                td #{memb.email}
+                                                td #{memb.college}
                             else
-                                li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
-                            if (user.internal.going)
-                                if (buscaptain != null)
-                                    li.buscaptain
-                                        b Bus Captain
-                                        |  #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
-                            else
-                                p You must RSVP before you can sign up for the bus.
-                    if (user.internal.going)
-                        .busselection
-                            input#signup.btn.btn-success(type='button', value='sign up', name='signup')
-                            input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                b
+                                | We need a bus captain for your route! Email
+                                a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                                |  if you'd like to help out.
+                            .busselection
+                                if user.internal.busid == bus.id
+                                    input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                else
+                                    input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                        else
+                            p You must RSVP before you can sign up for the bus.
 
         +sectionHeading("RSVP")
         if (user.internal.going == null)
