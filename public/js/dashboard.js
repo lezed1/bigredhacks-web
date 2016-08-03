@@ -1,9 +1,10 @@
+var max_receipt_mb = 15
+
 $(document).ready(function () {
 
     /************************************
      *** Dashboard Home Functionality****
      ************************************/
-
         //Update resume
     $("#resume-update").on('click', function (e) {
         e.preventDefault();
@@ -179,6 +180,10 @@ $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
     else return false;
 });
 
+$.validator.addMethod('filesize', function (value, element, param) {
+    return this.optional(element) || (element.files[0].size <= param)
+    }, 'File size must be less than ' + max_receipt_mb + ' mb'); 
+
 $('#rsvpForm').validate({
     ignore: 'input:not([name])', //ignore unnamed input tags
     onfocusout: function (e, event) {
@@ -192,7 +197,8 @@ $('#rsvpForm').validate({
         receipt: {
             conditionalRSVP: true,
             extension: "pdf",
-            accept: 'application/pdf'
+            accept: 'application/pdf',
+            filesize: 1024 * 1024 * max_receipt_mb
         },
         legal: {
             conditionalRSVP: true

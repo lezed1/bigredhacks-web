@@ -21,7 +21,7 @@ var uid = require('uid2');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
 
-var MAX_FILE_SIZE = 1024 * 1024 * 10;
+var MAX_FILE_SIZE = 1024 * 1024 * 15;
 var MAX_BUS_PROXIMITY = 50; //miles
 
 module.exports = function (io) {
@@ -67,33 +67,28 @@ module.exports = function (io) {
                     return done(err, members);
                 })
             },
+            // Priority is user-override, then school-override, then default
             reimbursement: function (done) {
+                if (req.user.internal.reimbursement_override > 0) {
+                    return done(null, { amount: req.user.internal.reimbursement_override });
+                }
+
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                     if (rem == null) {
-                        if (req.user.internal.reimbursement_override > 0) {
-                            return done(err, { amount: req.user.internal.reimbursement_override });
-                        } else {
-                            if (err) {
-                                console.log(err);
-                            }
-                            
-                            var default_rem = {};
-                            default_rem.amount = config.admin.default_reimbursement;
-                            return done(err, default_rem);
-                        }
+                        var default_rem = {};
+                        default_rem.amount = config.admin.default_reimbursement;
+                        return done(err, default_rem);
                     }
 
                     return done(err, rem);
-                })
+                });
             },
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
             },
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
-                const rsvpTime = moment.duration(config.admin.days_to_rsvp, 'days');
-
-
+                const rsvpTime = moment.duration(Number(config.admin.days_to_rsvp), 'days');
                 if (notified) {
                     const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {
@@ -107,7 +102,8 @@ module.exports = function (io) {
             }
         }, function (err, results) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                return res.sendStatus(500);
             }
 
             var render_data = {
@@ -410,17 +406,20 @@ module.exports = function (io) {
                         if (err) {
                             console.log(err);
                             req.flash('error', "File upload failed. :(");
+                            return res.redirect('/user/dashboard');
                         }
+
                         if (typeof file === "string") {
                             req.flash('error', file);
-                        }
-                        else {
+                            return res.redirect('/user/dashboard');
+                        } else {
                             req.flash('success', 'We have received your response!');
                             req.user.internal.travel_receipt = file.filename;
                             req.user.save(function (err) {
                                 if (err) {
                                     console.log(err);
                                 }
+
                                 return res.redirect('/user/dashboard');
                             });
                         }

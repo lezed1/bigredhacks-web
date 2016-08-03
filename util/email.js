@@ -3,7 +3,7 @@ var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 var moment = require("moment");
 
 const year = new Date().getFullYear();
-const rsvpTime = moment.duration(global_config.admin.days_to_rsvp, 'days');
+const rsvpTime = moment.duration(Number(global_config.admin.days_to_rsvp), 'days');
 
 const acceptedSubject = "You've been accepted to BigRed//Hacks "+year+"!";
 
@@ -30,10 +30,10 @@ const waitlistedBody = "<p>Thank you for applying for BigRed//Hacks! With so man
                         "<p>All the best for the future, and keep on hacking!</p>" +
                         "<p>BigRed//Hacks Team</p>";
 
-const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons happening this year," +
+const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many hackathons happening this year, " +
                         "we're honored that we were on your list.</p>" +
                         "<p>Unfortunately, we aren't able to offer you a spot at BigRed//Hacks "+year+". We had a " +
-                        "record number of applications, and a very limited amount of space. But know that we still think you're" +
+                        "record number of applications and a very limited amount of space. But know that we still think you're" +
                         " awesome, and would love for you to apply again for BigRed//Hacks "+(year+1)+"!</p>" +
                         "<p>All the best for the future, and keep on hacking!</p>" +
                         "<p>BigRed//Hacks Team</p>";
@@ -41,7 +41,7 @@ const rejectedBody = "<p>Thank you for applying for BigRed//Hacks! With so many 
 const waitlistedToAcceptedBody = "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>We're trying to make sure that everyone who wants to come has the opportunity, so please head over to " +
-    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>" + rsvpTime.humanize() + "</b> if you're able to make it, " +
+    "<a href=http://www.bigredhacks.com/>our website</a> and let us know within <b>" + rsvpTime.humanize() + "</b> if you're able to make it." +
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>";
 
