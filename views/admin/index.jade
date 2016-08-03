@@ -19,6 +19,8 @@ block append admin_content
             a(href='#top-schools', aria-controls='top-schools', role='tab', data-toggle='tab') Top Schools
         li(role='presentation')
             a(href='#announcements', aria-controls='announcements', role='tab', data-toggle='tab') Announcements
+        li(role='presentation')
+            a(href='#rolling-decisions', aria-controls='rolling-decisions', role='tab', data-toggle='tab') Rolling Decisions
 
     //- Tab panes
     .tab-content
@@ -37,12 +39,6 @@ block append admin_content
                     li #{rsvps.true} accepted their invitations
                     li #{rsvps.false} declined their invitations
                     li #{rsvps.null} have not responded
-            h2 Notify Decisions
-            p Send an email notifying application decisions to all who have not received their latest decision.
-            form#notify-form(method='post', action='/api/admin/rollingDecision')
-                .form-group.np-enabled
-                    button#notifyMake.btn.btn-blue(type='submit') Announce
-            span Will affect #{decisionAnnounces} people.
         #top-schools.tab-pane(role='tabpanel')
             table.table.table-striped
                 tr
@@ -91,5 +87,12 @@ block append admin_content
                     br
                 .form-group
                     button#announcementMake.btn.btn-blue(onclick="return confirm('Are you sure?')") Announce
+        #rolling-decisions.tab-pane(role='tabpanel')
+            h2 Notify Decisions
+            p Send an email notifying application decisions to all who have not received their latest decision.
+            form#notify-form(method='post', action='/api/admin/rollingDecision')
+                .form-group.np-enabled
+                    button#notifyMake.btn.btn-blue(type='submit' onclick="return confirm('Are you sure? This will email new decisions!')") Make Rolling Decision
+            span Will affect #{decisionAnnounces} people.
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
