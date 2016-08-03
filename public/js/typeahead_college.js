@@ -48,6 +48,7 @@ var _tt_college_enable = function() {
         return;
     }
 
+    // TODO: Reduce this to just be a .new-college class. See issue #65.
     $('#college,.newcollege,#new-college').typeahead({
         hint: true,
         highlight: true,
