@@ -159,9 +159,11 @@ function makeRollingAnnouncement(req, res, next) {
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
-            const maxRequestsAtATime = 3; // Do not want to overload by doing too many requests, so this will limit the async
+            // Do not want to overload by doing too many requests, so this will limit the async
+            const maxRequestsAtATime = 3;
             async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
-                console.log('beginning email tranaction for ' + recip.email); // TODO: Remove once we are more confident about this code
+                // TODO: Remove once we are more confident about this code (Issue #64)
+                console.log('beginning email tranaction for ' + recip.email);
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -173,8 +175,7 @@ function makeRollingAnnouncement(req, res, next) {
 
                 email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
                     if (err)  {
-                        console.error('ERROR in sending decision emails: ' + err);
-                        callback(err);
+                        return callback(err);
                     } else {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
@@ -183,7 +184,8 @@ function makeRollingAnnouncement(req, res, next) {
                                 console.error(err);
                                 console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
                             } else {
-                                console.log(recip.email + ' has successfully been sent their new decision'); // TODO: Do not log this once we are more confident about this code
+                                // TODO: Do not log this once we are more confident about this code (Issue #64)
+                                console.log(recip.email + ' has successfully been sent their new decision');
                             }
                         });
                         callback();
