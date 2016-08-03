@@ -325,7 +325,14 @@ $('document').ready(function () {
     //add college to list of bus stops
     $('#addcollege').on('click', function () {
         //FIXME: highly error-prone implementation
-        //college id is added in typeahead, modify both in this function instead
+        // College ID
+        var currentidlist = $("#collegeidlist").val();
+        if (currentidlist != "") {
+            $("#collegeidlist").val(currentidlist + "," + collegeDatum.id);
+        }
+        else {
+            $("#collegeidlist").val(collegeDatum.id);
+        }
         var newCollege = $("#college").val();
         var currentBusStops = $("#busstops").val();
         var currentBusStopsDisplay = $("#busstops-display").text();
@@ -430,6 +437,79 @@ $('document').ready(function () {
             },
             error: function (e) {
                 console.log("Couldn't update the bus!", e);
+            }
+        });
+    });
+
+    // Unset bus captain
+    $('#unsetCaptain').on('click', function () {
+        var em = $('#removeEmail').val();
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/busCaptain",
+                data: {
+                    email: em
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: alertErrorHandler
+            });
+    });
+
+    function busRouteConfirmationAjax(type, message) {
+        return function() {
+            var id = $(this).parents(".businfobox").data("busid");
+            var c = confirm(message);
+            if (c) {
+                $.ajax({
+                    type: type,
+                    url: "/api/admin/confirmBus",
+                    data: {
+                        busid: id
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: alertErrorHandler
+                });
+            }
+        };
+    }
+
+    $('.confirmroute').on('click', busRouteConfirmationAjax('POST', 'Are you sure you want to enable this bus route?'));
+    $('.unconfirmroute').on('click', busRouteConfirmationAjax('DELETE', 'Are you sure you want to disable this bus route?'));
+
+
+    // Bus route override
+    $("#submit-student-route").on('click', function() {
+        $.ajax({
+            method: "PUT",
+            url: "/api/admin/busOverride",
+            data: {
+                email: $("#route-override-email").val(),
+                routeName: $("#route-override-name").val()
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete Student Bus Route Override
+    $(".delete-student-route").on('click', function() {
+        var dat = $(this).parents("tr");
+        var that = this;
+        $.ajax({
+            method: "DELETE",
+            url: "/api/admin/busOverride",
+            data: {
+                email: dat[0].dataset.student
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                $(that).parents("tr").remove();
             }
         });
     });

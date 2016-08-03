@@ -20,6 +20,7 @@ var middle = require('../middleware');
 var email = require('../../util/email');
 var io = require('../../app').io;
 var OAuth = require('oauth');
+var util = require('../../util/util.js');
 
 var Twitter = require('twitter');
 var graph = require('fbgraph');
@@ -35,6 +36,15 @@ router.post('/np/set', setNoParticipation);
 
 router.delete('/removeBus', removeBus);
 router.put('/updateBus', updateBus);
+
+router.post('/busCaptain', setBusCaptain);
+router.delete('/busCaptain', deleteBusCaptain);
+
+router.post('/confirmBus', busConfirmationHandler(true));
+router.delete('/confirmBus', busConfirmationHandler(false));
+
+router.put('/busOverride', setBusOverride);
+router.delete('/busOverride', deleteBusOverride);
 
 router.post('/reimbursements/school', schoolReimbursementsPost);
 router.patch('/reimbursements/school', schoolReimbursementsPatch);
@@ -159,7 +169,11 @@ function makeRollingAnnouncement(req, res, next) {
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
-            async.each(recipient, function(recip, callback) {
+            // Do not want to overload by doing too many requests, so this will limit the async
+            const maxRequestsAtATime = 3;
+            async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
+                // TODO: Remove once we are more confident about this code (Issue #64)
+                console.log('beginning email tranaction for ' + recip.email);
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -171,17 +185,17 @@ function makeRollingAnnouncement(req, res, next) {
 
                 email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
                     if (err)  {
-                        console.log(err);
-                        callback(err);
+                        return callback(err);
                     } else {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
                         recip.save(function(err) {
                             if (err) {
-                                console.log(err);
-                                console.log("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
+                                console.error(err);
+                                console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
                             } else {
-                                console.log('sent and saved');
+                                // TODO: Do not log this once we are more confident about this code (Issue #64)
+                                console.log(recip.email + ' has successfully been sent their new decision');
                             }
                         });
                         callback();
@@ -189,10 +203,9 @@ function makeRollingAnnouncement(req, res, next) {
                 })
             }, function(err) {
                 if (err) {
-                    console.log(err);
+                    console.error('An error occurred with decision emails. Decision sending was terminated. See the log for remediation: ' + err);
                     res.sendStatus(500);
                 } else {
-                    console.log('All transactional decision emails successfully sent!');
                     req.flash('success', 'All transactional decision emails successfully sent!');
                     return res.redirect('/admin/dashboard');
                 }
@@ -244,6 +257,37 @@ function removeBus(req, res, next) {
 }
 
 /**
+ * @api {POST} /api/admin/confirmBus Set a route to confirmed.
+ * @apiName ConfirmBus
+ * @apiGroup Admin
+ *
+ * @apiParam {String} busid
+ * @apiError (500) BusDoesntExist
+ *
+ * @api {DELETE} /api/admin/confirmBus Set a route back to tentative.
+ * @apiName UnconfirmBus
+ * @apiGroup Admin
+ *
+ * @apiParam {String} busid
+ * @apiError (500) BusDoesntExist
+ */
+function busConfirmationHandler(confirm) {
+    return function (req, res, next) {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            } else if (!bus) {
+                return res.status(500).send('Bus not found!');
+            }
+
+            bus.confirmed = confirm;
+            bus.save(util.dbSaveCallback(res));
+        });
+    };
+}
+
+/**
  * @api {POST} /api/admin/updateBus update bus in list of buses.
  * @apiName UpdateBus
  * @apiGroup Admin
@@ -268,6 +312,209 @@ function updateBus(req, res, next) {
             }
             else return res.sendStatus(200);
         });
+    });
+}
+
+/**
+ * @api {POST} /api/admin/busCaptain Set the captain of a bus.
+ * @apiName SetBusCaptain
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the captain.
+ * @apiParam {String} routeName The name of the bus route.
+ */
+function setBusCaptain(req, res, next) {
+    const email = req.body.email;
+    const routeName = req.body.routeName;
+
+    if (!email || !routeName) {
+        return res.sendStatus(500);
+    }
+
+    async.series({
+        captain: function (callback) {
+            User.findOne({"email": email}, callback);
+        },
+        bus: function (callback){
+            Bus.findOne({"name": routeName}, callback);
+        }
+    }, function assignCaptain(err, results) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        var captain = results.captain;
+        var bus = results.bus;
+
+        if (bus.captain.name) {
+            res.status(500).send('Bus already has a captain');
+        } else if (captain.internal.busid != bus.id){
+            res.status(500).send('User has not signed up for that bus');
+        } else {
+            bus.captain.name = captain.name.first + " " + captain.name.last;
+            bus.captain.email = captain.email;
+            bus.captain.college = captain.school.name;
+            bus.captain.id = captain.id;
+
+            captain.internal.busCaptain = true;
+
+            bus.save(function(err) {
+                if (err) {
+                    console.error(err);
+                    res.sendStatus(500);
+                } else {
+                    captain.save(function(err) {
+                        if (err) {
+                            console.error(err);
+                            res.sendStatus(500);
+                        } else {
+                            res.redirect('/admin/businfo');
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/busCaptain Unset the captain of a bus.
+ * @apiName UnsetBusCaptain
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the captain.
+ */
+function deleteBusCaptain(req, res, next) {
+    const email = req.body.email;
+
+    if (!email) {
+        return res.status(500).send('Missing email');
+    }
+
+    async.series({
+        captain: function (callback) {
+            User.findOne({"email": email}, callback);
+        },
+        bus: function (callback){
+            Bus.findOne({"captain.email": email}, callback);
+        }
+    }, function removeCaptain(err, results) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (!results.bus || !results.captain) {
+            return res.status(500).send('Could not find bus or captain');
+        }
+
+        var captain = results.captain;
+        var bus = results.bus;
+
+        bus.captain.name = null;
+        bus.captain.email = null;
+        bus.captain.college = null;
+        bus.captain.id = null;
+
+        captain.internal.busCaptain = false;
+
+        bus.save(function(err) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            } else {
+                captain.save(function(err) {
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    } else {
+                        return res.sendStatus(200);
+                    }
+                });
+            }
+        });
+    });
+}
+
+/**
+ * @api {PUT} /api/admin/busOverride Override the bus associated with a rider. If the rider is already signed up for a bus,
+ *                                   this will remove the rider from that bus in the process.
+ * @apiName SetBusOverride
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the rider.
+ * @apiParam {String} routeName The name of the new route for the user
+ */
+function setBusOverride(req, res, next) {
+    const email = req.body.email;
+    const routeName = req.body.routeName;
+
+    if (!email || !routeName) {
+        return res.status(500).send('Missing email or route name');
+    }
+
+    User.findOne( {"email" : email}, function(err,user) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        } else if (!user) {
+            return res.status(500).send('No such user');
+        }
+
+        if (user.internal.busid) {
+            // User has already RSVP'd for a bus, undo this
+            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
+            util.removeUserFromBus(Bus, req, fakeRes, user);
+        }
+
+        // Confirm bus exists
+        Bus.findOne({name: req.body.routeName}, function(err,bus){
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            } else if (!bus) {
+                return res.status(500).send('No such bus route');
+            }
+
+            user.internal.busOverride = bus._id;
+            user.save(util.dbSaveCallback(res));
+        });
+    });
+}
+
+/**
+ * @api {DELETE} /api/admin/busOverride Unset the override for a bus rider. If the rider is already signed up for a bus,
+ *                                      this will remove the rider from that bus in the process.
+ *
+ * @apiName UnsetBusOverride
+ * @apiGroup Admin
+ *
+ * @apiParam {String} email The email of the rider.
+ */
+function deleteBusOverride(req, res, next) {
+    const email = req.body.email;
+
+    if (!email) {
+        return res.status(500).send('Missing email');
+    }
+
+    User.findOne( {"email" : email}, function(err,user) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        } else if (!user) {
+            return res.status(500).send('No such user');
+        }
+
+        if (user.internal.busid) {
+            // User has already RSVP'd for a bus, undo this
+            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
+            util.removeUserFromBus(Bus, req, fakeRes, user);
+        }
+
+        user.internal.busOverride = null;
+        user.save(util.dbSaveCallback(res));
     });
 }
 
