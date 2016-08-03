@@ -26,7 +26,7 @@ var en = {
             shortWithPending: "A W R P".split(" ")
         },
         role: {
-            long: "user/admin/test/mentor".split("/")//remove "user item"
+            long: "test/admin/mentor".split("/")//remove "user item"
         }
     },
     mentor: {
