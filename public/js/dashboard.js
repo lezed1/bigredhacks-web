@@ -162,18 +162,25 @@ $("#cornell-rsvp").on("change", function () {
 });
 
 $("#rsvpDropdown").on('change', function () {
-    if ($(this).val() == "yes") {
+    const val = $(this).val();
+    if (val == "yes") {
         $("#coming-only").show();
+        $("#no-submit").hide();
+    } else if (val == "no") {
+        $("#no-submit").show();
+        $("#coming-only").hide();
+    } else {
+        $("#coming-only").hide();
+        $("#no-submit").hide();
     }
-    else $("#coming-only").hide();
 });
 
 $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
-    //require value if yes response
+    // Require value if yes response
     if ($("#rsvpDropdown").val() == "yes" && val) {
         return true;
     }
-    //dont require value if no response
+    // Dont require value if no response
     else if ($("#rsvpDropdown").val() == "no") {
         return true;
     }

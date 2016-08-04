@@ -176,6 +176,9 @@ block dashboard_content
                     select#rsvpDropdown.form-control(name='rsvpDropdown', required='')
                         option(value='') select
                         +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
+                #no-submit(style='display:none')
+                    .form-group
+                        button#rsvp.btn.btn-blue(type='submit', name='rsvpsubmit') submit
                 #coming-only(style='display:none')
                     if bus == null
                         .form-group
