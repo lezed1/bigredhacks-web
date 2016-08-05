@@ -224,7 +224,8 @@ router.get('/dashboard', function (req, res, next) {
         }
 
         // Calculate Maximum Reimbursement
-        function filterSchoolReimbursement(user) {
+        // Checks through per-school reimbursements to see if user matches any of those schools
+        let _filterSchoolReimbursement = function _filterSchoolReimbursement(user) {
             for (let i = 0; i < result.reimbursements.length; i++) {
                 let x = result.reimbursements[i];
                 if (x.college.id == user.school.id) {
@@ -233,10 +234,11 @@ router.get('/dashboard', function (req, res, next) {
             }
 
             return -1;
-        }
+        };
 
-        function calculateReimbursement(user, RSVPOnly) {
-            if (user.internal.going == false || (RSVPOnly && !user.internal.going)) {
+        // Calculates reimbursement using the ordering: user-override => school-override => default
+        let _calculateReimbursement = function _calculateReimbursement(user, rsvpOnly) {
+            if (user.internal.going == false || (rsvpOnly && !user.internal.going)) {
                 return 0;
             }
 
@@ -244,17 +246,16 @@ router.get('/dashboard', function (req, res, next) {
                 return user.internal.reimbursement_override;
             }
 
-            let school_override = filterSchoolReimbursement(user);
+            let school_override = _filterSchoolReimbursement(user);
             return (school_override == -1) ? config.admin.default_reimbursement : school_override;
-        }
+        };
 
         // Assumes charterbus reimbursements have been set
-        let currentMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, true), 0);
-        let potentialMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, false), 0);
+        let currentMax = result.accepted.reduce( (acc, user) => acc + _calculateReimbursement(user, true), 0);
+        let potentialMax = result.accepted.reduce( (acc, user) => acc + _calculateReimbursement(user, false), 0);
         let reimburse = {currentMax, potentialMax};
 
-        //console.log(result);
-        res.render('admin/index', {
+        return res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,
             schools: result.schools,
@@ -264,7 +265,6 @@ router.get('/dashboard', function (req, res, next) {
 
         })
     });
-
 });
 
 /**
@@ -529,7 +529,7 @@ router.get('/reimbursements', function (req, res, next) {
             console.error(err);
         }
 
-        res.render('admin/reimbursements', {
+        return res.render('admin/reimbursements', {
             reimbursements: result.reimbursements,
             overrides: result.overrides
         });
