@@ -162,16 +162,16 @@ $("#cornell-rsvp").on("change", function () {
 });
 
 $("#rsvpDropdown").on('change', function () {
-    const val = $(this).val();
+    const val = $(this).val().toLowerCase();
     if (val == "yes") {
-        $("#coming-only").show();
-        $("#no-submit").hide();
+        $("#rsvp-yes").show();
+        $("#rsvp-no").hide();
     } else if (val == "no") {
-        $("#no-submit").show();
-        $("#coming-only").hide();
+        $("#rsvp-no").show();
+        $("#rsvp-yes").hide();
     } else {
-        $("#coming-only").hide();
-        $("#no-submit").hide();
+        $("#rsvp-yes").hide();
+        $("#rsvp-no").hide();
     }
 });
 

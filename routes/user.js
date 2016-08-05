@@ -382,7 +382,7 @@ module.exports = function (io) {
 
             req.body = helper.reformatFields(fields);
 
-            if (req.body.rsvpDropdown == "yes") {
+            if (req.body.rsvpDropdown.toLowerCase() == "yes") {
                 req.user.internal.going = true;
                 //travel receipt
                 _findAssignedOrNearestBus(req, function (err, bus) {
