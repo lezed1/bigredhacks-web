@@ -19,6 +19,7 @@ block admin_content
         #schools.tab-pane.active(role='tabpanel')
             h2 Manage Schools
             p Use this page to manage reimbursements for schools.
+            h5 The maximum cost of reimbursements is currently $#{currentMax} for all RSVP'd and $#{potentialMax} for all accepted including those RSVP'd.
             #searchresults.col-md-12
                 p#result-count.text-right #{reimbursements.length} results found.
                 table#user-roles.table.table-striped
