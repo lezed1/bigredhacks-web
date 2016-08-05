@@ -382,59 +382,64 @@ module.exports = function (io) {
 
             req.body = helper.reformatFields(fields);
 
-            if (req.body.rsvpDropdown == "yes") {
+            if (req.body.rsvpDropdown.toLowerCase() == "yes") {
                 req.user.internal.going = true;
-            }
-            else if (req.body.rsvpDropdown == "no") {
-                req.user.internal.going = false;
-            }
-
-            //travel receipt
-            _findAssignedOrNearestBus(req, function (err, bus) {
-                if (err) {
-                    console.log(err);
-                }
-                //travel receipt required if no bus
-                if (bus == null) {
-                    //fail if no receipt uploaded
-                    if (!receipt) {
-                        req.flash('error', "Please upload a travel receipt.");
-                        return res.redirect('/user/dashboard');
+                //travel receipt
+                _findAssignedOrNearestBus(req, function (err, bus) {
+                    if (err) {
+                        console.log(err);
                     }
-
-                    helper.uploadFile(receipt, {type: "receipt"}, function (err, file) {
-                        if (err) {
-                            console.log(err);
-                            req.flash('error', "File upload failed. :(");
+                    //travel receipt required if no bus
+                    if (bus == null) {
+                        //fail if no receipt uploaded
+                        if (!receipt) {
+                            req.flash('error', "Please upload a travel receipt.");
                             return res.redirect('/user/dashboard');
                         }
 
-                        if (typeof file === "string") {
-                            req.flash('error', file);
-                            return res.redirect('/user/dashboard');
-                        } else {
-                            req.flash('success', 'We have received your response!');
-                            req.user.internal.travel_receipt = file.filename;
-                            req.user.save(function (err) {
-                                if (err) {
-                                    console.log(err);
-                                }
-
+                        helper.uploadFile(receipt, {type: "receipt"}, function (err, file) {
+                            if (err) {
+                                console.log(err);
+                                req.flash('error', "File upload failed. :(");
                                 return res.redirect('/user/dashboard');
-                            });
-                        }
-                    })
-                }
-                else {
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
-                }
-            });
+                            }
+
+                            if (typeof file === "string") {
+                                req.flash('error', file);
+                                return res.redirect('/user/dashboard');
+                            } else {
+                                req.flash('success', 'We have received your response!');
+                                req.user.internal.travel_receipt = file.filename;
+                                req.user.save(function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+
+                                    return res.redirect('/user/dashboard');
+                                });
+                            }
+                        })
+                    }
+                    else {
+                        req.flash('success', 'We have received your response!');
+                        req.user.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            return res.redirect('/user/dashboard');
+                        });
+                    }
+                });
+            } else {
+                req.user.internal.going = false;
+                req.flash('success', 'We have received your decision not to attend.');
+                req.user.save(function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    return res.redirect('/user/dashboard');
+                });
+            }
         })
     });
 

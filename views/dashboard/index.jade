@@ -176,7 +176,10 @@ block dashboard_content
                     select#rsvpDropdown.form-control(name='rsvpDropdown', required='')
                         option(value='') select
                         +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
-                #coming-only(style='display:none')
+                #rsvp-no(style='display:none')
+                    .form-group
+                        button#rsvp-no-button.btn.btn-blue(type='submit', name='rsvpsubmit') submit
+                #rsvp-yes(style='display:none')
                     if bus == null
                         .form-group
                             label(for='receipt') Travel Receipt (.pdf, max: 15MB) *
@@ -201,7 +204,7 @@ block dashboard_content
                                 |  Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
                                 |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
                     .form-group
-                        button#rsvp.btn.btn-red(type='submit', name='rsvpsubmit') submit
+                        button#rsvp-yes-button.btn.btn-red(type='submit', name='rsvpsubmit') submit
         else
             if user.internal.going
                 p You told us that you are going to BigRed//Hacks.
