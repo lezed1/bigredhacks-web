@@ -247,7 +247,7 @@ router.get('/dashboard', function (req, res, next) {
             }
 
             let school_override = _filterSchoolReimbursement(user);
-            return (school_override == -1) ? config.admin.default_reimbursement : school_override;
+            return (school_override == -1) ? Number(config.admin.default_reimbursement) : school_override;
         };
 
         // Assumes charterbus reimbursements have been set
