@@ -209,18 +209,59 @@ router.get('/dashboard', function (req, res, next) {
                     return done(err, resu);
                 }
             });
+        },
+        reimbursements: function(done) {
+            Reimbursements.find({},done);
+        },
+        accepted: function(done) {
+            User.find({"internal.status": "Accepted"})
+                .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
+                .exec(done)
         }
     }, function (err, result) {
         if (err) {
             console.log(err);
         }
+
+        // Calculate Maximum Reimbursement
+        function filterSchoolReimbursement(user) {
+            for (let i = 0; i < result.reimbursements.length; i++) {
+                let x = result.reimbursements[i];
+                if (x.college.id == user.school.id) {
+                    return x.amount;
+                }
+            }
+
+            return -1;
+        }
+
+        function calculateReimbursement(user, RSVPOnly) {
+            if (user.internal.going == false || (RSVPOnly && !user.internal.going)) {
+                return 0;
+            }
+
+            if (user.internal.reimbursement_override > 0) {
+                return user.internal.reimbursement_override;
+            }
+
+            let school_override = filterSchoolReimbursement(user);
+            return (school_override == -1) ? config.admin.default_reimbursement : school_override;
+        }
+
+        // Assumes charterbus reimbursements have been set
+        let currentMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, true), 0);
+        let potentialMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, false), 0);
+        let reimburse = {currentMax, potentialMax};
+
         //console.log(result);
         res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,
             schools: result.schools,
             rsvps: result.rsvps,
-            decisionAnnounces: result.decisionAnnounces
+            decisionAnnounces: result.decisionAnnounces,
+            reimburse
+
         })
     });
 
@@ -482,50 +523,15 @@ router.get('/reimbursements', function (req, res, next) {
                 .select("pubid name email school.name internal.reimbursement_override")
                 .sort("name.first")
                 .exec(done)
-        },
-        accepted: function(done) {
-            User.find({"internal.status": "Accepted"})
-                .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
-                .exec(done)
         }
     }, function (err, result) {
         if (err) {
             console.error(err);
         }
 
-        function filterSchoolReimbursement(user) {
-            for (let i = 0; i < result.reimbursements.length; i++) {
-                let x = result.reimbursements[i];
-                if (x.college.id == user.school.id) {
-                    return x.amount;
-                }
-            }
-
-            return -1;
-        }
-
-        function calculateReimbursement(user, RSVPOnly) {
-            if (RSVPOnly && !user.internal.going) {
-                return 0;
-            }
-
-            if (user.internal.reimbursement_override > 0) {
-                return user.internal.reimbursement_override;
-            }
-
-            let school_override = filterSchoolReimbursement(user);
-            return (school_override == -1) ? config.admin.default_reimbursement : school_override;
-        }
-
-        // Assumes charterbus reimbursements have been set
-        let currentMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, true), 0);
-        let potentialMax = result.accepted.reduce( (acc, user) => acc + calculateReimbursement(user, false), 0);
-
         res.render('admin/reimbursements', {
             reimbursements: result.reimbursements,
-            overrides: result.overrides,
-            currentMax: currentMax,
-            potentialMax: potentialMax
+            overrides: result.overrides
         });
     })
 });
