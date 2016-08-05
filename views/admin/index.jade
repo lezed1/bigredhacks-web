@@ -39,6 +39,13 @@ block append admin_content
                     li #{rsvps.true} accepted their invitations
                     li #{rsvps.false} declined their invitations
                     li #{rsvps.null} have not responded
+
+            h2 Reimbursements
+            span Our maximum reimbursement costs are:
+            ul
+                li RSVP'd: $#{reimburse.currentMax}
+                li All Accepted (including RSVP'd): $#{reimburse.potentialMax}
+
         #top-schools.tab-pane(role='tabpanel')
             table.table.table-striped
                 tr
