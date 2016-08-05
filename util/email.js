@@ -11,6 +11,8 @@ const waitlistedSubject = "BigRed//Hacks " + year + " Decision Status";
 
 const rejectectSubject = "BigRed//Hacks " + year + " Decision Status";
 
+const acceptedToRejectedSubject = "BigRed//Hacks " + year + " RSVP Deadline Passed";
+
 const acceptedBody = "<p>Congratulations, you have been accepted to BigRed//Hacks "+year+"! " +
     "Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
     "<p>We're trying to make sure that everyone who wants to come has the opportunity, so please head over to " +
@@ -45,11 +47,11 @@ const waitlistedToAcceptedBody = "<p>Congratulations, you've survived the wait l
     "<p>A more updated schedule will be posted soon.  We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>";
 
-const acceptedToRejectedBody =  "<p>You did not RSVP within the time frame which we requested.</p>" +
-                                "<p>Because we want to make sure that everyone who wants to attend has the opportunity, we are " +
-                                "rescinding your acceptance. If you still want to come, please email " +
-                                '<a href="mailto:info@bigredhacks.com?subject=Rejection Appeal" target="_blank">info@bigredhacks.com</a>' +
-                                " immediately, though we cannot guarantee that we will be able to offer you a spot again.</p>" +
+const acceptedToRejectedBody =  "<p>Because you did not RSVP within the time frame we requested, we are " +
+                                "rescinding your acceptance. We want to be fair to our applicants and ensure that " +
+                                "everyone who wants to attend has the opportunity. If you still want to come, please email " +
+                                '<a href="mailto:info@bigredhacks.com?subject=Rejection Appeal" target="_blank">info@bigredhacks.com</a> ' +
+                                "immediately, though we cannot guarantee that we will be able to offer you a spot again.</p>" +
                                 "<p>All the best for the future, and keep on hacking!</p>" +
                                 "<p>BigRed//Hacks Team</p>";
 
@@ -86,7 +88,7 @@ module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, conf
       config.subject = acceptedSubject;
       sendEmail("<p>Hey " + name + ",</p>" + waitlistedToAcceptedBody, config, callback);
   } else if (notifyStatus === "Accepted" && newStatus === "Rejected") {
-      config.subject = rejectectSubject;
+      config.subject = acceptedToRejectedSubject;
       sendEmail("<p>Hi " + name + ",</p>" + acceptedToRejectedBody, config, callback);
   } else {
       switch (newStatus) {
