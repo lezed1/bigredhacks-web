@@ -91,6 +91,9 @@ userSchema.pre('save', function (next) {
         _this.modified_at = Date.now();
     }
 
+    // Lowercase email for consistent login
+    _this.email = _this.email.toLowerCase();
+
     //verify password is present
     if (!_this.isModified('password')) return next();
 
