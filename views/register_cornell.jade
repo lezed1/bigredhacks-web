@@ -10,8 +10,8 @@ block vars
 
 block append description
     if (cornell_reg)
-        h1 General Registration
-        p Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the first #{limit} spots are guaranteed.
+        h1 Cornell Registration
+        p This year, we're admitting Cornell students using a lottery system. Apply by <strong> September 1 </strong> to be entered!
         p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon.
         p Don't miss this amazing event, sign up now!
         p <strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong>
@@ -22,7 +22,7 @@ block append description
 block append account-information
     .form-group
         label(for='email') email address *
-        input#email.form-control(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
+        input#email.form-control.not-cornell(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
     .form-group
         label(for='password') password *
         input#password.form-control(type='password', name='password', placeholder='password', required=true)
@@ -48,23 +48,34 @@ block append basic-information
 
 block append school
     .form-group
-        labelfull school name *
-        br
-        input.form-control(type='text',value=college.display, readonly=true)
-    .form-group
-        label(for='yearDropdown') academic year *
-        select#yearDropdown.form-control(name='yearDropdown', required='')
-            option(value='') select
-            +generateOptions(en.year, {selected: (input.yearDropdown || "")})
-    .form-group
-        label(for='major') major *
-        input#major.form-control(type='text', name='major', placeholder='major', value=input.major || '', required=true)
+        input#collegeid.form-control(type='hidden', name='collegeid', value=input.collegeid || '', required=true)
+        .form-group
+            label(for='yearDropdown') academic year *
+            select#yearDropdown.form-control(name='yearDropdown', required='')
+                option(value='') select
+                +generateOptions(en.year, {selected: (input.yearDropdown || "")})
+        .form-group
+            label(for='college') full school name *
+            br
+            input#college.form-control.typeahead(type='text', name='college', placeholder='School Name', value=input.college || '', required=true)
+        .form-group
+            label(for='major') major *
+            input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
+
+
 
 block append background
     .form-group
-        label(for='resume') resume (.pdf) *
+        //- TODO: link size of resume to backend constant
+        label(for='resume') resume (.pdf, max 10 mb) *
         .wrapper
             input#resume.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resume', accept='.pdf', required='')
+    .form-group
+        label tell us something interesting about yourself. *
+        textarea#q1.form-control(name='q1', rows='4', required='') #{input.q1 || "" }
+    .form-group
+        label what's a cool project that you've worked on? *
+        textarea#q2.form-control(name='q2', rows='4', required='') #{input.q2 || "" }
     .form-group
         label(for='github') github profile
         .input-group
@@ -93,6 +104,10 @@ block append logistics
             option(value='') select
             +generateOptions(en.tshirt, {selected: (input.tshirt || "")})
     .form-group
+        label is there any kind of hardware that you want to hack on?
+        input#hardware.form-control.typeahead(type='text', name='hardware', placeholder='VR, Smart Home, etc...'  value=input.hardware || '', data-role="tagsinput")
+    .form-group
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
 
+block no_terms
