@@ -96,11 +96,3 @@ block append logistics
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
 
-block append terms
-    p Please carefully read the two documents below:
-    .form-group
-        a.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2015.pdf', target='_blank') liability waiver & release
-        a.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
-        br
-        br
-        p: label By registering and taking part in BigRed//Hacks, you affirm that you have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.
