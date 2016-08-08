@@ -221,3 +221,12 @@ $('#rsvpForm').validate({
         }
     }
 });
+
+//change button colors to blue after clicked on
+$('#liability').click(function(){
+    $(this).css('opacity','0.6');
+    //$(this).css('border-color','#D4EFFD');
+});
+$('#code-of-conduct').click(function(){
+    $(this).css('opacity','0.6');
+});
