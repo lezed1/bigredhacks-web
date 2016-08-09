@@ -5,6 +5,7 @@ var moment = require("moment");
 const year = new Date().getFullYear();
 const rsvpTime = moment.duration(Number(global_config.admin.days_to_rsvp), 'days');
 
+// Decisions
 const acceptedSubject = "You've been accepted to BigRed//Hacks "+year+"!";
 
 const waitlistedSubject = "BigRed//Hacks " + year + " Decision Status";
@@ -54,7 +55,14 @@ const acceptedToRejectedBody =  "<p>Because you did not RSVP within the time fra
                                 "immediately, though we cannot guarantee that we will be able to offer you a spot again.</p>" +
                                 "<p>All the best for the future, and keep on hacking!</p>" +
                                 "<p>BigRed//Hacks Team</p>";
+// Other
+const deadlineWarningSubject = "One day left to RSVP to BigRed//Hacks!";
 
+const deadlineWarningBody = "<p>We wanted to remind you that you have <b>less than one day</b> left to RSVP to BigRed//Hacks. " +
+        "Please log on to <a href=http://www.bigredhacks.com/>our website</a> and let us know if you'll be able to make it, or " +
+        "we may have to offer your spot to someone else.</p>" +
+    "<p>We hope to see you there!</p>" +
+    "<p>BigRed//Hacks Team</p>";
 /**
  * Asynchronously sends a transactional email
  * @param body Contains the html body of the email
@@ -106,6 +114,11 @@ module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, conf
               break;
       }
   }
+};
+
+module.exports.sendDeadlineEmail = function (name, config, callback) {
+    config.subject = deadlineWarningSubject;
+    sendEmail("<p>Hi " + name + ",</p>" + deadlineWarningBody, config, callback);
 };
 
 module.exports.sendEmail = sendEmail;

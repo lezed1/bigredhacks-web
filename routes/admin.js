@@ -6,6 +6,7 @@ var async = require('async');
 
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
+var email = require('../util/email.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -582,6 +583,65 @@ router.get('/stats', function (req, res, next) {
     );
 
 });
+
+// Regular decision deadline processing
+var CronJob = require('cron').CronJob;
+const EVERY_HOUR = '* * * * *';
+new CronJob(EVERY_HOUR, function checkDecisionDeadlines() {
+    const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+    const dateForWarning = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp) - 1)); // One day in advance
+    const dateForRejection = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp)));
+
+    User.find( { $and: [
+        {"internal.status" : "Accepted"},
+        {"internal.notificationStatus" : "Accepted"},
+        {"internal.going" : null},
+        {"internal.lastNotifiedAt" : {$lt: dateForWarning}}
+    ]}, function(err,users) {
+        if (err) {
+            return void console.error(err);
+        }
+
+        let _warnUser = function _warnUser(user) {
+            const config = {
+                "from_email": "info@bigredhacks.com",
+                "from_name": "BigRed//Hacks",
+                "to": {
+                    "email": user.email,
+                    "name": user.name.full
+                }
+            };
+            // Check whether user needs to be rejected or warned
+            if (user.internal.lastNotifiedAt < dateForRejection) {
+                // Reject
+                user.internal.status = 'Rejected';
+                user.save(function (err) {
+                    if (err) {
+                        console.error(err);
+                    }
+                });
+            } else {
+                if (!user.internal.deadlineWarned) {
+                    // Warn
+                    user.internal.deadlineWarned = true;
+                    user.save(function (err) {
+                        if (err) {
+                            return void console.error(err);
+                        }
+                        // Send email after saving to avoid possibility of spam
+                        email.sendDeadlineEmail(user.name.first, config, function(err) {
+                            if (err) {
+                                console.error(err);
+                            }
+                        });
+                    });
+                }
+            }
+        };
+
+        users.forEach(x => _warnUser(x));
+    });
+}, null, true, 'America/New_York');
 
 /**
  * Helper function to fill team members in teammember prop
