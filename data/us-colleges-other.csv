@@ -2,4 +2,5 @@ unitid,name,state,zip,city,longitude,latitude
 x000001,Cornell Tech,NY,10011,New York,-74.0021,40.7409
 x000100,Concordia University,QC,X,Montreal,-73.6424732,45.4581148
 x000101,McGill University,QC,X,Montreal,-73.5793398,45.5047884
+x000102,University of Waterloo,ON,X,Waterloo,-80.5470463,43.4722893
 x999999,Unlisted,XX,00000,X X,0,0
