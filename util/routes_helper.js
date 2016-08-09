@@ -113,6 +113,8 @@ helper.uploadFile = function uploadFile(file, options, callback) {
         if (typeHeader !== 'application/pdf' && typeHeader !== 'image/jpg' && typeHeader !== 'image/png') {
             return callback(null, 'File must be a pdf, jpg, or png!');
         }
+    } else {
+        return callback(null, 'Unknown upload option!');
     }
 
     //prepare to upload file
