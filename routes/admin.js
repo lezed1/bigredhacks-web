@@ -615,9 +615,19 @@ new CronJob(EVERY_HOUR, function checkDecisionDeadlines() {
             if (user.internal.lastNotifiedAt < dateForRejection) {
                 // Reject
                 user.internal.status = 'Rejected';
-                user.save(function (err) {
-                    if (err) {
-                        console.error(err);
+                // Send email immediately to prevent concurrency RSVP issues
+                email.sendDecisionEmail(user.name.first, user.internal.notificationStatus, user.internal.status, config, function(err) {
+                    if (err)  {
+                        return void console.error(err);
+                    } else {
+                        user.internal.lastNotifiedAt = Date.now();
+                        user.internal.notificationStatus = 'Rejected';
+                        user.save(function(err) {
+                            if (err) {
+                                console.error(err);
+                                console.error("ERROR: User with email " + user.email + " has been informed of their new status, but that was not saved in the database!");
+                            }
+                        });
                     }
                 });
             } else {
