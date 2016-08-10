@@ -8,6 +8,10 @@ block vars
 
 
 block admin_content
-    +contentHeading("Review Team")
-    include _usertemplate
-    include _userteamtemplate
+    +contentHeading("Review User")
+    .row.review-header
+        include _statstemplate
+    .row.review-body
+        include _usertemplate
+        include _userteamtemplate
+    .row.review-footer

@@ -284,10 +284,16 @@ router.get('/user/:pubid', function (req, res, next) {
                 if (err) {
                     console.log(err);
                 }
-                res.render('admin/user', {
-                    currentUser: user,
-                    title: 'Review User'
-                })
+                _getStats(user, function (err,stats) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    res.render('admin/user', {
+                        currentUser: user,
+                        title: 'Review User',
+                        stats
+                    })
+                });
             });
         }
     });
@@ -371,6 +377,16 @@ router.get('/search', function (req, res, next) {
     }
 });
 
+// Returns an object of stats related to the user
+function _getStats(user, callback) {
+    async.parallel({
+        overall: aggregate.applicants.byMatch(USER_FILTER),
+        school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
+        bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
+        gender: aggregate.applicants.gender()
+    }, callback);
+}
+
 /**
  * @api {GET} /admin/review Review page to review a random applicant who hasn't been reviewed yet
  * @apiName Review
@@ -392,12 +408,7 @@ router.get('/review', function (req, res, next) {
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
 
-                async.parallel({
-                    overall: aggregate.applicants.byMatch(USER_FILTER),
-                    school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
-                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
-                    gender: aggregate.applicants.gender()
-                }, function (err, stats) {
+                _getStats(user, function (err, stats) {
                     if (err) {
                         console.error(err);
                     }
