@@ -109,5 +109,13 @@ block append logistics
     .form-group
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
+        
+block append terms
+    br
+    label Please carefully read the two documents below:
+    .form-group
+        a#liability.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+        a#code-of-conduct.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
 
 block no_terms
+
