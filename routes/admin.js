@@ -17,7 +17,7 @@ var Reimbursements = require('../models/reimbursements.js');
 var TimeAnnotation = require('../models/time_annotation.js');
 
 //filter out admin users in aggregate queries.
-var USER_FILTER = { role: "user" };
+var USER_FILTER = {role: "user"};
 
 //some commonly used aggregation queries:
 //todo refactor and clean this up
@@ -27,7 +27,7 @@ var USER_FILTER = { role: "user" };
  * @param data
  * @param defaults
  */
-function objectAndDefault (data, defaults) {
+function objectAndDefault(data, defaults) {
     //make all values lowercase
     data = _.map(data, function (x) {
         return _.mapObject(x, function (val, key) {
@@ -86,40 +86,42 @@ var aggregate = {
         },
         gender: function () {
             return function (done) {
-                User.count( {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}
-                , function (err, totalRes) {
-                    if (err) {
-                        done(err);
-                    } else {
-                        User.aggregate(
-                            [
-                                {$match: {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}},
-                                {$group: {
-                                    _id: "$gender",
-                                    totalAccepted: {$sum: 1}
-                                }}
-                            ], function (err, acceptedRes) {
-                                if (err) {
-                                    done(err);
-                                } else {
+                User.count({$and: [{"internal.status": "Accepted"}, USER_FILTER]}
+                    , function (err, totalRes) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            User.aggregate(
+                                [
+                                    {$match: {$and: [{"internal.status": "Accepted"}, USER_FILTER]}},
+                                    {
+                                        $group: {
+                                            _id: "$gender",
+                                            totalAccepted: {$sum: 1}
+                                        }
+                                    }
+                                ], function (err, acceptedRes) {
+                                    if (err) {
+                                        done(err);
+                                    } else {
 
-                                    acceptedRes = objectAndDefault(acceptedRes, {
-                                        male: 0,
-                                        female: 0
-                                    });
+                                        acceptedRes = objectAndDefault(acceptedRes, {
+                                            male: 0,
+                                            female: 0
+                                        });
 
 
-                                    const res = {
-                                        male: 100.0 * acceptedRes.male / totalRes,
-                                        female: 100.0 * acceptedRes.female / totalRes,
-                                    };
+                                        const res = {
+                                            male: 100.0 * acceptedRes.male / totalRes,
+                                            female: 100.0 * acceptedRes.female / totalRes,
+                                        };
 
-                                    done(null, res);
+                                        done(null, res);
+                                    }
                                 }
-                                }
-                        )
-                    }
-                })
+                            )
+                        }
+                    })
             }
         }
     }
@@ -147,7 +149,12 @@ router.get('/dashboard', function (req, res, next) {
         schools: function (done) {
             User.aggregate([
                 {$match: USER_FILTER},
-                {$group: {_id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"}, total: {$sum: 1}}},
+                {
+                    $group: {
+                        _id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"},
+                        total: {$sum: 1}
+                    }
+                },
                 {
                     $project: {
                         accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
@@ -186,13 +193,15 @@ router.get('/dashboard', function (req, res, next) {
                 return done(err, res);
             })
         },
-        rsvps: function(done) {
+        rsvps: function (done) {
             User.aggregate([
-                { $match: { $and: [USER_FILTER, {"internal.status" : "Accepted"}] } },
-                {$group: {
-                    _id: "$internal.going",
-                    count: {$sum: 1}
-                }}
+                {$match: {$and: [USER_FILTER, {"internal.status": "Accepted"}]}},
+                {
+                    $group: {
+                        _id: "$internal.going",
+                        count: {$sum: 1}
+                    }
+                }
             ], function (err, res) {
                 res = objectAndDefault(res, {
                     true: 0,
@@ -202,18 +211,18 @@ router.get('/dashboard', function (req, res, next) {
                 return done(err, res);
             })
         },
-        decisionAnnounces: function(done) {
-            User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+        decisionAnnounces: function (done) {
+            User.count({$and: [{$where: "this.internal.notificationStatus != this.internal.status"}, {"internal.status": {$ne: "Pending"}}]}, function (err, resu) {
                 if (err) console.log(err);
                 else {
                     return done(err, resu);
                 }
             });
         },
-        reimbursements: function(done) {
-            Reimbursements.find({},done);
+        reimbursements: function (done) {
+            Reimbursements.find({}, done);
         },
-        accepted: function(done) {
+        accepted: function (done) {
             User.find({"internal.status": "Accepted"})
                 .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
                 .exec(done)
@@ -251,8 +260,8 @@ router.get('/dashboard', function (req, res, next) {
         };
 
         // Assumes charterbus reimbursements have been set
-        let currentMax = result.accepted.reduce( (acc, user) => acc + _calculateReimbursement(user, true), 0);
-        let potentialMax = result.accepted.reduce( (acc, user) => acc + _calculateReimbursement(user, false), 0);
+        let currentMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, true), 0);
+        let potentialMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, false), 0);
         let reimburse = {currentMax, potentialMax};
 
         return res.render('admin/index', {
@@ -284,7 +293,7 @@ router.get('/user/:pubid', function (req, res, next) {
                 if (err) {
                     console.log(err);
                 }
-                _getStats(user, function (err,stats) {
+                _getStats(user, function (err, stats) {
                     if (err) {
                         console.error(err);
                     }
@@ -393,7 +402,7 @@ function _getStats(user, callback) {
  * @apiGroup AdminAuth
  */
 router.get('/review', function (req, res, next) {
-    var query = { 'internal.status': "Pending" };
+    var query = {'internal.status': "Pending"};
     query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
         if (err) {
@@ -451,14 +460,14 @@ router.get('/businfo', function (req, res, next) {
                 callback();
             });
         }, function (err) {
-            User.find({"internal.busOverride" : {$ne : null}}, function(err, users) {
+            User.find({"internal.busOverride": {$ne: null}}, function (err, users) {
                 if (err) {
                     console.error(err);
                 }
 
                 var overrideUsers = [];
                 // Setup an array of users with bus overrides
-                users.forEach(function(user) {
+                users.forEach(function (user) {
                     var info = {};
                     info.name = user.name.full;
                     info.school = user.school.name;
@@ -526,10 +535,10 @@ router.post('/businfo', function (req, res, next) {
  */
 router.get('/reimbursements', function (req, res, next) {
     async.parallel({
-        reimbursements: function(done) {
-            Reimbursements.find({},done);
+        reimbursements: function (done) {
+            Reimbursements.find({}, done);
         },
-        overrides: function(done) {
+        overrides: function (done) {
             User.find({"internal.reimbursement_override": {$gt: 0}})
                 .select("pubid name email school.name internal.reimbursement_override")
                 .sort("name.first")
@@ -552,7 +561,7 @@ router.get('/reimbursements', function (req, res, next) {
  * @apiName CheckIn
  * @apiGroup AdminAuth
  */
-router.get('/checkin', function(req, res, next) {
+router.get('/checkin', function (req, res, next) {
     res.render('admin/checkin');
 });
 
@@ -563,33 +572,32 @@ router.get('/checkin', function(req, res, next) {
  */
 router.get('/stats', function (req, res, next) {
     async.parallel([
-        function(callback) {
-            TimeAnnotation.find({}, function (err, ann) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    callback(null, ann);
-                }
-            });
-        },
-        function(callback) {
-            const projection = 'created_at';
-            User.find({}, projection, function (err,users) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    callback(null, users);
-                }
-            });
-        }
+            function (callback) {
+                TimeAnnotation.find({}, function (err, ann) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        callback(null, ann);
+                    }
+                });
+            },
+            function (callback) {
+                const projection = 'created_at';
+                User.find({}, projection, function (err, users) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        callback(null, users);
+                    }
+                });
+            }
 
-    ], function(err, results) {
+        ], function (err, results) {
             res.render('admin/stats', {
                 annotations: results[0],
                 users: results[1],
             });
-    }
-
+        }
     );
 
 });
