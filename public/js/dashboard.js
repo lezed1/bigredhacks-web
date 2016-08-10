@@ -222,7 +222,7 @@ $('#rsvpForm').validate({
     }
 });
 
-//change button colors to blue after clicked on
+// Make buttons more transparent after clicked on
 $('#liability').click(function(){
     $(this).css('opacity','0.6');
 });
