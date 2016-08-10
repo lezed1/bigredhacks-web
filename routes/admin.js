@@ -289,20 +289,23 @@ router.get('/user/:pubid', function (req, res, next) {
             //todo return on error
         }
         else {
-            _fillTeamMembers(user, function (err, user) {
-                if (err) {
-                    console.log(err);
+            async.parallel({
+                team: function genTeam(callback) {
+                    _fillTeamMembers(user, callback);
+                },
+                stats: function genStats(callback) {
+                    _getStats(user, callback);
                 }
-                _getStats(user, function (err, stats) {
-                    if (err) {
-                        console.error(err);
-                    }
-                    res.render('admin/user', {
-                        currentUser: user,
-                        title: 'Review User',
-                        stats
-                    })
-                });
+            }, function (err, info) {
+                if (err) {
+                    console.error(err);
+                    return res.sendStatus(500);
+                }
+                res.render('admin/user', {
+                    title: 'Review User',
+                    currentUser: user,
+                    stats: info.stats
+                })
             });
         }
     });
