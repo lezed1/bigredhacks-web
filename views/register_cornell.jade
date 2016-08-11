@@ -21,7 +21,7 @@ block append description
 block append account-information
     .form-group
         label(for='email') email address *
-        input#email.form-control.not-cornell(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
+        input#email.form-control(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
     .form-group
         label(for='password') password *
         input#password.form-control(type='password', name='password', placeholder='password', required=true)
@@ -56,7 +56,7 @@ block append school
         .form-group
             label(for='college') full school name *
             br
-            input.form-control(type='text',value=college.display, readonly=true)
+            input#college.form-control.typeahead(type='text',placeholder='college',value=input.college || '', required=true)
         .form-group
             label(for='major') major *
             input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
