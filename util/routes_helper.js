@@ -5,7 +5,6 @@ var uid = require('uid2');
 var fs = require('fs');
 var qs = require('qs');
 var mcapi = require('mailchimp-api');
-var cron = require('./cron'); // Ensure this loads
 
 var config = require('../config.js');
 

@@ -69,7 +69,7 @@ const DEADLINE_WARNING_BODY = "<p>We wanted to remind you that you have <b>less 
  * @param config Contains parameters: to.email, to.name, from_email, from_name, and subject
  * @param callback a function of (err, json) to handle callback
  */
-function sendEmail (body, config, callback) {
+function sendCustomEmail (body, config, callback) {
     if (!callback) callback = defaultCallback;
     var email = new sendgrid.Email();
 
@@ -94,23 +94,28 @@ function sendEmail (body, config, callback) {
 module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, config, callback) {
   if (notifyStatus === "Waitlisted" && newStatus === "Accepted") {
       config.subject = ACCEPTED_SUBJECT;
-      sendEmail("<p>Hey " + name + ",</p>" + WAITLISTED_TO_ACCEPTED_BODY, config, callback);
+      sendCustomEmail("<p>Hey " + name + ",</p>" + WAITLISTED_TO_ACCEPTED_BODY, config, callback);
   } else if (notifyStatus === "Accepted" && newStatus === "Rejected") {
       config.subject = ACCEPTED_TO_REJECTED_SUBJECT;
-      sendEmail("<p>Hi " + name + ",</p>" + ACCEPTED_TO_REJECTED_BODY, config, callback);
+      sendCustomEmail("<p>Hi " + name + ",</p>" + ACCEPTED_TO_REJECTED_BODY, config, callback);
   } else {
       switch (newStatus) {
           case "Accepted":
               config.subject = ACCEPTED_SUBJECT;
-              sendEmail("<p>Hey " + name + ",</p>" + ACCEPTED_BODY, config, callback);
+              sendCustomEmail("<p>Hey " + name + ",</p>" + ACCEPTED_BODY, config, callback);
               break;
           case "Waitlisted":
               config.subject = WAITLISTED_SUBJECT;
-              sendEmail("<p>Hi " + name + ",</p>" + WAITLISTED_BODY, config, callback);
+              sendCustomEmail("<p>Hi " + name + ",</p>" + WAITLISTED_BODY, config, callback);
               break;
           case "Rejected":
               config.subject = REJECTED_SUBJECT;
-              sendEmail("<p>Hi " + name + ",</p>" + REJECTED_BODY, config, callback);
+              sendCustomEmail("<p>Hi " + name + ",</p>" + REJECTED_BODY, config, callback);
+              break;
+          case "Pending":
+              // In this case, we revoked a decision. No email should be sent as this only
+              // should happen in exceptional cases.
+              callback();
               break;
       }
   }
@@ -118,10 +123,10 @@ module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, conf
 
 module.exports.sendDeadlineEmail = function (name, config, callback) {
     config.subject = DEADLINE_WARNING_SUBJECT;
-    sendEmail("<p>Hi " + name + ",</p>" + DEADLINE_WARNING_BODY, config, callback);
+    sendCustomEmail("<p>Hi " + name + ",</p>" + DEADLINE_WARNING_BODY, config, callback);
 };
 
-module.exports.sendCustomEmail = sendEmail;
+module.exports.sendCustomEmail = sendCustomEmail;
 
 var defaultCallback = function (err, json) {
     if (err) {
