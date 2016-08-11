@@ -77,6 +77,8 @@ module.exports.go = function go() {
                     return void email.sendDeadlineEmail(user.name.first, config, callback);
                 });
             }
+
+            return void callback(); // User has less than 24 hours left, already warned
         }
     }
 };
