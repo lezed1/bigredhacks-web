@@ -104,23 +104,33 @@ helper.uploadFile = function uploadFile(file, options, callback) {
         return callback(null, "File is too big!");
     }
 
-    if (file.headers['content-type'] !== 'application/pdf') {
-        return callback(null, 'File must be a pdf!');
+    const typeHeader = file.headers['content-type'];
+    const RECEIPT_FORMATS = 'application/pdf,image/jpg,image/png'.split(',');
+    if (options.type == "resume") {
+        if (typeHeader !== 'application/pdf') {
+            return callback(null, 'File must be a pdf!');
+        }
+    } else if (options.type == "receipt") {
+        if (RECEIPT_FORMATS.indexOf(typeHeader) == -1) {
+            return callback(null, 'File must be a pdf, jpg, or png!');
+        }
+    } else {
+        return callback(null, 'Unknown upload option!');
     }
 
     //prepare to upload file
     var body = fs.createReadStream(file.path);
     //generate a filename if not provided
     if (!filename) {
-        filename = uid(15) + ".pdf";
+        const type = '.' + typeHeader.substring(typeHeader.indexOf('/') + 1);
+        filename = uid(15) + type;
     }
-    //console.log(filename);
     s3.putObject({
         Bucket: config.setup.AWS_S3_bucket,
         Key: dest + filename,
         ACL: 'public-read',
         Body: body,
-        ContentType: 'application/pdf'
+        ContentType: typeHeader
     }, function (err, res) {
         if (err) {
             console.error('Error uploading resume!');

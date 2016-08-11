@@ -294,7 +294,6 @@ module.exports = function (io) {
 
                     // Actually update user's resume
                     var user = req.user;
-                    console.log(user);
                     if (user) {
                         user.app.resume = file.filename; // TODO: We may need to validate before saving here
                         user.save ( function (err, doc) {
