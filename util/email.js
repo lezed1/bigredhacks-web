@@ -117,6 +117,9 @@ module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, conf
               // should happen in exceptional cases.
               callback();
               break;
+          default:
+              callback('Error: Saw unknown status in sendDecisionEmail: ' + newStatus);
+              break;
       }
   }
 };
