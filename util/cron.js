@@ -76,9 +76,10 @@ module.exports.go = function go() {
                     // Send email after saving to avoid possibility of spam
                     return void email.sendDeadlineEmail(user.name.first, config, callback);
                 });
+            } else {
+                // User has less than 24 hours left, already warned
+                return void callback();
             }
-            // User has less than 24 hours left, already warned
-            return void callback();
         }
     }
 };
