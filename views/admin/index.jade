@@ -52,6 +52,8 @@ block append admin_content
                     th Rank
                     th School Name
                     th.text-center Applicants
+                    th.text-center Going
+                    th.text-center Not Going
                     th.text-center Accepted
                     th.text-center Waitlisted
                     th.text-center Rejected
@@ -62,6 +64,8 @@ block append admin_content
                         td(class=done ? "success": "")= i+1
                         td: h: a.low-vis(href="/admin/search?collegeid="+school.collegeid+"&college="+school.name,target="_blank") #{school.name}
                         td.text-center= school.total
+                        td.text-center= school.going
+                        td.text-center= school.notGoing
                         td.text-center= school.accepted
                         td.text-center= school.waitlisted
                         td.text-center= school.rejected
