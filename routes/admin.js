@@ -200,7 +200,7 @@ router.get('/dashboard', function (req, res, next) {
                         waitlisted: "$waitlisted",
                         rejected: "$rejected",
                         pending: "$pending",
-                        total: {$add: ["$going","$notGoing","$accepted", "$pending", "$waitlisted", "$rejected"]}
+                        total: {$add: ["$accepted", "$pending", "$waitlisted", "$rejected"]}
                     }
                 },
                 {$sort: {total: -1, name: 1}}
