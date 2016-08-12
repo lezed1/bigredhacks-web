@@ -282,7 +282,7 @@ module.exports = function (io) {
                                             "name": newUser.name.first + " " + newUser.name.last,
                                         }
                                     };
-                                    email.sendEmail(email_body, config);
+                                    email.sendCustomEmail(email_body, config);
                                     res.redirect('/user/dashboard');
                                 })
                             })
@@ -533,7 +533,7 @@ module.exports = function (io) {
                                                     "name": newUser.name.first + " " + newUser.name.last,
                                                 }
                                             };
-                                            email.sendEmail(template_content, config);
+                                            email.sendCustomEmail(template_content, config);
                                             res.redirect('/user/dashboard');
                                         })
                                     })
@@ -827,7 +827,7 @@ module.exports = function (io) {
                                 "name": user.name.first + " " + user.name.last,
                             },
                         };
-                        email.sendEmail(template_content, config);
+                        email.sendCustomEmail(template_content, config);
                     }
                 });
             }

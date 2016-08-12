@@ -6,6 +6,7 @@ var async = require('async');
 
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
+var email = require('../util/email.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');

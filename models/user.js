@@ -51,6 +51,7 @@ var userSchema = new mongoose.Schema({
         busOverride: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
         notificationStatus: {type: String, enum: en.user.status, default: "Pending"}, // The status that we've last informed them of
+        deadlineWarned: {type: Boolean, default: false},
         previousStatus: {type: String, enum: en.user.status, default: "Pending"},
         lastNotifiedAt: {type: Date, default: null},
         going: {type: Boolean, default: null},
