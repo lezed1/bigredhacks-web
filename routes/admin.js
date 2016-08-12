@@ -169,10 +169,7 @@ router.get('/dashboard', function (req, res, next) {
                                 {$eq: ["$_id.going", false]}
                             ]},
                             "$total", 0]},
-                        accepted: {$cond: [{$and:
-                            [{$eq: ["$_id.status", "Accepted"]}]},
-
-                        "$total", 0]},
+                        accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
                         waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
                         rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]},
                         //$ifnull returns first argument if not null, which is truthy in this case
