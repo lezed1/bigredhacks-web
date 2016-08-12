@@ -11,14 +11,15 @@ var User = require('../models/user.js');
 module.exports.go = function go() {
     // Regular decision deadline processing
     const TIME_ZONE = 'America/New_York';
-    const EVERY_EIGHT_HOURS = '00 00 */8 * * *';
+    const EVERY_EIGHT_HOURS = '00 * * * * *';
     const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    const DATE_FOR_WARNING = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp) - 1)); // One day in advance
-    const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp)));
+
 
     new CronJob(EVERY_EIGHT_HOURS, function checkDecisionDeadlines() {
         // TODO: Remove this error once we are confident this is running every 8 hours (#112)
         console.log('[debug error] cron running');
+        const DATE_FOR_WARNING = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp) - 1)); // One day in advance
+
         User.find({
             $and: [
                 {"internal.status": "Accepted"},
@@ -42,6 +43,7 @@ module.exports.go = function go() {
 
     // Warns or rejects a user if they are past deadline
     function _warnOrRejectUser(user, callback) {
+        const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp)));
         const config = {
             "from_email": "info@bigredhacks.com",
             "from_name": "BigRed//Hacks",
