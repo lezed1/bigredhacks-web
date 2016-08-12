@@ -40,7 +40,7 @@ module.exports.go = function go() {
         });
     }, null, true, TIME_ZONE);
 
-// Warns or rejects a user if they are past deadline
+    // Warns or rejects a user if they are past deadline
     function _warnOrRejectUser(user, callback) {
         const config = {
             "from_email": "info@bigredhacks.com",
@@ -77,8 +77,8 @@ module.exports.go = function go() {
                     return void email.sendDeadlineEmail(user.name.first, config, callback);
                 });
             }
-
-            return void callback(); // User has less than 24 hours left, already warned
+            // User has less than 24 hours left, already warned
+            return void callback();
         }
     }
 };
