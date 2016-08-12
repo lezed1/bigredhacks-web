@@ -157,18 +157,8 @@ router.get('/dashboard', function (req, res, next) {
                 },
                 {
                     $project: {
-                        going: {$cond: [{$and:
-                            [
-                                {$eq: ["$_id.status", "Accepted"]},
-                                {$eq: ["$_id.going", true]}
-                            ]},
-                            "$total", 0]},
-                        notGoing: {$cond: [{$and:
-                            [
-                                {$eq: ["$_id.status", "Accepted"]},
-                                {$eq: ["$_id.going", false]}
-                            ]},
-                            "$total", 0]},
+                        going: {$cond: [{$eq: ["$_id.going", true]}, "$total", 0]},
+                        notGoing: {$cond: [{$eq: ["$_id.going", false]}, "$total", 0]},
                         accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
                         waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
                         rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]},
