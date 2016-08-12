@@ -11,7 +11,7 @@ var User = require('../models/user.js');
 module.exports.go = function go() {
     // Regular decision deadline processing
     const TIME_ZONE = 'America/New_York';
-    const EVERY_EIGHT_HOURS = '00 * * * * *';
+    const EVERY_EIGHT_HOURS = '00 00 */8 * * *';
     const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
 
