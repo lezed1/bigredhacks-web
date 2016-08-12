@@ -151,13 +151,28 @@ router.get('/dashboard', function (req, res, next) {
                 {$match: USER_FILTER},
                 {
                     $group: {
-                        _id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"},
+                        _id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status", going: "$internal.going"},
                         total: {$sum: 1}
                     }
                 },
                 {
                     $project: {
-                        accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
+                        going: {$cond: [{$and:
+                            [
+                                {$eq: ["$_id.status", "Accepted"]},
+                                {$eq: ["$_id.going", true]}
+                            ]},
+                            "$total", 0]},
+                        notGoing: {$cond: [{$and:
+                            [
+                                {$eq: ["$_id.status", "Accepted"]},
+                                {$eq: ["$_id.going", false]}
+                            ]},
+                            "$total", 0]},
+                        accepted: {$cond: [{$and:
+                            [{$eq: ["$_id.status", "Accepted"]}]},
+
+                        "$total", 0]},
                         waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
                         rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]},
                         //$ifnull returns first argument if not null, which is truthy in this case
@@ -169,6 +184,8 @@ router.get('/dashboard', function (req, res, next) {
                 {
                     $group: {
                         _id: {name: "$_id.name", collegeid: "$_id.collegeid"},
+                        going: {$sum: "$going"},
+                        notGoing: {$sum: "$notGoing"},
                         accepted: {$sum: "$accepted"},
                         waitlisted: {$sum: "$waitlisted"},
                         rejected: {$sum: "$rejected"},
@@ -180,11 +197,13 @@ router.get('/dashboard', function (req, res, next) {
                         _id: 0,
                         name: "$_id.name",
                         collegeid: "$_id.collegeid",
+                        going: "$going",
+                        notGoing: "$notGoing",
                         accepted: "$accepted",
                         waitlisted: "$waitlisted",
                         rejected: "$rejected",
                         pending: "$pending",
-                        total: {$add: ["$accepted", "$pending", "$waitlisted", "$rejected"]}
+                        total: {$add: ["$going","$notGoing","$accepted", "$pending", "$waitlisted", "$rejected"]}
                     }
                 },
                 {$sort: {total: -1, name: 1}}
