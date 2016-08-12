@@ -124,7 +124,7 @@ $('document').ready(function () {
         //handle decision radio buttons for individual(detail) view
     $('input[type=radio][name=individualstatus]').on('change', function () {
         var newStatus = $(this).val();
-        var pubid = $(this).parent().parent().data('pubid');
+        var pubid = $(this).closest('form').data('pubid');
         updateStatus("user", pubid, newStatus, function (data) {
         });
     });
