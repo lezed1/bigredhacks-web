@@ -191,19 +191,20 @@ function makeRollingAnnouncement(req, res, next) {
                         recip.internal.lastNotifiedAt = Date.now();
                         recip.save(function(err) {
                             if (err) {
-                                console.error(err);
                                 console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
+                                return void callback(err);
                             } else {
                                 // TODO: Do not log this once we are more confident about this code (Issue #64)
                                 console.log(recip.email + ' has successfully been sent their new decision');
+                                return void callback();
                             }
                         });
-                        callback();
                     }
                 })
             }, function(err) {
                 if (err) {
                     console.error('An error occurred with decision emails. Decision sending was terminated. See the log for remediation: ' + err);
+                    req.flash('error', 'An error occurred. Check the logs!');
                     res.sendStatus(500);
                 } else {
                     req.flash('success', 'All transactional decision emails successfully sent!');

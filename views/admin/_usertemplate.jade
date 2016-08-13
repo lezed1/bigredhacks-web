@@ -92,9 +92,15 @@ h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pub
                         +generateOptions("true false".split(" "), {selected: (user.internal.checkedin + "")})
         .text-center
             | Update user application decision:
-            form.decision-radio.user.np-enabled
+            form.decision-radio.user.np-enabled(data-pubid = user.pubid)
                 +generateInlineRadio(enums.virtual.status.longWithPending, {
                 checked: user.internal.status, //set default value
                 name: "individualstatus", //name attr of each input
                 label: enums.virtual.status.longWithPending //label of the input different from actual input
                 })
+        br
+        .text-center
+            | Previous status: #{user.internal.previousStatus}
+        if user.internal.status == "Rejected" && user.internal.previousStatus == "Accepted"
+            .text-center
+                | This user's deadline to RSVP has expired.

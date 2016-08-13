@@ -203,8 +203,8 @@ $('#rsvpForm').validate({
         },
         receipt: {
             conditionalRSVP: true,
-            extension: "pdf",
-            accept: 'application/pdf',
+            extension: "pdf,jpg,png",
+            accept: 'application/pdf,image/jpg,image/png',
             filesize: 1024 * 1024 * max_receipt_mb
         },
         legal: {

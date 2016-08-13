@@ -51,6 +51,8 @@ var userSchema = new mongoose.Schema({
         busOverride: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
         notificationStatus: {type: String, enum: en.user.status, default: "Pending"}, // The status that we've last informed them of
+        deadlineWarned: {type: Boolean, default: false},
+        previousStatus: {type: String, enum: en.user.status, default: "Pending"},
         lastNotifiedAt: {type: Date, default: null},
         going: {type: Boolean, default: null},
         travel_receipt: {type: String, default: null},
@@ -69,6 +71,11 @@ var userSchema = new mongoose.Schema({
         skills: [String],
         bio: String
     }
+});
+
+userSchema.path('internal.status').set(function (newStatus) {
+    this.internal.previousStatus = this.internal.status;
+    return newStatus;
 });
 
 //full name of user
