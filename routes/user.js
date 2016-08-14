@@ -340,7 +340,6 @@ module.exports = function (io) {
                                     return res.sendStatus(500);
                                 }
                                 else {
-                                    req.flash('success', "You have signed up for a bus!");
                                     return res.sendStatus(200);
                                 }
                             });
@@ -353,7 +352,6 @@ module.exports = function (io) {
             });
         }
         else if (req.body.decision.toLowerCase() == "optout") {
-            req.flash('success', "You have opted out of a bus!");
             return util.removeUserFromBus(Bus, req, res, user);
         }
         else {

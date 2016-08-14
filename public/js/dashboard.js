@@ -79,8 +79,8 @@ $(document).ready(function () {
                 businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
                 businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
                 businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Signed Up")
-                location.reload();
-                $(window).scrollTop(0);
+                
+                $("#signup-message").show();
             });
         }
     });
@@ -94,9 +94,9 @@ $(document).ready(function () {
                 businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
                 businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
                 businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Opt Out")
-                location.reload();
-                $(window).scrollTop(0);
             });
+            $("#optout-message").show();
+
         }
     });
 });
