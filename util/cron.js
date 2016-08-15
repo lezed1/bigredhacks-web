@@ -16,8 +16,6 @@ module.exports.go = function go() {
     const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
 
     new CronJob(EVERY_EIGHT_HOURS, function checkDecisionDeadlines() {
-        // TODO: Remove this error once we are confident this is running every 8 hours (#112)
-        console.log('[debug error] cron running');
         const DATE_FOR_WARNING = new Date(Date.now() - DAY_IN_MILLIS * (DAYS_TO_RSVP - 1)); // One day in advance
 
         User.find({
