@@ -5,6 +5,8 @@ var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var middle = require('./middleware.js');
 
+var Announcement = require ('../models/announcement.js');
+
 var config = require('../config.js');
 
 /**
@@ -59,8 +61,15 @@ router.post('/cornell/subscribe', function (req, res, next) {
  * @apiGroup Index
  */
 router.get('/live', middle.requireDayof,function (req, res, next) {
-    res.render('live', {
-        title: 'BigRed//Hacks | Live'
+    Announcement.find({}, "message time", function (err, announcements) {
+        if (err) {
+            console.error(err);
+        } else {
+            res.render('live', {
+                title: 'BigRed//Hacks | Live',
+                announcements
+            });
+        }
     });
 });
 
