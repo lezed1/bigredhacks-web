@@ -194,9 +194,12 @@ block dashboard_content
                         | Please click the two following links and read the
                         | documents carefully.
                     .form-group
-                        a#liability.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
-                        a#code-of-conduct.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
-                        br
+                        label
+                            input#viewLegal(name='viewLegal', hidden=true)
+                            a#liability.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+                            a#code-of-conduct.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+                            br
+                    .form-group
                         .checkbox
                             label
                                 input#legal.checkbox(type='checkbox', name='legal', value='true')

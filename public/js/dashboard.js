@@ -187,6 +187,18 @@ $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
     else return false;
 });
 
+$.validator.addMethod("cocAndLiabilityRead", function (val, elem, params) {
+    // Require value if yes response
+    if ($("#rsvpDropdown").val() == "yes" && $('#rsvp-yes-button').hasClass('btn-blue')) {
+        return true;
+    }
+    // Dont require value if no response
+    else if ($("#rsvpDropdown").val() == "no") {
+        return true
+    }
+    else return false;
+});
+
 $.validator.addMethod('filesize', function (value, element, param) {
     return this.optional(element) || (element.files[0].size <= param)
     }, 'File size must be less than ' + max_receipt_mb + ' mb'); 
@@ -209,6 +221,9 @@ $('#rsvpForm').validate({
         },
         legal: {
             conditionalRSVP: true
+        },
+        viewLegal: {
+            cocAndLiabilityRead: true
         }
     },
     messages: {
@@ -218,14 +233,31 @@ $('#rsvpForm').validate({
         },
         legal: {
             conditionalRSVP: "Please review the legal information"
+        },
+        viewLegal: {
+            cocAndLiabilityRead: "Please read the liability & waiver release and the code of conduct."
         }
     }
 });
 
 // Make buttons more transparent after clicked on
 $('#liability').click(function(){
-    $(this).css('opacity','0.6');
+    $(this)
+        .removeClass('btn-red')
+        .addClass('btn-blue');
+    if ($('#code-of-conduct').hasClass('btn-blue')) {
+        $('#rsvp-yes-button')
+            .removeClass('btn-red')
+            .addClass('btn-blue');
+    }
 });
 $('#code-of-conduct').click(function(){
-    $(this).css('opacity','0.6');
+    $(this)
+        .removeClass('btn-red')
+        .addClass('btn-blue');
+    if ($('#liability').hasClass('btn-blue')) {
+        $('#rsvp-yes-button')
+            .removeClass('btn-red')
+            .addClass('btn-blue');
+    }
 });
