@@ -158,5 +158,5 @@ require('./util/load_static_data.js').hardwareLoader.loadOnce(function (err) {
 });
 // Start execution of cron jobs
 require('./util/cron').go();
-
+require('./util/_dbmigrations').backFillRSVPTime(); // TODO: Remove as soon as migration complete
 module.exports = app;
