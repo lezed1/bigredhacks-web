@@ -88,7 +88,7 @@ module.exports = function (io) {
             },
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
-                const rsvpTime = moment.duration(Number(config.admin.days_to_rsvp), 'days');
+                const rsvpTime = moment.duration(req.user.internal.daysToRSVP, 'days');
                 if (notified) {
                     const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {

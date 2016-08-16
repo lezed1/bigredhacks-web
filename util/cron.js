@@ -13,17 +13,15 @@ module.exports.go = function go() {
     const TIME_ZONE = 'America/New_York';
     const EVERY_EIGHT_HOURS = '00 00 */8 * * *';
     const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
 
     new CronJob(EVERY_EIGHT_HOURS, function checkDecisionDeadlines() {
-        const DATE_FOR_WARNING = new Date(Date.now() - DAY_IN_MILLIS * (DAYS_TO_RSVP - 1)); // One day in advance
-
+        const now = Date.now();
         User.find({
             $and: [
                 {"internal.status": "Accepted"},
                 {"internal.notificationStatus": "Accepted"},
                 {"internal.going": null},
-                {"internal.lastNotifiedAt": {$lt: DATE_FOR_WARNING}}
+                {$where: function() {return this.internal.lastNotifiedAt < now - (this.internal.daysToRSVP - 1) * DAY_IN_MILLIS }}
             ]
         }, function (err, users) {
             if (err) {
@@ -41,7 +39,7 @@ module.exports.go = function go() {
 
     // Warns or rejects a user if they are past deadline
     function _warnOrRejectUser(user, callback) {
-        const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (DAYS_TO_RSVP));
+        const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (user.internal.daysToRSVP));
         const config = {
             "from_email": "info@bigredhacks.com",
             "from_name": "BigRed//Hacks",
