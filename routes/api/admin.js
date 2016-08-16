@@ -64,6 +64,7 @@ router.delete('/announcements', deleteAnnouncement);
 
 router.post('/rollingDecision', makeRollingAnnouncement);
 
+router.post('/deadlineOverride', rsvpDeadlineOverride);
 
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
@@ -166,6 +167,7 @@ function setUserRole(req, res, next) {
  * @api {PATCH} /api/admin/rollingDecision Publish decisions to all who have had one made and not received it yet.
  */
 function makeRollingAnnouncement(req, res, next) {
+    const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
@@ -189,6 +191,7 @@ function makeRollingAnnouncement(req, res, next) {
                     } else {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
+                        recip.internal.daysToRSVP = DAYS_TO_RSVP;
                         recip.save(function(err) {
                             if (err) {
                                 console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
@@ -884,6 +887,33 @@ function studentReimbursementsDelete(req, res, next) {
     });
 }
 
+// TODO: Implement front-end to call this (#115)
+/**
+ * @api {POST} /api/admin/rsvpDeadlineOverride Override the RSVP deadline of the given user
+ * @apiname DeadlineOverride
+ * @apigroup Admin
+ *
+ * @apiParam {String} email
+ * @apiParam {Number} daysToRSVP
+ **/
+function rsvpDeadlineOverride(req, res, next) {
+    if (!req.body.email || !req.body.daysToRSVP) {
+        return res.status(500).send('Need email and daysToRSVP');
+    } else if (req.body.daysToRSVP <= 0) {
+        return res.status(500).send('Need positive daysToRSVP value');
+    }
+
+    User.find( {email: req.body.email}, function (err, user) {
+        if (err) {
+            return res.status(500).send(err);
+        } else if (!user) {
+            return res.status(500).send('No such user');
+        }
+
+        user.internal.daysToRSVP = req.body.daysToRSVP;
+        user.save(util.dbSaveCallback(res));
+    });
+}
 
 /**
  * Converts a bool/string to a bool. Otherwise returns the original var.
