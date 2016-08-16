@@ -5,16 +5,17 @@ block header
     link(rel="stylesheet", href="/css/hardware.css")
 
 block main_content
-    h1 Hardware Page
-    ul.nav.nav-tabs(role='tablist')
-        li
-            a(href='#list-of-hardware', role='tab', data-toggle='tab') List of hardware
-        li
-            a(href='#items-checked-out', role='tab', data-toggle='tab') Items checked Out
-        li
-            a(href='#check-out-form', role='tab', data-toggle='tab') Check-out form
-        li
-            a(href='#return-form', role='tab', data-toggle='tab') Return form
+    h1#title Hardware Page
+    .tabs
+        ul.nav.nav-tabs.center(role='tablist')
+            li
+                a(href='#list-of-hardware', role='tab', data-toggle='tab') List of hardware
+            li
+                a(href='#items-checked-out', role='tab', data-toggle='tab') Items checked Out
+            li
+                a(href='#check-out-form', role='tab', data-toggle='tab') Check-out form
+            li
+                a(href='#return-form', role='tab', data-toggle='tab') Return form
             
     .tab-content
         #list-of-hardware.tab-pane.active(role='tabpanel')
