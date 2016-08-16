@@ -29,16 +29,21 @@ block main_content
                 tr
                     th Name of hardware
         #check-out-form.tab-pane(role='tabpanel')
-            h2 Checkout hardware
+            h2#test Checkout hardware
             .form-group
-                input.form-control(type='text', placeholder='name of hardware')
+                input#hardware.form-control(type='text', placeholder='name of hardware')
             .form-group
-                input.form-control(type='text', placeholder='name of person')
-            button.btn.btn-primary(type='submit') check out
+                input#name.form-control(type='text', placeholder='name of person')
+            .form-group
+                input#email.form-control(type='text', placeholder='email')
+            button#checkout-hardware-btn.btn.btn-primary(type='submit') check out
         #return-form.tab-pane(role='tabpanel')
             h2 Return hardware
             .form-group
                 input.form-control(type='text', placeholder='name of hardware')
             .form-group
                 input.form-control(type='text', placeholder='name of person')
-            button.btn.btn-primary(type='submit') return
+            button#return-hardware-btn.btn.btn-primary(type='submit') return
+            
+block footer
+    script(src="/js/hardware.js")
