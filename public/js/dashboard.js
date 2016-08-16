@@ -177,11 +177,11 @@ $("#rsvpDropdown").on('change', function () {
 
 $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
     // Require value if yes response
-    if ($("#rsvpDropdown").val() == "yes" && val) {
+    if ($("#rsvpDropdown").val().toLowerCase() == "yes" && val) {
         return true;
     }
     // Dont require value if no response
-    else if ($("#rsvpDropdown").val() == "no") {
+    else if ($("#rsvpDropdown").val().toLowerCase() == "no") {
         return true;
     }
     else return false;
