@@ -164,10 +164,10 @@ block dashboard_content
                                 |  if you'd like to help out.
                             .busselection
                                 if user.internal.busid == bus.id
-                                    div#buttonParent
+                                    .buttonParent
                                        input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
                                 else
-                                    div#buttonParent
+                                    .buttonParent
                                        input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         else
                             p You must RSVP before you can sign up for the bus.

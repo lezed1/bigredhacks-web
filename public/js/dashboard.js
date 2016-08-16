@@ -71,7 +71,7 @@ $(document).ready(function () {
 
 
     //Sign up for bus
-    $("#buttonParent").on('click', '#signup', function () {
+    $(".buttonParent").on('click', '#signup', function () {
         var businfobox = $(this).parents(".businfobox");
         if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
             userBusDecision(businfobox.data("busid"), "signup", function (data) {
@@ -92,7 +92,7 @@ $(document).ready(function () {
     });
 
     //Opt out of bus
-    $("#buttonParent").on('click', '#optout', function () {
+    $(".buttonParent").on('click', '#optout', function () {
         var businfobox = $(this).parents(".businfobox");
         if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
             userBusDecision(businfobox.data("busid"), "optout", function (data) {
