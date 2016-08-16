@@ -6,5 +6,32 @@ block header
 
 block main_content
     h1 Hardware Page
-
-
+    ul.nav.nav-tabs(role='tablist')
+        li
+            a(href='#list-of-hardware', role='tab', data-toggle='tab') List of hardware
+        li
+            a(href='#items-checked-out', role='tab', data-toggle='tab') Items checked Out
+        li
+            a(href='#check-out-form', role='tab', data-toggle='tab') Check-out form
+        li
+            a(href='#return-form', role='tab', data-toggle='tab') Return form
+            
+    .tab-content
+        #list-of-hardware.tab-pane.active(role='tabpanel')
+            h2 Hello
+        #items-checked-out.tab-pane(role='tabpanel')
+            h2 Yo
+        #check-out-form.tab-pane(role='tabpanel')
+            h2 Checkout hardware
+            .form-group
+                input.form-control(type='text', placeholder='name of hardware')
+            .form-group
+                input.form-control(type='text', placeholder='name of person')
+            button.btn.btn-primary(type='submit') check out
+        #return-form.tab-pane(role='tabpanel')
+            h2 Return hardware
+            .form-group
+                input.form-control(type='text', placeholder='name of hardware')
+            .form-group
+                input.form-control(type='text', placeholder='name of person')
+            button.btn.btn-primary(type='submit') return
