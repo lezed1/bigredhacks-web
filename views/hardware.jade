@@ -19,9 +19,15 @@ block main_content
             
     .tab-content
         #list-of-hardware.tab-pane.active(role='tabpanel')
-            h2 Hello
+            table.table.table-striped
+                tr
+                    th Name of hardware
+                tr
+                    th Example VR
         #items-checked-out.tab-pane(role='tabpanel')
-            h2 Yo
+            table.table.table-striped
+                tr
+                    th Name of hardware
         #check-out-form.tab-pane(role='tabpanel')
             h2 Checkout hardware
             .form-group
