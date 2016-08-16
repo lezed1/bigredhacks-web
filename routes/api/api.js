@@ -135,10 +135,10 @@ router.get('/calendar', function (req, res, next) {
     util.grabCalendar(function (err, cal) {
         if (err) {
             console.error(err);
-            res.status(500).send(err);
-        } else {
-            res.status(200).send(cal);
+            return res.status(500).send(err);
         }
+
+        return res.status(200).send(cal);
     });
 });
 
