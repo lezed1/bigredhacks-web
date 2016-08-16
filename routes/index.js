@@ -65,7 +65,8 @@ router.post('/cornell/subscribe', function (req, res, next) {
 router.get('/live', middle.requireDayof,function (req, res, next) {
     async.parallel({
             announcements: function announcements(callback) {
-                Announcement.find({}, "message time", callback);
+                const PROJECTION = 'message time';
+                Announcement.find({}, PROJECTION, callback);
             },
             calendar: function calendar(callback) {
                 util.grabCalendar(callback);
