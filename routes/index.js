@@ -96,4 +96,15 @@ router.get('/wayel', function (req, res, next) {
     });
 });
 
+/**
+ * @api {GET} /hardware hardware chcekout page
+ * @apiName Hardware
+ * @apiGroup Index
+ */
+router.get('/hardware', function (req, res, next) {
+    res.render('hardware', {
+        title: 'Hardware'
+    });
+});
+
 module.exports = router;
