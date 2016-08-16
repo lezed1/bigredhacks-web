@@ -299,14 +299,14 @@ module.exports = function (io) {
                        if (err)  {
                            console.error(err);
                            req.flash('error', 'Error in saving resume');
-                           return void res.redirect('/user/dashboard');
+                           return res.redirect('/user/dashboard');
                        }
 
                         req.flash('success', 'Resume successfully updated');
                         return res.redirect('/user/dashboard');
                     });
                 } else {
-                    console.log('No user sent, can\'t update resume!');
+                    console.error('No user sent, can\'t update resume!');
                     req.flash('error', 'Error in user validation');
                     return res.redirect('/user/dashboard');
                 }
