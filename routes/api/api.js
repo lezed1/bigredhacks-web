@@ -1,12 +1,15 @@
 "use strict";
+
 var express = require('express');
 var router = express.Router();
+
 var Colleges = require('../../models/college.js');
 var Hardware = require('../../models/hardware.js');
 var User = require('../../models/user.js');
 var Announcement = require ('../../models/announcement.js');
 
 var middle = require('../middleware');
+var util = require('../../util/util');
 
 /**
  * @api {get} /api/colleges Request a full list of known colleges
@@ -112,6 +115,29 @@ router.get('/announcements', function (req, res, next) {
             res.send({
                 announcements: ann
             });
+        }
+    });
+});
+
+/**
+ * @api {GET} /api/calendar Get a list of all calendar events
+ * @apiName GETCalendar
+ * @apiGroup Calendar
+ *
+ * @apiSuccess {Object[]} calendarEvents
+ * @apiSuccess {String} calendarEvents.event Name of the event
+ * @apiSuccess {Date} calendarEvents.start Start of the event
+ * @apiSuccess {Date} calendarEvents.end End of the event
+ * @apiSuccess {Date} calendarEvents.location Location of the event or "" if not specified
+ * @apiSuccess {Date} calendarEvents.description Description of the event or "" if not specified
+ */
+router.get('/calendar', function (req, res, next) {
+    util.grabCalendar(function (err, cal) {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(cal);
         }
     });
 });
