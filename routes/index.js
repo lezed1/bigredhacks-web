@@ -4,10 +4,12 @@ var router = express.Router();
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var middle = require('./middleware.js');
+var async = require('async');
 
 var Announcement = require ('../models/announcement.js');
 
 var config = require('../config.js');
+var util = require('../util/util');
 
 /**
  * @api {GET} /index Home page.
@@ -61,15 +63,24 @@ router.post('/cornell/subscribe', function (req, res, next) {
  * @apiGroup Index
  */
 router.get('/live', middle.requireDayof,function (req, res, next) {
-    Announcement.find({}, "message time", function (err, announcements) {
+    async.parallel({
+            announcements: function announcements(callback) {
+                Announcement.find({}, "message time", callback);
+            },
+            calendar: function calendar(callback) {
+                util.grabCalendar(callback);
+            }
+        }, function (err, result) {
         if (err) {
             console.error(err);
-        } else {
-            res.render('live', {
-                title: 'BigRed//Hacks | Live',
-                announcements
-            });
+            return res.status(500); // Do not expose error to users
         }
+
+        res.render('live', {
+            title: 'Live',
+            announcements: result.announcements,
+            calendar: result.calendar
+        });
     });
 });
 
