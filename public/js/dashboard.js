@@ -80,6 +80,12 @@ $(document).ready(function () {
                 businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
                 businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Signed Up")
                 $("#signup-message").show();
+                $("#signup").prop({
+                    id: 'optout',
+                    value: 'opt out',
+                    name: 'optout',
+                    class: 'btn btn-danger'
+                });
             });
         }
     });
@@ -95,6 +101,12 @@ $(document).ready(function () {
                 businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Opt Out")
             });
             $("#optout-message").show();
+            $("#optout").prop({
+                id: 'signup',
+                value: 'sign up',
+                name: 'signup',
+                class: 'btn btn-success'
+            });
         }
     });
 });
