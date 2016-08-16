@@ -77,7 +77,7 @@ router.get('/live', middle.requireDayof,function (req, res, next) {
             return res.status(500); // Do not expose error to users
         }
 
-        res.render('live', {
+        return res.render('live', {
             title: 'Live',
             announcements: result.announcements,
             calendar: result.calendar
