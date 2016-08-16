@@ -887,6 +887,7 @@ function studentReimbursementsDelete(req, res, next) {
     });
 }
 
+// TODO: Implement front-end to call this (#115)
 /**
  * @api {POST} /api/admin/rsvpDeadlineOverride Override the RSVP deadline of the given user
  * @apiname DeadlineOverride

@@ -15,7 +15,7 @@ module.exports.go = function go() {
 
 
     let _nearDeadline = function _nearDeadline() {
-        // Needs to be here to make mongo work
+        // Constant needs to be here in order to be in scope when called by the CronJob
         const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
         return this.internal.lastNotifiedAt < new Date(Date.now() - (this.internal.daysToRSVP - 1) * DAY_IN_MILLIS);
     };
@@ -44,7 +44,7 @@ module.exports.go = function go() {
 
     // Warns or rejects a user if they are past deadline
     function _warnOrRejectUser(user, callback) {
-        const DAY_IN_MILLIS = 1000 * 60 * 60 * 24; // Redundant but needed here to work with Mongo
+        const DAY_IN_MILLIS = 1000 * 60 * 60 * 24; // Redundant with previous constant, but needs to be here for scope
         const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (user.internal.daysToRSVP));
         const config = {
             "from_email": "info@bigredhacks.com",
