@@ -142,6 +142,4 @@ router.get('/calendar', function (req, res, next) {
     });
 });
 
-
-
 module.exports = router;
