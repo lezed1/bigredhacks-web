@@ -128,8 +128,8 @@ router.get('/announcements', function (req, res, next) {
  * @apiSuccess {String} calendarEvents.event Name of the event
  * @apiSuccess {Date} calendarEvents.start Start of the event
  * @apiSuccess {Date} calendarEvents.end End of the event
- * @apiSuccess {Date} calendarEvents.location Location of the event or "" if not specified
- * @apiSuccess {Date} calendarEvents.description Description of the event or "" if not specified
+ * @apiSuccess {String} calendarEvents.location Location of the event or "" if not specified
+ * @apiSuccess {String} calendarEvents.description Description of the event or "" if not specified
  */
 router.get('/calendar', function (req, res, next) {
     util.grabCalendar(function (err, cal) {
