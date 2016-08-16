@@ -88,7 +88,7 @@ util.grabCalendar = function grabCalendar(callback) {
                     location: element.properties.LOCATION[0].value,
                     description: element.properties.DESCRIPTION[0].value
                 }
-            }).sort( (x,y) =>  (new Date(x.start) > new Date(y.start)));
+            }).sort( (x,y) => (x.start > y.start));
 
             callback(null, calendarEvents);
         }
