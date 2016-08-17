@@ -142,7 +142,29 @@ module.exports = function (io) {
             'yearDropdown',
             'hardware'
         ]);
+    }
 
+    // Cornell has its own set of fields to validate
+    function validateCornell (req) {
+        //todo reorder validations to be consistent with form
+        return validator.validate(req, [
+            'email',
+            'password',
+            'firstname',
+            'lastname',
+            'phonenumber',
+            'major',
+            'genderDropdown',
+            'dietary',
+            'tshirt',
+            'linkedin',
+            'q1',
+            'q2',
+            'anythingelse',
+            'hackathonsAttended',
+            'yearDropdown',
+            'hardware'
+        ]);
     }
 
 
@@ -380,7 +402,7 @@ module.exports = function (io) {
 
                 //todo reorder validations to be consistent with form
                 //application questions are removed
-                req = validateAll(req);
+                req = validateCornell(req);
 
 
                 var errors = req.validationErrors();
