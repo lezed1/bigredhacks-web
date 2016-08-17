@@ -13,6 +13,8 @@ var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
 var TimeAnnotation = require('../../models/time_annotation.js');
 var Announcement = require('../../models/announcement.js');
+var Inventory = require('../../models/inventory.js');
+var InventoryTransaction = require('../../models/inventory_transaction.js');
 
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
@@ -65,6 +67,8 @@ router.delete('/announcements', deleteAnnouncement);
 router.post('/rollingDecision', makeRollingAnnouncement);
 
 router.post('/deadlineOverride', rsvpDeadlineOverride);
+
+router.post('hardware/transaction', transactHardware);
 
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
@@ -912,6 +916,119 @@ function rsvpDeadlineOverride(req, res, next) {
 
         user.internal.daysToRSVP = req.body.daysToRSVP;
         user.save(util.dbSaveCallback(res));
+    });
+}
+
+/**
+ * @api {POST} /api/admin/hardware/transaction Check in or out hardware
+ * @apiname TransactHardware
+ * @apigroup Admin
+ *
+ * @apiParam {Boolean} checkingOut true if checking out, false if checking in
+ * @apiParam {String} email Email of the student for the transaction
+ * @apiParam {Number} quantity The quantity of hardware to transact
+ * @apiParam {String} name The unique name of the hardware being transacted
+ **/
+function transactHardware({body}, res, next) {
+    if (body.checkingOut === undefined || !body.email || body.quantity == undefined || !body.name) {
+        return res.status(500).send('Missing a parameter, check the API!');
+    }
+
+    if (body.quantity < 1) {
+        return res.status(500).send('Please send a positive quantity');
+    }
+
+    async.parallel({
+        student: function(cb) {
+            User.findOne({email: body.email}, cb);
+        },
+        item: function(cb) {
+            Inventory.findOne({name: body.name}, cb);
+        }
+    }, function (err, result) {
+        if (err) {
+            return res.status(500).send(err);
+        } else if (!result.student) {
+            return res.status(500).send('No such user');
+        } else if (!result.item) {
+            return res.status(500).send('No such item');
+        }
+
+        InventoryTransaction.findOne({student: result.student.id, inventory_id: result.item.id}, function (err, transaction) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (body.checkingOut) {
+                if (item.quantityAvailable - body.quantity >= 0) {
+                    if (!transaction) {
+                        transaction = new InventoryTransaction({
+                            student: result.student.id,
+                            inventory_id: result.item.id,
+                            quantity: 0
+                        });
+                    }
+
+                    transaction.quantity += body.quantity;
+                    item.quantityAvailable -= body.quantity;
+
+                    item.save(function(err) {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).send('Could not save item');
+                        }
+
+                        transaction.save(function(err) {
+                            if (err) {
+                                return res.status(500).send('Error: could not save transaction');
+                            }
+
+                            return res.sendStatus(200);
+                        });
+                    });
+                } else {
+                    return res.status(500).send('Quantity exceeds availability');
+                }
+            } else {
+                if (!transaction) {
+                    return res.status(500).send('User has no transactions for that item.');
+                } else if (body.quantity > transaction.quantity) {
+                    return res.status(500).send('User has not checked out that many items of that type!');
+                }
+
+                if (item.quantityAvailable + body.quantity >= item.quantityOwned) {
+                    console.error('ERROR: return quantity exceeds owned quantity, ignoring this error');
+                }
+
+                transaction.quantity -= body.quantity;
+                item.quantityAvailable += body.quantity;
+
+                item.save(function(err) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send('Could not save item');
+                    }
+
+                    if (transaction.quantity == 0) {
+                        transaction.remove(function(err) {
+                            if (err) {
+                                return res.status(500).send('Error: could not remove transaction');
+                            }
+
+                            return res.sendStatus(200);
+                        });
+                    } else {
+                        transaction.save(function(err) {
+                            if (err) {
+                                return res.status(500).send('Error: could not save transaction');
+                            }
+
+                            return res.sendStatus(200);
+                        });
+                    }
+                });
+            }
+        });
     });
 }
 
