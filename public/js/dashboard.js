@@ -175,28 +175,18 @@ $("#rsvpDropdown").on('change', function () {
     }
 });
 
+function rsvpingYes() {
+    return $("#rsvpDropdown").val().toLowerCase() == "yes";
+}
+
 $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
     // Require value if yes response
-    if ($("#rsvpDropdown").val().toLowerCase() == "yes" && val) {
-        return true;
-    }
-    // Dont require value if no response
-    else if ($("#rsvpDropdown").val().toLowerCase() == "no") {
-        return true;
-    }
-    else return false;
+    return !rsvpingYes() || val;
 });
 
 $.validator.addMethod("cocAndLiabilityRead", function (val, elem, params) {
-    // Require value if yes response
-    if ($("#rsvpDropdown").val() == "yes" && $('#rsvp-yes-button').hasClass('btn-blue')) {
-        return true;
-    }
-    // Dont require value if no response
-    else if ($("#rsvpDropdown").val() == "no") {
-        return true
-    }
-    else return false;
+    // Require coc/liability documents have been read if yes response
+    return !rsvpingYes() || $('#rsvp-yes-button').hasClass('btn-success');
 });
 
 $.validator.addMethod('filesize', function (value, element, param) {
@@ -222,7 +212,7 @@ $('#rsvpForm').validate({
         legal: {
             conditionalRSVP: true
         },
-        viewLegal: {
+        'agreements-viewed': {
             cocAndLiabilityRead: true
         }
     },
@@ -234,7 +224,7 @@ $('#rsvpForm').validate({
         legal: {
             conditionalRSVP: "Please review the legal information"
         },
-        viewLegal: {
+        'agreements-viewed': {
             cocAndLiabilityRead: "Please read the liability & waiver release and the code of conduct."
         }
     }
@@ -243,21 +233,21 @@ $('#rsvpForm').validate({
 // Make buttons more transparent after clicked on
 $('#liability').click(function(){
     $(this)
-        .removeClass('btn-red')
-        .addClass('btn-blue');
-    if ($('#code-of-conduct').hasClass('btn-blue')) {
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+    if ($('#code-of-conduct').hasClass('btn-success')) {
         $('#rsvp-yes-button')
-            .removeClass('btn-red')
-            .addClass('btn-blue');
+            .removeClass('btn-danger')
+            .addClass('btn-success');
     }
 });
 $('#code-of-conduct').click(function(){
     $(this)
-        .removeClass('btn-red')
-        .addClass('btn-blue');
-    if ($('#liability').hasClass('btn-blue')) {
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+    if ($('#liability').hasClass('btn-success')) {
         $('#rsvp-yes-button')
-            .removeClass('btn-red')
-            .addClass('btn-blue');
+            .removeClass('btn-danger')
+            .addClass('btn-success');
     }
 });

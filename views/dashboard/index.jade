@@ -178,7 +178,7 @@ block dashboard_content
                         +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
                 #rsvp-no(style='display:none')
                     .form-group
-                        button#rsvp-no-button.btn.btn-blue(type='submit', name='rsvpsubmit') submit
+                        button#rsvp-no-button.btn.btn-success(type='submit', name='rsvpsubmit') submit
                 #rsvp-yes(style='display:none')
                     if bus == null
                         .form-group
@@ -195,9 +195,9 @@ block dashboard_content
                         | documents carefully.
                     .form-group
                         label
-                            input#viewLegal(name='viewLegal', hidden=true)
-                            a#liability.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
-                            a#code-of-conduct.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+                            input#agreements-viewed(name='agreements-viewed', hidden=true)
+                            a#liability.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+                            a#code-of-conduct.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
                             br
                     .form-group
                         .checkbox
@@ -207,7 +207,7 @@ block dashboard_content
                                 |  Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
                                 |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
                     .form-group
-                        button#rsvp-yes-button.btn.btn-red(type='submit', name='rsvpsubmit') submit
+                        button#rsvp-yes-button.btn.btn-danger(type='submit', name='rsvpsubmit') submit
         else
             if user.internal.going
                 p You told us that you are going to BigRed//Hacks.
