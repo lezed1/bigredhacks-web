@@ -123,9 +123,8 @@ $('document').ready(function () {
 
         //handle decision radio buttons for individual(detail) view
     $('input[type=radio][name=individualstatus]').on('change', function () {
-        var _this = this;
-        var newStatus = $(_this).val();
-        var pubid = $("#pubid").text();
+        var newStatus = $(this).val();
+        var pubid = $(this).closest('form').data('pubid');
         updateStatus("user", pubid, newStatus, function (data) {
         });
     });
@@ -325,7 +324,14 @@ $('document').ready(function () {
     //add college to list of bus stops
     $('#addcollege').on('click', function () {
         //FIXME: highly error-prone implementation
-        //college id is added in typeahead, modify both in this function instead
+        // College ID
+        var currentidlist = $("#collegeidlist").val();
+        if (currentidlist != "") {
+            $("#collegeidlist").val(currentidlist + "," + collegeDatum.id);
+        }
+        else {
+            $("#collegeidlist").val(collegeDatum.id);
+        }
         var newCollege = $("#college").val();
         var currentBusStops = $("#busstops").val();
         var currentBusStopsDisplay = $("#busstops-display").text();
@@ -434,10 +440,116 @@ $('document').ready(function () {
         });
     });
 
+    // Unset bus captain
+    $('#unsetCaptain').on('click', function () {
+        var em = $('#removeEmail').val();
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/busCaptain",
+                data: {
+                    email: em
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: alertErrorHandler
+            });
+    });
+
+    function busRouteConfirmationAjax(type, message) {
+        return function() {
+            var id = $(this).parents(".businfobox").data("busid");
+            var c = confirm(message);
+            if (c) {
+                $.ajax({
+                    type: type,
+                    url: "/api/admin/confirmBus",
+                    data: {
+                        busid: id
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: alertErrorHandler
+                });
+            }
+        };
+    }
+
+    $('.confirmroute').on('click', busRouteConfirmationAjax('POST', 'Are you sure you want to enable this bus route?'));
+    $('.unconfirmroute').on('click', busRouteConfirmationAjax('DELETE', 'Are you sure you want to disable this bus route?'));
+
+
+    // Bus route override
+    $("#submit-student-route").on('click', function() {
+        $.ajax({
+            method: "PUT",
+            url: "/api/admin/busOverride",
+            data: {
+                email: $("#route-override-email").val(),
+                routeName: $("#route-override-name").val()
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete Student Bus Route Override
+    $(".delete-student-route").on('click', function() {
+        var dat = $(this).parents("tr");
+        var that = this;
+        $.ajax({
+            method: "DELETE",
+            url: "/api/admin/busOverride",
+            data: {
+                email: dat[0].dataset.student
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                $(that).parents("tr").remove();
+            }
+        });
+    });
+
 
     /********************************
      *** Reimbursement Management****
      ********************************/
+    // Add Student Override
+    $("#submit-student").on('click', function() {
+        var that = this;
+        $.ajax({
+            method: "POST",
+            url: "/api/admin/reimbursements/student",
+            data: {
+                email: $("#add-email").val(),
+                amount: $("#add-amount").val()
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete Student Override
+    $(".delete-student").on('click', function() {
+        var dat = $(this).parents("tr");
+        var that = this;
+        $.ajax({
+            method: "DELETE",
+            url: "/api/admin/reimbursements/student",
+            data: {
+                email: dat[0].dataset.student
+            },
+            error: alertErrorHandler,
+            success: function (res) {
+                $(that).parents("tr").remove();
+            }
+        });
+    });
 
         //disable amount for charter bus
     $("#new-travel, .modeDropdown").on('change', function () {
@@ -566,4 +678,19 @@ try {
     _tt_college_enable();
 } catch (e){
     // Some pages should not need this, so this error is expected.
+}
+
+function overrideFormDefault(form, target) {
+    $(form).submit(function (e) {
+        e.preventDefault();
+        $(target).click();
+    });
+}
+
+// Generic error handler, alerting the error thrown to the user.
+function alertErrorHandler(jqXHR, textStatus, errorThrown ) {
+    var resp = textStatus + ' (' + errorThrown + ')';
+    if (jqXHR.responseText)
+        resp += ': ' + jqXHR.responseText;
+    alert(resp);
 }

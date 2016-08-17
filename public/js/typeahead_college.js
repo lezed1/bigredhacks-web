@@ -1,7 +1,6 @@
 /*
  * Typeahead
  */
-
 var _tt_college_enabled = false; //whether the typeahead is enabled
 
 var engine = new Bloodhound({
@@ -49,7 +48,8 @@ var _tt_college_enable = function() {
         return;
     }
 
-    $('#college').typeahead({
+    // TODO: Reduce this to just be a .new-college class. See issue #65.
+    $('#college,.newcollege,#new-college').typeahead({
         hint: true,
         highlight: true,
         autoselect: false,
@@ -72,13 +72,7 @@ var _tt_college_enable = function() {
         displayKey: 'name', // if not set, will default to 'value',
         source: engine.ttAdapter()
     }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-        var currentidlist = $("#collegeidlist").val();
-        if (currentidlist != "") {
-            $("#collegeidlist").val(currentidlist + "," + datum.id);
-        }
-        else {
-            $("#collegeidlist").val(datum.id);
-        }
+        collegeDatum = datum; // Intentionally global
     });
 
     _tt_college_enabled = true;

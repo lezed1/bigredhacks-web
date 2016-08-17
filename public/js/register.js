@@ -1,5 +1,7 @@
 $('document').ready(function () {
 
+    var max_resume_mb = 10;
+
     $.CollegeTypeahead.enable();
 
     //File picker
@@ -81,6 +83,10 @@ $('document').ready(function () {
         return (restrict.indexOf(val) == -1);
     }, notCornellText);
 
+    $.validator.addMethod('filesize', function (value, element, param) {
+        return this.optional(element) || (element.files[0].size <= param)
+    }, 'File size must be less than ' + max_resume_mb + ' mb'); // TODO: Parametrize this
+
     $('#registrationForm').validate({
         ignore: 'input:not([name])', //ignore unnamed input tags
         onfocusout: function (e, event) {
@@ -127,7 +133,8 @@ $('document').ready(function () {
             resume: {
                 required: true,
                 extension: "pdf",
-                accept: 'application/pdf'
+                accept: 'application/pdf',
+                filesize: 1024 * 1024 * max_resume_mb // Note must match backend
             },
             q1: {
                 required: true,
@@ -147,6 +154,9 @@ $('document').ready(function () {
             hardware: {
                 required: false,
                 maxlength: 1000
+            },
+            CoC: {
+                required: true
             }
         },
         messages: {
@@ -168,7 +178,6 @@ $('document').ready(function () {
             firstname: "Please enter your first name",
             lastname: "Please enter your last name",
             phonenumber: "Please provide a valid phone number",
-            resume: "Please upload a valid .pdf",
             major: 'Enter a valid major. Enter "Unlisted - [your major name]" if your major is not listed, or "Undecided" if you do not have one.',
             linkedin: "Please provide a valid LinkedIn url",
             hardware: "Please hit enter to add a hardware"
@@ -196,7 +205,6 @@ $('document').ready(function () {
             return false;
         }
     });
-
 });
 
 

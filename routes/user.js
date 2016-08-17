@@ -11,6 +11,7 @@ var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
 var middle = require('../routes/middleware.js');
+var util = require('../util/util.js');
 
 var Bus = require('../models/bus.js');
 var User = require('../models/user.js');
@@ -20,7 +21,7 @@ var uid = require('uid2');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
 
-var MAX_FILE_SIZE = 1024 * 1024 * 10;
+var MAX_FILE_SIZE = 1024 * 1024 * 15;
 var MAX_BUS_PROXIMITY = 50; //miles
 
 module.exports = function (io) {
@@ -66,26 +67,28 @@ module.exports = function (io) {
                     return done(err, members);
                 })
             },
+            // Priority is user-override, then school-override, then default
             reimbursement: function (done) {
+                if (req.user.internal.reimbursement_override > 0) {
+                    return done(null, { amount: req.user.internal.reimbursement_override });
+                }
+
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
-                    if (err || rem == null) {
-                        console.log(err);
+                    if (rem == null) {
                         var default_rem = {};
-                        default_rem.amount = 150;
+                        default_rem.amount = config.admin.default_reimbursement;
                         return done(err, default_rem);
                     }
-                    return done(err, rem);
 
-                })
+                    return done(err, rem);
+                });
             },
             bus: function (done) {
                 _findAssignedOrNearestBus(req, done)
             },
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
-                const rsvpTime = moment.duration(config.admin.days_to_rsvp, 'days');
-
-
+                const rsvpTime = moment.duration(req.user.internal.daysToRSVP, 'days');
                 if (notified) {
                     const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {
@@ -99,7 +102,8 @@ module.exports = function (io) {
             }
         }, function (err, results) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                return res.sendStatus(500);
             }
 
             var render_data = {
@@ -268,7 +272,7 @@ module.exports = function (io) {
                 req.flash('error', "Error parsing form.");
                 return res.redirect('/user/dashboard');
             }
-            //console.log(files);
+
             var resume = files.resumeinput[0];
             var options = {};
             // make sure the user has had a resume
@@ -279,29 +283,33 @@ module.exports = function (io) {
 
             helper.uploadFile(resume, options, function (err, file) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     req.flash('error', "File upload failed.");
-                }
-                if (typeof file === "string") {
+                    return res.redirect('/user/dashboard');
+                } else if (typeof file === "string") {
                     req.flash('error', file);
-                }
-                else {
-                    req.flash('success', 'Resume successfully updated');
-
-                    // Actually update user's resume
-                    var user = req.user;
-                    console.log(user);
-                    if (user) {
-                        user.app.resume = file.filename; // TODO: We may need to validate before saving here
-                        user.save ( function (err, doc) {
-                           if (err) console.log(err);
-                        });
-                    } else {
-                        console.log('No user sent, can\'t update resume!');
-                    }
+                    return res.redirect('/user/dashboard');
                 }
 
-                return res.redirect('/user/dashboard');
+                // Actually update user's resume
+                var user = req.user;
+                if (user) {
+                    user.app.resume = file.filename; // TODO: We may need to validate before saving here
+                    user.save ( function (err) {
+                       if (err)  {
+                           console.error(err);
+                           req.flash('error', 'Error in saving resume');
+                           return res.redirect('/user/dashboard');
+                       }
+
+                        req.flash('success', 'Resume successfully updated');
+                        return res.redirect('/user/dashboard');
+                    });
+                } else {
+                    console.error('No user sent, can\'t update resume!');
+                    req.flash('error', 'Error in user validation');
+                    return res.redirect('/user/dashboard');
+                }
             })
         })
     });
@@ -310,8 +318,10 @@ module.exports = function (io) {
      * @api {POST} /user/busdecision Riding bus signup
      * @apiName BusDecision
      * @apiGroup User
+     *
+     * @apiParam {String} decision Either signup or optout
      */
-    router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
+    router.post('/busdecision', middle.requireAccepted, function (req, res) {
         var user = req.user;
         if (req.body.decision == "signup") {
             Bus.findOne({_id: req.body.busid}, function (err, bus) {
@@ -320,17 +330,18 @@ module.exports = function (io) {
                     bus.members.push({
                         name: user.name.last + ", " + user.name.first,
                         college: user.school.name,
+                        email: user.email,
                         id: user.id
                     });
                     bus.save(function (err) {
                         if (err) {
-                            console.log(err);
+                            console.log('Bus Save Error: ' + err);
                             return res.sendStatus(500);
                         }
                         else {
                             user.save(function (err) {
                                 if (err) {
-                                    console.log(err);
+                                    console.log('User Save Error: ' + err);
                                     return res.sendStatus(500);
                                 }
                                 else {
@@ -345,49 +356,8 @@ module.exports = function (io) {
                 }
             });
         }
-        else if (req.body.decision == "optout") {
-            Bus.findOne({_id: req.body.busid}, function (err, bus) {
-                if (user.internal.busid == req.body.busid) {
-                    user.internal.busid = null;
-                    var newmembers = [];
-                    async.each(bus.members, function (member, callback) {
-                        if (member.id != user.id) {
-                            newmembers.push(member);
-                        }
-                        callback()
-                    }, function (err) {
-                        bus.members = newmembers;
-                        bus.save(function (err) {
-                            if (err) {
-                                console.log(err);
-                                return res.sendStatus(500);
-                            }
-                            else {
-                                user.save(function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                        return res.sendStatus(500);
-                                    }
-                                    else {
-                                        return res.sendStatus(200);
-                                    }
-                                });
-                            }
-                        })
-                    });
-                }
-                else {
-                    user.internal.busid = null;
-                    user.save(function (err) {
-                        if (err) {
-                            return res.sendStatus(500);
-                        }
-                        else {
-                            return res.sendStatus(200);
-                        }
-                    });
-                }
-            });
+        else if (req.body.decision.toLowerCase() == "optout") {
+            return util.removeUserFromBus(Bus, req, res, user);
         }
         else {
             return res.sendStatus(500);
@@ -416,58 +386,64 @@ module.exports = function (io) {
 
             req.body = helper.reformatFields(fields);
 
-            if (req.body.rsvpDropdown == "yes") {
+            if (req.body.rsvpDropdown.toLowerCase() == "yes") {
                 req.user.internal.going = true;
-            }
-            else if (req.body.rsvpDropdown == "no") {
-                req.user.internal.going = false;
-            }
-
-            //travel receipt
-            _findAssignedOrNearestBus(req, function (err, bus) {
-                if (err) {
-                    console.log(err);
-                }
-                //travel receipt required if no bus
-                if (bus == null) {
-                    //fail if no receipt uploaded
-                    if (!receipt) {
-                        req.flash('error', "Please upload a travel receipt.");
-                        return res.redirect('/user/dashboard');
+                //travel receipt
+                _findAssignedOrNearestBus(req, function (err, bus) {
+                    if (err) {
+                        console.log(err);
                     }
+                    //travel receipt required if no bus
+                    if (bus == null) {
+                        //fail if no receipt uploaded
+                        if (!receipt) {
+                            req.flash('error', "Please upload a travel receipt.");
+                            return res.redirect('/user/dashboard');
+                        }
 
-                    helper.uploadFile(receipt, {type: "receipt"}, function (err, file) {
-                        if (err) {
-                            console.log(err);
-                            req.flash('error', "File upload failed. :(");
-                        }
-                        if (typeof file === "string") {
-                            req.flash('error', file);
-                        }
-                        else {
-                            //console.log(file);
-                            req.flash('success', 'We have received your response!');
-                            req.user.internal.travel_receipt = file.filename;
-                            req.user.save(function (err) {
-                                if (err) {
-                                    console.log(err);
-                                }
+                        helper.uploadFile(receipt, {type: "receipt"}, function (err, file) {
+                            if (err) {
+                                console.log(err);
+                                req.flash('error', "File upload failed. :(");
                                 return res.redirect('/user/dashboard');
-                            });
-                        }
-                        return res.redirect('/user/dashboard');
-                    })
-                }
-                else {
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
-                }
-            });
+                            }
+
+                            if (typeof file === "string") {
+                                req.flash('error', file);
+                                return res.redirect('/user/dashboard');
+                            } else {
+                                req.flash('success', 'We have received your response!');
+                                req.user.internal.travel_receipt = file.filename;
+                                req.user.save(function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+
+                                    return res.redirect('/user/dashboard');
+                                });
+                            }
+                        })
+                    }
+                    else {
+                        req.flash('success', 'We have received your response!');
+                        req.user.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            return res.redirect('/user/dashboard');
+                        });
+                    }
+                });
+            } else {
+                req.user.internal.going = false;
+                req.flash('success', 'We have received your decision not to attend.');
+                req.user.save(function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    return res.redirect('/user/dashboard');
+                });
+            }
         })
     });
 
@@ -760,72 +736,86 @@ module.exports = function (io) {
     function _findAssignedOrNearestBus(req, done) {
         var userbus = null;
         var closestdistance = null;
-        Bus.find({}).exec(function (err, buses) {
-            if (err) {
-                console.log(err);
-            }
-            //todo optimize this (see if it's possible to perform this operation in a single aggregation
-            async.each(buses, function (bus, callback) {
-                async.each(bus.stops, function (stop, inner_callback) {
-                    College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
-                        function (err, colleges) {
-                            //The case when the query returns only one college because the college of the bus's stop
-                            //is the same as the user's college
-                            if (colleges.length == 1) {
-                                userbus = bus;
-                                userbus.message = "a bus stops at your school:";
-                                closestdistance = 0;
-                            }
-                            //The other case when the query returns two colleges because the college of the bus's
-                            //stop is not the same as the user's college.
-                            else if (colleges.length == 2) {
-                                //find the distance between two colleges
-                                var distanceBetweenColleges = _distanceBetweenPointsInMiles(
-                                    colleges[0].loc.coordinates, colleges[1].loc.coordinates);
-                                if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
-                                    if (closestdistance == null || distanceBetweenColleges < closestdistance) {
-                                        userbus = bus;
-                                        //properly round to two decimal points
-                                        var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                            100) / 100;
-                                        userbus.message = "a bus stops near your school at " + stop.collegename +
-                                        " (roughly " + roundedDistance + " miles away):";
-                                        closestdistance = distanceBetweenColleges;
-                                    }
-                                }
-                            }
-                            inner_callback(err);
-                        });
-                }, function (err) {
-                    callback(err);
-                });
-            }, function (err) {
+        if (req.user.internal.busOverride) {
+            Bus.findOne({_id : req.user.internal.busOverride }, function (err,bus) {
+                if (err) {
+                    console.error(err);
+                } else if (bus) {
+                    done(null, bus);
+                } else {
+                    console.error('ERROR: Missing bus on an overridden user');
+                }
+            });
+        } else {
+            Bus.find({}).exec(function (err, buses) {
                 if (err) {
                     console.log(err);
                 }
-                done(null, userbus);
-                //temporarily disable
-                //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
-                //todo consider storing bus captain info in bus
-                //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
-                /*
-                 async.each(userbus.members, function (member, finalcallback) {
-                 User.findOne({_id: member.id}, function (err, user) {
-                 if (err) {
-                 console.log(err);
-                 }
-                 else if (user.role == "bus captain") {
-                 userbus.buscaptain = user;
-                 }
-                 finalcallback();
-                 });
-                 }, function (err) {
-                 return done(null, userbus);
-                 });
-                 */
+                //todo optimize this (see if it's possible to perform this operation in a single aggregation
+                async.each(buses, function (bus, callback) {
+                    async.each(bus.stops, function (stop, inner_callback) {
+                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                            function (err, colleges) {
+                                //The case when the query returns only one college because the college of the bus's stop
+                                //is the same as the user's college
+                                if (colleges.length == 1) {
+                                    userbus = bus;
+                                    userbus.message = "a bus stops at your school:";
+                                    closestdistance = 0;
+                                }
+                                //The other case when the query returns two colleges because the college of the bus's
+                                //stop is not the same as the user's college.
+                                else if (colleges.length == 2) {
+                                    //find the distance between two colleges
+                                    var distanceBetweenColleges = _distanceBetweenPointsInMiles(
+                                        colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                    if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                        if (closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                            userbus = bus;
+                                            //properly round to two decimal points
+                                            var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
+                                                    100) / 100;
+                                            userbus.message = "a bus stops near your school at " + stop.collegename +
+                                                " (roughly " + roundedDistance + " miles away):";
+                                            closestdistance = distanceBetweenColleges;
+                                        }
+                                    }
+                                }
+                                inner_callback(err);
+                            });
+                    }, function (err) {
+                        callback(err);
+                    });
+                }, function (err) {
+                    if (err) {
+                        console.log(err);
+                        done(err, userbus);
+                    } else {
+                        done(null, userbus);
+                    }
+                    //temporarily disable
+                    //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
+                    //todo consider storing bus captain info in bus
+                    //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
+                    /*
+                     async.each(userbus.members, function (member, finalcallback) {
+                     User.findOne({_id: member.id}, function (err, user) {
+                     if (err) {
+                     console.log(err);
+                     }
+                     else if (user.role == "bus captain") {
+                     userbus.buscaptain = user;
+                     }
+                     finalcallback();
+                     });
+                     }, function (err) {
+                     return done(null, userbus);
+                     });
+                     */
+                });
             });
-        });
+        }
     }
 
     return router;
-}
+};

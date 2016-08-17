@@ -14,7 +14,7 @@ var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
 var middle = require('./middleware');
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
-var MAX_FILE_SIZE = 1024 * 1024 * 5;
+var MAX_FILE_SIZE = 1024 * 1024 * 15;
 
 var config = require('../config.js');
 var email = require('../util/email');
@@ -196,8 +196,6 @@ module.exports = function (io) {
                         return res.redirect('/register');
                     }
 
-                    //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
-
                     var newUser = new User({
                         name: {
                             first: req.body.firstname,
@@ -282,7 +280,7 @@ module.exports = function (io) {
                                             "name": newUser.name.first + " " + newUser.name.last,
                                         }
                                     };
-                                    email.sendEmail(email_body, config);
+                                    email.sendCustomEmail(email_body, config);
                                     res.redirect('/user/dashboard');
                                 })
                             })
@@ -533,7 +531,7 @@ module.exports = function (io) {
                                                     "name": newUser.name.first + " " + newUser.name.last,
                                                 }
                                             };
-                                            email.sendEmail(template_content, config);
+                                            email.sendCustomEmail(template_content, config);
                                             res.redirect('/user/dashboard');
                                         })
                                     })
@@ -567,6 +565,15 @@ module.exports = function (io) {
      * @apiParam user.email Email for login
      */
     router.post('/login',
+        /** TODO: Uncomment this before 2017 registration. In 2016 we have a mix of cases so this cannot be used yet.
+        function (req, res, next) {
+            if (req.body.email) {
+                req.body.email = req.body.email.toLowerCase();
+            }
+
+            next();
+        },
+         */
         passport.authenticate('local', {
             failureRedirect: '/login',
             failureFlash: true
@@ -818,7 +825,7 @@ module.exports = function (io) {
                                 "name": user.name.first + " " + user.name.last,
                             },
                         };
-                        email.sendEmail(template_content, config);
+                        email.sendCustomEmail(template_content, config);
                     }
                 });
             }

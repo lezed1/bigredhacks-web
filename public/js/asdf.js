@@ -36,6 +36,7 @@ setInterval(function() {
             if (________________ >= 7) {
                 qwerty = !qwerty;
                 $('.whale').css('z-index',9999);
+                $('.whale-happy').css('z-index',9999);
                 $(".c").css("opacity",1).fadeIn(300, function () {
                     setTimeout( d, 1000);
                     setTimeout( dd, 2000);

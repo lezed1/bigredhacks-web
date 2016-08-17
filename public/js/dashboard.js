@@ -1,9 +1,10 @@
+var max_receipt_mb = 15
+
 $(document).ready(function () {
 
     /************************************
      *** Dashboard Home Functionality****
      ************************************/
-
         //Update resume
     $("#resume-update").on('click', function (e) {
         e.preventDefault();
@@ -58,8 +59,12 @@ $(document).ready(function () {
                 callback(data);
             },
             error: function (e) {
-                console.log("Couldn't sign up or opt out of bus.");
-                alert('The bus is full! Please contact us at info@bigredhacks.com')
+                if (decision.toLowerCase() == "optout") {
+                    alert('Error opting out! Please contact us at info@bigredhacks.com');
+                }
+                else {
+                    alert('The bus is full! Please contact us at info@bigredhacks.com');
+                }
             }
         });
     };
@@ -157,23 +162,36 @@ $("#cornell-rsvp").on("change", function () {
 });
 
 $("#rsvpDropdown").on('change', function () {
-    if ($(this).val() == "yes") {
-        $("#coming-only").show();
+    const val = $(this).val().toLowerCase();
+    if (val == "yes") {
+        $("#rsvp-yes").show();
+        $("#rsvp-no").hide();
+    } else if (val == "no") {
+        $("#rsvp-no").show();
+        $("#rsvp-yes").hide();
+    } else {
+        $("#rsvp-yes").hide();
+        $("#rsvp-no").hide();
     }
-    else $("#coming-only").hide();
 });
 
+function rsvpingYes() {
+    return $("#rsvpDropdown").val().toLowerCase() == "yes";
+}
+
 $.validator.addMethod("conditionalRSVP", function (val, elem, params) {
-    //require value if yes response
-    if ($("#rsvpDropdown").val() == "yes" && val) {
-        return true;
-    }
-    //dont require value if no response
-    else if ($("#rsvpDropdown").val() == "no") {
-        return true;
-    }
-    else return false;
+    // Require value if yes response
+    return !rsvpingYes() || val;
 });
+
+$.validator.addMethod("cocAndLiabilityRead", function (val, elem, params) {
+    // Require coc/liability documents have been read if yes response
+    return !rsvpingYes() || $('#rsvp-yes-button').hasClass('btn-success');
+});
+
+$.validator.addMethod('filesize', function (value, element, param) {
+    return this.optional(element) || (element.files[0].size <= param)
+    }, 'File size must be less than ' + max_receipt_mb + ' mb'); 
 
 $('#rsvpForm').validate({
     ignore: 'input:not([name])', //ignore unnamed input tags
@@ -187,11 +205,15 @@ $('#rsvpForm').validate({
         },
         receipt: {
             conditionalRSVP: true,
-            extension: "pdf",
-            accept: 'application/pdf'
+            extension: "pdf,jpg,png",
+            accept: 'application/pdf,image/jpg,image/png',
+            filesize: 1024 * 1024 * max_receipt_mb
         },
         legal: {
             conditionalRSVP: true
+        },
+        'agreements-viewed': {
+            cocAndLiabilityRead: true
         }
     },
     messages: {
@@ -201,6 +223,31 @@ $('#rsvpForm').validate({
         },
         legal: {
             conditionalRSVP: "Please review the legal information"
+        },
+        'agreements-viewed': {
+            cocAndLiabilityRead: "Please read the liability & waiver release and the code of conduct."
         }
+    }
+});
+
+// Make buttons more transparent after clicked on
+$('#liability').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+    if ($('#code-of-conduct').hasClass('btn-success')) {
+        $('#rsvp-yes-button')
+            .removeClass('btn-danger')
+            .addClass('btn-success');
+    }
+});
+$('#code-of-conduct').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+    if ($('#liability').hasClass('btn-success')) {
+        $('#rsvp-yes-button')
+            .removeClass('btn-danger')
+            .addClass('btn-success');
     }
 });

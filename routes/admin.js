@@ -6,6 +6,7 @@ var async = require('async');
 
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
+var email = require('../util/email.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -17,7 +18,7 @@ var Reimbursements = require('../models/reimbursements.js');
 var TimeAnnotation = require('../models/time_annotation.js');
 
 //filter out admin users in aggregate queries.
-var USER_FILTER = { role: "user" };
+var USER_FILTER = {role: "user"};
 
 //some commonly used aggregation queries:
 //todo refactor and clean this up
@@ -27,7 +28,7 @@ var USER_FILTER = { role: "user" };
  * @param data
  * @param defaults
  */
-function objectAndDefault (data, defaults) {
+function objectAndDefault(data, defaults) {
     //make all values lowercase
     data = _.map(data, function (x) {
         return _.mapObject(x, function (val, key) {
@@ -86,40 +87,42 @@ var aggregate = {
         },
         gender: function () {
             return function (done) {
-                User.count( {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}
-                , function (err, totalRes) {
-                    if (err) {
-                        done(err);
-                    } else {
-                        User.aggregate(
-                            [
-                                {$match: {$and: [{"internal.status" : "Accepted"}, USER_FILTER]}},
-                                {$group: {
-                                    _id: "$gender",
-                                    totalAccepted: {$sum: 1}
-                                }}
-                            ], function (err, acceptedRes) {
-                                if (err) {
-                                    done(err);
-                                } else {
+                User.count({$and: [{"internal.status": "Accepted"}, USER_FILTER]}
+                    , function (err, totalRes) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            User.aggregate(
+                                [
+                                    {$match: {$and: [{"internal.status": "Accepted"}, USER_FILTER]}},
+                                    {
+                                        $group: {
+                                            _id: "$gender",
+                                            totalAccepted: {$sum: 1}
+                                        }
+                                    }
+                                ], function (err, acceptedRes) {
+                                    if (err) {
+                                        done(err);
+                                    } else {
 
-                                    acceptedRes = objectAndDefault(acceptedRes, {
-                                        male: 0,
-                                        female: 0
-                                    });
+                                        acceptedRes = objectAndDefault(acceptedRes, {
+                                            male: 0,
+                                            female: 0
+                                        });
 
 
-                                    const res = {
-                                        male: 100.0 * acceptedRes.male / totalRes,
-                                        female: 100.0 * acceptedRes.female / totalRes,
-                                    };
+                                        const res = {
+                                            male: 100.0 * acceptedRes.male / totalRes,
+                                            female: 100.0 * acceptedRes.female / totalRes,
+                                        };
 
-                                    done(null, res);
+                                        done(null, res);
+                                    }
                                 }
-                                }
-                        )
-                    }
-                })
+                            )
+                        }
+                    })
             }
         }
     }
@@ -147,9 +150,16 @@ router.get('/dashboard', function (req, res, next) {
         schools: function (done) {
             User.aggregate([
                 {$match: USER_FILTER},
-                {$group: {_id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"}, total: {$sum: 1}}},
+                {
+                    $group: {
+                        _id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status", going: "$internal.going"},
+                        total: {$sum: 1}
+                    }
+                },
                 {
                     $project: {
+                        going: {$cond: [{$eq: ["$_id.going", true]}, "$total", 0]},
+                        notGoing: {$cond: [{$eq: ["$_id.going", false]}, "$total", 0]},
                         accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
                         waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
                         rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]},
@@ -162,6 +172,8 @@ router.get('/dashboard', function (req, res, next) {
                 {
                     $group: {
                         _id: {name: "$_id.name", collegeid: "$_id.collegeid"},
+                        going: {$sum: "$going"},
+                        notGoing: {$sum: "$notGoing"},
                         accepted: {$sum: "$accepted"},
                         waitlisted: {$sum: "$waitlisted"},
                         rejected: {$sum: "$rejected"},
@@ -173,6 +185,8 @@ router.get('/dashboard', function (req, res, next) {
                         _id: 0,
                         name: "$_id.name",
                         collegeid: "$_id.collegeid",
+                        going: "$going",
+                        notGoing: "$notGoing",
                         accepted: "$accepted",
                         waitlisted: "$waitlisted",
                         rejected: "$rejected",
@@ -186,13 +200,15 @@ router.get('/dashboard', function (req, res, next) {
                 return done(err, res);
             })
         },
-        rsvps: function(done) {
+        rsvps: function (done) {
             User.aggregate([
-                { $match: { $and: [USER_FILTER, {"internal.status" : "Accepted"}] } },
-                {$group: {
-                    _id: "$internal.going",
-                    count: {$sum: 1}
-                }}
+                {$match: {$and: [USER_FILTER, {"internal.status": "Accepted"}]}},
+                {
+                    $group: {
+                        _id: "$internal.going",
+                        count: {$sum: 1}
+                    }
+                }
             ], function (err, res) {
                 res = objectAndDefault(res, {
                     true: 0,
@@ -202,28 +218,69 @@ router.get('/dashboard', function (req, res, next) {
                 return done(err, res);
             })
         },
-        decisionAnnounces: function(done) {
-            User.count( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, resu) {
+        decisionAnnounces: function (done) {
+            User.count({$and: [{$where: "this.internal.notificationStatus != this.internal.status"}, {"internal.status": {$ne: "Pending"}}]}, function (err, resu) {
                 if (err) console.log(err);
                 else {
                     return done(err, resu);
                 }
             });
+        },
+        reimbursements: function (done) {
+            Reimbursements.find({}, done);
+        },
+        accepted: function (done) {
+            User.find({"internal.status": "Accepted"})
+                .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
+                .exec(done)
         }
     }, function (err, result) {
         if (err) {
             console.log(err);
         }
-        //console.log(result);
-        res.render('admin/index', {
+
+        // Calculate Maximum Reimbursement
+        // Checks through per-school reimbursements to see if user matches any of those schools
+        let _filterSchoolReimbursement = function _filterSchoolReimbursement(user) {
+            for (let i = 0; i < result.reimbursements.length; i++) {
+                let x = result.reimbursements[i];
+                if (x.college.id == user.school.id) {
+                    return x.amount;
+                }
+            }
+
+            return -1;
+        };
+
+        // Calculates reimbursement using the ordering: user-override => school-override => default
+        let _calculateReimbursement = function _calculateReimbursement(user, rsvpOnly) {
+            if (user.internal.going == false || (rsvpOnly && !user.internal.going)) {
+                return 0;
+            }
+
+            if (user.internal.reimbursement_override > 0) {
+                return user.internal.reimbursement_override;
+            }
+
+            let school_override = _filterSchoolReimbursement(user);
+            return (school_override == -1) ? Number(config.admin.default_reimbursement) : school_override;
+        };
+
+        // Assumes charterbus reimbursements have been set
+        let currentMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, true), 0);
+        let potentialMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, false), 0);
+        let reimburse = {currentMax, potentialMax};
+
+        return res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,
             schools: result.schools,
             rsvps: result.rsvps,
-            decisionAnnounces: result.decisionAnnounces
+            decisionAnnounces: result.decisionAnnounces,
+            reimburse
+
         })
     });
-
 });
 
 /**
@@ -239,13 +296,22 @@ router.get('/user/:pubid', function (req, res, next) {
             //todo return on error
         }
         else {
-            _fillTeamMembers(user, function (err, user) {
+            async.parallel({
+                team: function genTeam(callback) {
+                    _fillTeamMembers(user, callback);
+                },
+                stats: function genStats(callback) {
+                    _getStats(user, callback);
+                }
+            }, function (err, info) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
+                    return res.sendStatus(500);
                 }
                 res.render('admin/user', {
+                    title: 'Review User',
                     currentUser: user,
-                    title: 'Review User'
+                    stats: info.stats
                 })
             });
         }
@@ -330,13 +396,23 @@ router.get('/search', function (req, res, next) {
     }
 });
 
+// Returns an object of stats related to the user
+function _getStats(user, callback) {
+    async.parallel({
+        overall: aggregate.applicants.byMatch(USER_FILTER),
+        school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
+        bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
+        gender: aggregate.applicants.gender()
+    }, callback);
+}
+
 /**
  * @api {GET} /admin/review Review page to review a random applicant who hasn't been reviewed yet
  * @apiName Review
  * @apiGroup AdminAuth
  */
 router.get('/review', function (req, res, next) {
-    var query = { 'internal.status': "Pending" };
+    var query = {'internal.status': "Pending"};
     query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
         if (err) {
@@ -351,12 +427,7 @@ router.get('/review', function (req, res, next) {
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
 
-                async.parallel({
-                    overall: aggregate.applicants.byMatch(USER_FILTER),
-                    school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
-                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
-                    gender: aggregate.applicants.gender(),
-                }, function (err, stats) {
+                _getStats(user, function (err, stats) {
                     if (err) {
                         console.error(err);
                     }
@@ -386,13 +457,12 @@ router.get('/businfo', function (req, res, next) {
         var _buses = [];
         async.each(buses, function (bus, callback) {
             async.each(bus.members, function (member, callback2) {
+                // Confirm that all riding users are valid when returning results
                 User.findOne({_id: member.id}, function (err, user) {
                     if (err) {
                         console.log(err);
                     }
-                    else if (user.role == "bus captain") {
-                        bus.buscaptain = user;
-                    }
+
                     callback2();
                 });
             }, function (err) {
@@ -400,9 +470,36 @@ router.get('/businfo', function (req, res, next) {
                 callback();
             });
         }, function (err) {
-            res.render('admin/businfo', {
-                title: 'Admin Dashboard - Bus Information',
-                buses: _buses
+            User.find({"internal.busOverride": {$ne: null}}, function (err, users) {
+                if (err) {
+                    console.error(err);
+                }
+
+                var overrideUsers = [];
+                // Setup an array of users with bus overrides
+                users.forEach(function (user) {
+                    var info = {};
+                    info.name = user.name.full;
+                    info.school = user.school.name;
+                    info.email = user.email;
+                    info.route = "error";
+
+                    for (var i = 0; i < _buses.length; i++) {
+                        var route = _buses[i];
+                        // _id has a non-string type, so coercing is required here
+                        if (route._id + "" == user.internal.busOverride + "") {
+                            info.route = route.name;
+                            break;
+                        }
+                    }
+
+                    overrideUsers.push(info);
+                });
+                res.render('admin/businfo', {
+                    title: 'Admin Dashboard - Bus Information',
+                    buses: _buses,
+                    overrides: overrideUsers
+                });
             });
         });
     });
@@ -447,12 +544,24 @@ router.post('/businfo', function (req, res, next) {
  * @apiGroup AdminAuth
  */
 router.get('/reimbursements', function (req, res, next) {
-    Reimbursements.find({}, function (err, reimbursements) {
+    async.parallel({
+        reimbursements: function (done) {
+            Reimbursements.find({}, done);
+        },
+        overrides: function (done) {
+            User.find({"internal.reimbursement_override": {$gt: 0}})
+                .select("pubid name email school.name internal.reimbursement_override")
+                .sort("name.first")
+                .exec(done)
+        }
+    }, function (err, result) {
         if (err) {
             console.error(err);
         }
-        res.render('admin/reimbursements', {
-            reimbursements: reimbursements
+
+        return res.render('admin/reimbursements', {
+            reimbursements: result.reimbursements,
+            overrides: result.overrides
         });
     })
 });
@@ -462,7 +571,7 @@ router.get('/reimbursements', function (req, res, next) {
  * @apiName CheckIn
  * @apiGroup AdminAuth
  */
-router.get('/checkin', function(req, res, next) {
+router.get('/checkin', function (req, res, next) {
     res.render('admin/checkin');
 });
 
@@ -473,33 +582,32 @@ router.get('/checkin', function(req, res, next) {
  */
 router.get('/stats', function (req, res, next) {
     async.parallel([
-        function(callback) {
-            TimeAnnotation.find({}, function (err, ann) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    callback(null, ann);
-                }
-            });
-        },
-        function(callback) {
-            const projection = 'created_at';
-            User.find({}, projection, function (err,users) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    callback(null, users);
-                }
-            });
-        }
+            function (callback) {
+                TimeAnnotation.find({}, function (err, ann) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        callback(null, ann);
+                    }
+                });
+            },
+            function (callback) {
+                const projection = 'created_at';
+                User.find({}, projection, function (err, users) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        callback(null, users);
+                    }
+                });
+            }
 
-    ], function(err, results) {
+        ], function (err, results) {
             res.render('admin/stats', {
                 annotations: results[0],
                 users: results[1],
             });
-    }
-
+        }
     );
 
 });

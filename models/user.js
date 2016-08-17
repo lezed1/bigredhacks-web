@@ -47,14 +47,20 @@ var userSchema = new mongoose.Schema({
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
         teamwithcornell: {type: Boolean, default: false},
         busid: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
+        busCaptain: {type: Boolean, default: false},
+        busOverride: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
         notificationStatus: {type: String, enum: en.user.status, default: "Pending"}, // The status that we've last informed them of
+        deadlineWarned: {type: Boolean, default: false},
+        daysToRSVP: {type: Number, default: 10},
+        previousStatus: {type: String, enum: en.user.status, default: "Pending"},
         lastNotifiedAt: {type: Date, default: null},
         going: {type: Boolean, default: null},
         travel_receipt: {type: String, default: null},
         not_interested: {type: Boolean, default: null}, //waitlisted - if true, they forfeit their spot
         cornell_applicant: {type: Boolean, default: false},
-        checkedin: {type: Boolean, default: false}
+        checkedin: {type: Boolean, default: false},
+        reimbursement_override: {type: Number}
     },
     passwordtoken: String,
     created_at: {type: Date, default: Date.now},
@@ -66,6 +72,11 @@ var userSchema = new mongoose.Schema({
         skills: [String],
         bio: String
     }
+});
+
+userSchema.path('internal.status').set(function (newStatus) {
+    this.internal.previousStatus = this.internal.status;
+    return newStatus;
 });
 
 //full name of user
@@ -87,6 +98,9 @@ userSchema.pre('save', function (next) {
     if (_this.isModified()) {
         _this.modified_at = Date.now();
     }
+
+    // Lowercase email for consistent login
+    _this.email = _this.email.toLowerCase();
 
     //verify password is present
     if (!_this.isModified('password')) return next();
