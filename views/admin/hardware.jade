@@ -1,0 +1,52 @@
+//-
+    Dayof hardware management page
+
+extends _layout-admin
+
+block append admin_content
+    h1#title Hardware
+    .tabs
+        ul.nav.nav-tabs.center(role='tablist')
+            li
+                a(href='#hardware-available', role='tab', data-toggle='tab') Hardware Available
+            li
+                a(href='#transactions', role='tab', data-toggle='tab') Transactions
+            li
+                a(href='#check-out-form', role='tab', data-toggle='tab') Check-out form
+            li
+                a(href='#return-form', role='tab', data-toggle='tab') Return form
+
+    .tab-content
+        #hardware-available.tab-pane.active(role='tabpanel')
+            table.table.table-striped
+                tr
+                    th Name of hardware
+                    th Quantity Available
+                    th Quantity Total
+                tr
+                    th ex. VR
+                    th ex. 3
+                    th ex. 10
+        #transactions.tab-pane(role='tabpanel')
+            table.table.table-striped
+                tr
+                    th Name of hardware
+                    th Quantity
+                    th Name of student
+                    th Checkout/Checkin
+        #check-out-form.tab-pane(role='tabpanel')
+            h2#test Checkout hardware
+            .form-group
+                input#hardware.form-control(type='text', placeholder='name of hardware')
+            .form-group
+                input#name.form-control(type='text', placeholder='name of person')
+            .form-group
+                input#email.form-control(type='text', placeholder='email')
+            button#checkout-hardware-btn.btn.btn-primary(type='submit') check out
+        #return-form.tab-pane(role='tabpanel')
+            h2 Return hardware
+            .form-group
+                input.form-control(type='text', placeholder='name of hardware')
+            .form-group
+                input.form-control(type='text', placeholder='name of person')
+            button#return-hardware-btn.btn.btn-primary(type='submit') return
