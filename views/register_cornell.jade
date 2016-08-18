@@ -47,21 +47,19 @@ block append basic-information
 
 block append school
     .form-group
-        input#collegeid.form-control(type='hidden', name='collegeid', value=input.collegeid || '', required=true)
-        .form-group
-            label(for='yearDropdown') academic year *
-            select#yearDropdown.form-control(name='yearDropdown', required='')
-                option(value='') select
-                +generateOptions(en.year, {selected: (input.yearDropdown || "")})
-        .form-group
-            label(for='college') full school name *
-            br
-            input#college.form-control(type='text',value=college.display, readonly=true)
-        .form-group
-            label(for='major') major *
-            input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
-
-
+        input#collegeid.form-control(type='hidden', name='collegeid', value=college._id, required=true)
+    .form-group
+        label(for='yearDropdown') academic year *
+        select#yearDropdown.form-control(name='yearDropdown', required='')
+            option(value='') select
+            +generateOptions(en.year, {selected: (input.yearDropdown || "")})
+    .form-group
+        label(for='college') full school name *
+        br
+        input#college.form-control(type='text',value=college.display, readonly=true)
+    .form-group
+        label(for='major') major *
+        input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
 
 block append background
     .form-group
