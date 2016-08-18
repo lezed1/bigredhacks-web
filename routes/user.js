@@ -412,26 +412,45 @@ module.exports = function (io) {
                                 req.flash('error', file);
                                 return res.redirect('/user/dashboard');
                             } else {
-                                req.flash('success', 'We have received your response!');
-                                req.user.internal.travel_receipt = file.filename;
-                                req.user.save(function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
+                                async.parallel([
+                                        function(cb) {
+                                            req.user.save(cb)
+                                        },
+                                        function(cb) {
+                                            helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.firstname, req.user.lastname, cb);
+                                        }
+                                    ], function(err, result) {
+                                        if (err) {
+                                            console.error(err);
+                                            req.flash('error', 'An internal error has occurred.');
+                                        } else {
+                                            req.flash('success', 'We have received your response!');
+                                        }
 
-                                    return res.redirect('/user/dashboard');
-                                });
+                                        return res.redirect('/user/dashboard');
+                                    }
+                                );
                             }
                         })
-                    }
-                    else {
-                        req.flash('success', 'We have received your response!');
-                        req.user.save(function (err) {
-                            if (err) {
-                                console.log(err);
+                    } else {
+                        async.parallel([
+                            function(cb) {
+                                req.user.save(cb)
+                            },
+                            function(cb) {
+                                helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.firstname, req.user.lastname, cb);
                             }
-                            return res.redirect('/user/dashboard');
-                        });
+                            ], function(err, result) {
+                                if (err) {
+                                    console.error(err);
+                                    req.flash('error', 'An internal error has occurred.');
+                                } else {
+                                    req.flash('success', 'We have received your response!');
+                                }
+
+                                return res.redirect('/user/dashboard');
+                            }
+                        );
                     }
                 });
             } else {
