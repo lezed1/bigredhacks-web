@@ -195,7 +195,7 @@ block dashboard_content
                                 input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                     else
                         p You must RSVP before you can sign up for the bus.
-                        
+
         //Dashboard content for both General and Cornell
     if status == "accepted"
         +sectionHeading("RSVP")
@@ -291,6 +291,3 @@ block dashboard_content
             input#resumeinput.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resumeinput', accept='.pdf', required='')
         .form-group
             button#resume-save.btn.btn-blue(type='submit', disabled='') Save
-
-
-
