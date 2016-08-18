@@ -73,24 +73,21 @@ $(document).ready(function () {
         var businfobox = $(this).parents(".businfobox");
         userBusDecision(businfobox.data("busid"), btnId, function (data) {
             var newMemberNumber = parseInt(businfobox.find(".currentnumber").data("currentnumber"));
-            var decisionText;
-            var newClass;
-            var propValue;
-            var newId;
+            var decisionText, newClass, propValue, newId;
             if (btnId == 'signup') {
-                newMemberNumber += 1;
-                decisionText = ' Signed Up';
+                newMemberNumber++;
+                decisionText = 'Signed Up';
                 newClass = 'btn btn-danger';
                 propValue = 'opt out';
                 newId = 'optout';
                 $("#signup-message").show();
                 $("#optout-message").hide();
             } else {
-                newMemberNumber -= 1;
-                decisionText = ' Opt Out',
+                newMemberNumber--;
+                decisionText = 'Opt Out';
                 newClass = 'btn btn-success';
                 propValue = 'sign up';
-                newId = 'signup',
+                newId = 'signup';
                 $("#optout-message").show();
                 $("#signup-message").hide();
             }
