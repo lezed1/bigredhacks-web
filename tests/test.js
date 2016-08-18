@@ -1,9 +1,8 @@
 /**
  * Contains various tests on API endpoints
  */
-/*
+
 var assert = require('assert');
-var should = require('should');
 var request = require('supertest');
 
 function createHTTPStatusTestFn(status) {
@@ -62,4 +61,3 @@ describe('API Public Endpoints', function() {
         done();
     });
 });
-*/
