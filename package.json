@@ -56,6 +56,9 @@
     "uid2": "0.0.3"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^3.0.2",
     "should": "^8.4.0"
   },
   "apidoc": {
