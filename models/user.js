@@ -52,6 +52,7 @@ var userSchema = new mongoose.Schema({
         status: {type: String, enum: en.user.status, default: "Pending"},
         notificationStatus: {type: String, enum: en.user.status, default: "Pending"}, // The status that we've last informed them of
         deadlineWarned: {type: Boolean, default: false},
+        daysToRSVP: {type: Number, default: 10},
         previousStatus: {type: String, enum: en.user.status, default: "Pending"},
         lastNotifiedAt: {type: Date, default: null},
         going: {type: Boolean, default: null},

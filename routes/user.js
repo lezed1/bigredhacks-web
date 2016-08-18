@@ -88,7 +88,7 @@ module.exports = function (io) {
             },
             deadline: function(done) {
                 var notified = req.user.internal.lastNotifiedAt;
-                const rsvpTime = moment.duration(Number(config.admin.days_to_rsvp), 'days');
+                const rsvpTime = moment.duration(req.user.internal.daysToRSVP, 'days');
                 if (notified) {
                     const mNotified = moment(notified).add(rsvpTime);
                     return done(null, {
@@ -272,7 +272,7 @@ module.exports = function (io) {
                 req.flash('error', "Error parsing form.");
                 return res.redirect('/user/dashboard');
             }
-            //console.log(files);
+
             var resume = files.resumeinput[0];
             var options = {};
             // make sure the user has had a resume
@@ -283,28 +283,33 @@ module.exports = function (io) {
 
             helper.uploadFile(resume, options, function (err, file) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     req.flash('error', "File upload failed.");
-                }
-                if (typeof file === "string") {
+                    return res.redirect('/user/dashboard');
+                } else if (typeof file === "string") {
                     req.flash('error', file);
-                }
-                else {
-                    req.flash('success', 'Resume successfully updated');
-
-                    // Actually update user's resume
-                    var user = req.user;
-                    if (user) {
-                        user.app.resume = file.filename; // TODO: We may need to validate before saving here
-                        user.save ( function (err, doc) {
-                           if (err) console.log(err);
-                        });
-                    } else {
-                        console.log('No user sent, can\'t update resume!');
-                    }
+                    return res.redirect('/user/dashboard');
                 }
 
-                return res.redirect('/user/dashboard');
+                // Actually update user's resume
+                var user = req.user;
+                if (user) {
+                    user.app.resume = file.filename; // TODO: We may need to validate before saving here
+                    user.save ( function (err) {
+                       if (err)  {
+                           console.error(err);
+                           req.flash('error', 'Error in saving resume');
+                           return res.redirect('/user/dashboard');
+                       }
+
+                        req.flash('success', 'Resume successfully updated');
+                        return res.redirect('/user/dashboard');
+                    });
+                } else {
+                    console.error('No user sent, can\'t update resume!');
+                    req.flash('error', 'Error in user validation');
+                    return res.redirect('/user/dashboard');
+                }
             })
         })
     });

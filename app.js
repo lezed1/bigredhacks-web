@@ -158,5 +158,4 @@ require('./util/load_static_data.js').hardwareLoader.loadOnce(function (err) {
 });
 // Start execution of cron jobs
 require('./util/cron').go();
-
 module.exports = app;
