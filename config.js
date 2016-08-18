@@ -44,7 +44,7 @@ function traverse_full_config(schema, eachItem) {
 function validate_against_schema(config, schema) {
     traverse_full_config(schema, function (category, key) {
         if (!config[category][key]) throw new Error("Missing environment variable " + category + "." + key);
-        let type = schema[category][key] || "String";
+        let type = schema[category][key].type || "String";
         if (!validate_type(config[category][key], type)) throw new Error("Incorrect type for " + category + "." + key);
     });
 }
@@ -53,7 +53,7 @@ function from_environment(schema) {
     var configTemplate = {};
     traverse_full_config(schema, function (category, key) {
         if (!process.env.hasOwnProperty(category + "." + key)) throw new Error('Missing environment variable ' + category + "." + key);
-        let type = schema[category][key] || "String";
+        let type = schema[category][key].type || "String";
         configTemplate[category][key] = cast_to_type(process.env[category + "." + key], type);
     });
     return configTemplate;

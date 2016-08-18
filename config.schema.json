@@ -7,7 +7,8 @@
     "mailchimp_api_key": {"type": "String"},
     "cookie_secret": {"type": "String"},
     "sendgrid_api_key": {"type": "String"},
-    "url": {"type": "String"}
+    "url": {"type": "String"},
+    "ical": {"type": "String"}
   },
   "mailchimp": {
     "_comment": "Mailchimp list ids",
@@ -17,11 +18,13 @@
     "l_cornell_waitlisted": {"type": "String"}
   },
   "admin": {
+    "email": {"type": "String"},
     "reg_open": {"type": "Boolean"},
     "cornell_reg_open": {"type": "Boolean"},
     "cornell_auto_accept": {"type": "Number"},
     "dayof": {"type": "Boolean"},
-    "days_to_rsvp": {"type": "Number"}
+    "days_to_rsvp": {"type": "Number"},
+    "default_reimbursement": {"type": "Number"}
   },
   "sendgrid": {
     "_comment": "Sendgrid template ids",
