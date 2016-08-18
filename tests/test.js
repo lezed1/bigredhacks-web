@@ -25,6 +25,8 @@ var createOkayTestFn = createHTTPStatusTestFn(200);
 function createLazyTestWrapper(fn, url, addon) {
     return function() {
         describe('test ' + addon, function () {
+            this.slow(1000);
+            this.timeout(5000);
             it('tests ' + addon, function (done) {
                 fn(done, url, addon)();
             })
@@ -50,8 +52,6 @@ describe('API Private Endpoints', function() {
 });
 
 describe('API Public Endpoints', function() {
-    this.slow(1000);
-    this.timeout(5000);
     const url = 'localhost:3000';
     it('should succeed on all requests since they are public', function (done) {
         createLazyTestWrapper(createOkayTestFn, url, '/')();

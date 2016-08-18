@@ -80,7 +80,6 @@ describe('config.json variables', function() {
 
 
 describe('environment variables', function() {
-    var config;
 
     beforeEach(function() {
         process.env['setup.key_bool'] = 'true';
