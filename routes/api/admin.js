@@ -309,6 +309,7 @@ function updateBus(req, res, next) {
         bus.name = req.body.busname; //bus route name
         bus.stops = req.body.stops;
         bus.capacity = parseInt(req.body.buscapacity);
+        bus.customMessage = req.body.customMessage;
         bus.save(function (err) {
             if (err) {
                 console.error(err);
