@@ -611,6 +611,14 @@ router.get('/stats', function (req, res, next) {
     );
 
 });
+/**
+ * @api {GET} /admin/hardware Manage hardware checkout
+ * @apiName Hardware
+ * @apiGroup AdminAuth
+ */
+    router.get('/hardware', function (req, res, next) {
+        res.render('admin/hardware');
+    });
 
 /**
  * Helper function to fill team members in teammember prop
