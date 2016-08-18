@@ -450,14 +450,13 @@ section {
 
 .sustainable {
   padding-top: 60px;
-  padding-bottom: 250px;
-  z-index: -2;
+  z-index: 50;
   position: relative;
   p, h2 {
     z-index: 50;
-    color: #3c3c3c;
+    //color: @off-white;
+    color: white;
   }
-  background: @white;
   .content {
     padding-top: 100px;
 
@@ -471,15 +470,21 @@ section {
   z-index: 50;
 }
 
+.waterholder{
+  background: @ocean-blue;
+  z-index: -99999;
+}
+
 .faq {
   position: relative;
   z-index: 500;
   padding-top: 180px;
   padding-bottom: 180px;
-  opacity: 0.8;
+  //opacity: 0.8;
 
   h2, dd, dt {
-    color: @off-white;
+    //color: @off-white;
+    color: white;
   }
   .container {
     color: @off-white;
