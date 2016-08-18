@@ -56,7 +56,7 @@ block append school
         .form-group
             label(for='college') full school name *
             br
-            input#college.form-control.typeahead(type='text',placeholder='college',value=input.college || '', required=true)
+            input#college.form-control(type='text',value=college.display, readonly=true)
         .form-group
             label(for='major') major *
             input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
