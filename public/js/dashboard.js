@@ -55,9 +55,7 @@ $(document).ready(function () {
                 busid: busid,
                 decision: decision
             },
-            success: function (data) {
-                callback(data);
-            },
+            success: callback,
             error: function (e) {
                 if (decision.toLowerCase() == "optout") {
                     alert('Error opting out! Please contact us at info@bigredhacks.com');
@@ -69,47 +67,44 @@ $(document).ready(function () {
         });
     };
 
-
     //Sign up for bus
-    $(".buttonParent").on('click', '#signup', function () {
+    $(".buttonParent").on('click', function () {
+        var btnId = $(this).find('input').prop('id');
         var businfobox = $(this).parents(".businfobox");
-        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
-            userBusDecision(businfobox.data("busid"), "signup", function (data) {
-                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) + 1;
-                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
-                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
-                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Signed Up")
+        userBusDecision(businfobox.data("busid"), btnId, function (data) {
+            var newMemberNumber = parseInt(businfobox.find(".currentnumber").data("currentnumber"));
+            var decisionText;
+            var newClass;
+            var propValue;
+            var newId;
+            if (btnId == 'signup') {
+                newMemberNumber += 1;
+                decisionText = ' Signed Up';
+                newClass = 'btn btn-danger';
+                propValue = 'opt out';
+                newId = 'optout';
                 $("#signup-message").show();
                 $("#optout-message").hide();
-                $("#signup").prop({
-                    id: 'optout',
-                    value: 'opt out',
-                    name: 'optout',
-                    class: 'btn btn-danger'
-                });
-            });
-        }
-    });
-
-    //Opt out of bus
-    $(".buttonParent").on('click', '#optout', function () {
-        var businfobox = $(this).parents(".businfobox");
-        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
-            userBusDecision(businfobox.data("busid"), "optout", function (data) {
-                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) - 1;
-                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
-                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
-                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Opt Out")
-            });
-            $("#optout-message").show();
-            $("#signup-message").hide();
-            $("#optout").prop({
-                id: 'signup',
-                value: 'sign up',
-                name: 'signup',
-                class: 'btn btn-success'
-            });
-        }
+            } else {
+                newMemberNumber -= 1;
+                decisionText = ' Opt Out',
+                newClass = 'btn btn-success';
+                propValue = 'sign up';
+                newId = 'signup',
+                $("#optout-message").show();
+                $("#signup-message").hide();
+            }
+            
+            businfobox.find(".currentnumber").html(newMemberNumber.toString());
+            businfobox.find(".currentnumber").data("currentnumber", newMemberNumber.toString());
+            businfobox.find(".userbusdecision").html(decisionText);
+            $('#' + btnId).prop ({
+                id: newId,
+                value: propValue,
+                name: newId,
+                class: newClass
+            })
+        });
     });
 });
 

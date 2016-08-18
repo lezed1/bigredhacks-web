@@ -130,16 +130,20 @@ block dashboard_content
                                 for stop in bus.stops
                                     li(data-collegeid=stop.collegeid)
                                         span.collegename= stop.collegename
-                        li.currentnumber(data-currentnumber=bus.members.length)
-                            b Current Number on Bus:&nbsp;
-                            | #{bus.members.length}
+                        li
+                            b Current Number on Bus: 
+                            b.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
                         li.maxcapacity
                             b Max Capacity:&nbsp;
                             span.maxcapacitynumber= bus.capacity
-                        if user.internal.busid == bus.id
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
-                        else
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
+                            
+                        li
+                            b Your Current Bus Decision:
+                            if user.internal.busid == bus.id
+                                b.userbusdecision Signed Up
+                            else
+                                b.userbusdecision Opt Out
+                              
                         if (user.internal.going)
                             if (bus.captain != null && bus.captain.name != null)
                                 li.buscaptain
