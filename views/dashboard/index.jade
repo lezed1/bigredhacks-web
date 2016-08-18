@@ -106,19 +106,6 @@ block dashboard_content
                     | .
             else
                 p= bus.message
-                if (!bus.confirmed)
-                    h3
-                        | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
-                        | whether to send this bus.
-                    p
-                        | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
-                        | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
-                        | By opting in, you are only expressing your interest in riding the bus. We will reach out about
-                        | this deposit later on if we decide to send a bus on this route.
-                else
-                    p
-                        | This bus route has been <b>confirmed</b>. Keep an eye out for more information on how to get on!
-
                 .businfobox(data-busid=bus.id)
                     .busname
                     p#signup-message You have signed up for a bus!
@@ -166,6 +153,21 @@ block dashboard_content
                                 | We need a bus captain for your route! Email
                                 a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
                                 |  if you'd like to help out.
+
+                            if (!bus.confirmed)
+                                p
+                                    | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
+                                    | whether to send this bus.
+                                p
+                                    | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
+                                    | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
+                                    | By opting in, you are only expressing your interest in riding the bus. We will reach out about
+                                    | this deposit later on if we decide to send a bus on this route.
+                            else
+                                p
+                                    | This bus route has been <b>confirmed</b>.
+                                if (bus.customMessage)
+                                    p= bus.customMessage
                             .busselection
                                 if user.internal.busid == bus.id
                                     .buttonParent

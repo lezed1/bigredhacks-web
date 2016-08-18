@@ -185,7 +185,6 @@ helper.addSubscriber = function (listid, email, fname, lname, callback) {
     }, function (error) {
         callback(error);
     });
-
 };
 
 module.exports = helper;
