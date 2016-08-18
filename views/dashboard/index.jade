@@ -121,6 +121,8 @@ block dashboard_content
 
                 .businfobox(data-busid=bus.id)
                     .busname
+                    p#signup-message You have signed up for a bus!
+                    p#optout-message You have opted out of a bus!
                     ul.businfo
                         li.busstopslist
                             b Bus Stops:
@@ -128,16 +130,20 @@ block dashboard_content
                                 for stop in bus.stops
                                     li(data-collegeid=stop.collegeid)
                                         span.collegename= stop.collegename
-                        li.currentnumber(data-currentnumber=bus.members.length)
-                            b Current Number on Bus:&nbsp;
-                            | #{bus.members.length}
+                        li
+                            b Current Number on Bus: 
+                            span.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
                         li.maxcapacity
                             b Max Capacity:&nbsp;
                             span.maxcapacitynumber= bus.capacity
-                        if user.internal.busid == bus.id
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
-                        else
-                            li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
+                            
+                        li
+                            b Your Current Bus Decision:&nbsp;
+                            if user.internal.busid == bus.id
+                                span.userbusdecision Signed Up
+                            else
+                                span.userbusdecision Opt Out
+                              
                         if (user.internal.going)
                             if (bus.captain != null && bus.captain.name != null)
                                 li.buscaptain
@@ -162,9 +168,11 @@ block dashboard_content
                                 |  if you'd like to help out.
                             .busselection
                                 if user.internal.busid == bus.id
-                                    input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                    .buttonParent
+                                       input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
                                 else
-                                    input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                                    .buttonParent
+                                       input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                         else
                             p You must RSVP before you can sign up for the bus.
 
