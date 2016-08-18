@@ -17,7 +17,7 @@ migration.backFillRSVPDEmails = function() {
         async.eachLimit(users, RATE_LIMIT, function (user, done) {
             console.log('Migrating user: ' + user.name.full);
 
-            helper.addSubscriber(config.mailchimp.l_external_rsvpd, user.email, user.firstname, user.lastname, function (err, result) {
+            helper.addSubscriber(config.mailchimp.l_external_rsvpd, user.email, user.name.first, user.name.last, function (err, result) {
                 done(); // No error detection as errors can include already subscribed and funky emails
             });
         }, function (err) {

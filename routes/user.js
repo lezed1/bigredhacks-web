@@ -417,7 +417,7 @@ module.exports = function (io) {
                                             req.user.save(cb)
                                         },
                                         function(cb) {
-                                            helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.firstname, req.user.lastname, cb);
+                                            helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
                                         }
                                     ], function(err, result) {
                                         if (err) {
@@ -438,7 +438,7 @@ module.exports = function (io) {
                                 req.user.save(cb)
                             },
                             function(cb) {
-                                helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.firstname, req.user.lastname, cb);
+                                helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
                             }
                             ], function(err, result) {
                                 if (err) {
