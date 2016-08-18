@@ -15,7 +15,7 @@ var fs = require('fs');
 var configSchema = require('./config.schema.json');
 if (fs.existsSync('./config.json')) {
     var configData = require('./config.json');
-    validate_against_schema(configData, configSchema);
+    validate_against_schema(configSchema,configData);
     module.exports = configData;
 } else {
     module.exports = from_environment(configSchema);
@@ -41,9 +41,9 @@ function traverse_full_config(schema, eachItem) {
     }
 }
 
-function validate_against_schema(config, schema) {
+function validate_against_schema(schema, config) {
     traverse_full_config(schema, function (category, key) {
-        if (!config[category][key]) throw new Error("Missing environment variable " + category + "." + key);
+        if (!(config.hasOwnProperty(category) && config[category].hasOwnProperty(key))) throw new Error("Missing environment variable " + category + "." + key);
         let type = schema[category][key].type || "String";
         if (!validate_type(config[category][key], type)) throw new Error("Incorrect type for " + category + "." + key);
     });

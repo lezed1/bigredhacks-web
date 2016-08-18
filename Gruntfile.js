@@ -19,7 +19,9 @@ module.exports = function(grunt) {
                 src: ['tests/**/*.js']
             },
             options: {
-                run: true
+                reporter: 'spec',
+                quiet: false,
+                clearRequireCache: false
             }
         }
     });
