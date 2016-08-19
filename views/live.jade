@@ -14,7 +14,7 @@ block append main_content
                     th Message
                     th Time
 
-                for announcement in announcements
+                for announcement in announcements.reverse()
                     tr
                         td #{announcement.message}
                         td #{announcement.time}
