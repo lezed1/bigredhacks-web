@@ -9,9 +9,15 @@ block append main_content
     .container
         .announcements
             h1 Announcements
-            ul#announcementList
+            table#announcements-table.table.table-striped
+                tr
+                    th Message
+                    th Time
+
                 for announcement in announcements
-                    li #{announcement.message}
+                    tr
+                        td #{announcement.message}
+                        td #{announcement.time}
         .schedule
             h1 Schedule
                 .agenda
