@@ -3,13 +3,15 @@ extends _layout-unsecured
 
 block header
     link(href="/css/index.css", rel="stylesheet")
-    link(rel="stylesheet", href="/css/login.css")
+    link(rel="stylesheet", href="/css/live.css")
 
 block append main_content
     .container
         .announcements
             h1 Announcements
-                ul.announcementList
+            ul#announcementList
+                for announcement in announcements
+                    li #{announcement.message}
         .schedule
             h1 Schedule
                 .agenda
