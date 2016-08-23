@@ -8,11 +8,12 @@ var mcapi = require('mailchimp-api');
 
 var config = require('../config.js');
 
-var MAX_RESUME_SIZE = 1024 * 1024 * 10; // 10 mb limit
-var MAX_RECEIPT_SIZE = 1024 * 1024 * 15; // 15 mb limit
+const MAX_RESUME_SIZE = 1024 * 1024 * 10; // 10 mb limit
+const MAX_RECEIPT_SIZE = 1024 * 1024 * 15; // 15 mb limit
+const MIN_SIZE = 50; // 50 byte minimum to ensure non-null uploads
 
-var RESUME_DEST = 'resume/';
-var RECEIPT_DEST = 'travel/';
+const RESUME_DEST = 'resume/';
+const RECEIPT_DEST = 'travel/';
 
 var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
@@ -102,6 +103,8 @@ helper.uploadFile = function uploadFile(file, options, callback) {
     // /check file validity
     if (file.size > max_size) {
         return callback(null, "File is too big!");
+    } else if (file.size < MIN_SIZE) {
+        return callback(null, "File is suspiciously small, please upload a real document!");
     }
 
     const typeHeader = file.headers['content-type'];
@@ -125,6 +128,7 @@ helper.uploadFile = function uploadFile(file, options, callback) {
         const type = '.' + typeHeader.substring(typeHeader.indexOf('/') + 1);
         filename = uid(15) + type;
     }
+
     s3.putObject({
         Bucket: config.setup.AWS_S3_bucket,
         Key: dest + filename,
@@ -181,7 +185,6 @@ helper.addSubscriber = function (listid, email, fname, lname, callback) {
     }, function (error) {
         callback(error);
     });
-
 };
 
 module.exports = helper;

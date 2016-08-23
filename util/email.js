@@ -3,6 +3,7 @@ var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 var moment = require("moment");
 
 const year = new Date().getFullYear();
+// Can be used as a constant since all accepted use the current config var at the time of announcement
 const rsvpTime = moment.duration(Number(global_config.admin.days_to_rsvp), 'days');
 
 // Decisions

@@ -134,21 +134,10 @@ block dashboard_content
                 | .
         else
             p= bus.message
-            if (!bus.confirmed)
-                h3
-                    | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
-                    | whether to send this bus.
-                p
-                    | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
-                    | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
-                    | By opting in, you are only expressing your interest in riding the bus. We will reach out about
-                    | this deposit later on if we decide to send a bus on this route.
-            else
-                p
-                    | This bus route has been <b>confirmed</b>. Keep an eye out for more information on how to get on!
-
             .businfobox(data-busid=bus.id)
                 .busname
+                p#signup-message You have signed up for a bus!
+                p#optout-message You have opted out of a bus!
                 ul.businfo
                     li.busstopslist
                         b Bus Stops:
@@ -156,16 +145,20 @@ block dashboard_content
                             for stop in bus.stops
                                 li(data-collegeid=stop.collegeid)
                                     span.collegename= stop.collegename
-                    li.currentnumber(data-currentnumber=bus.members.length)
-                        b Current Number on Bus:&nbsp;
-                        | #{bus.members.length}
+                    li
+                        b Current Number on Bus:
+                        span.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
                     li.maxcapacity
                         b Max Capacity:&nbsp;
                         span.maxcapacitynumber= bus.capacity
-                    if user.internal.busid == bus.id
-                        li.userbusdecision <b>Your Current Bus Decision:</b> Signed Up
-                    else
-                        li.userbusdecision <b>Your Current Bus Decision:</b> Opt Out</li>
+
+                    li
+                        b Your Current Bus Decision:&nbsp;
+                        if user.internal.busid == bus.id
+                            span.userbusdecision Signed Up
+                        else
+                            span.userbusdecision Opt Out
+
                     if (user.internal.going)
                         if (bus.captain != null && bus.captain.name != null)
                             li.buscaptain
@@ -188,11 +181,28 @@ block dashboard_content
                             | We need a bus captain for your route! Email
                             a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
                             |  if you'd like to help out.
+
+                        if (!bus.confirmed)
+                            p
+                                | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
+                                | whether to send this bus.
+                            p
+                                | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
+                                | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
+                                | By opting in, you are only expressing your interest in riding the bus. We will reach out about
+                                | this deposit later on if we decide to send a bus on this route.
+                        else
+                            p
+                                | This bus route has been <b>confirmed</b>.
+                            if (bus.customMessage)
+                                p= bus.customMessage
                         .busselection
                             if user.internal.busid == bus.id
-                                input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                .buttonParent
+                                   input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
                             else
-                                input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                                .buttonParent
+                                   input#signup.btn.btn-success(type='button', value='sign up', name='signup')
                     else
                         p You must RSVP before you can sign up for the bus.
 
@@ -208,7 +218,7 @@ block dashboard_content
                         +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
                 #rsvp-no(style='display:none')
                     .form-group
-                        button#rsvp-no-button.btn.btn-blue(type='submit', name='rsvpsubmit') submit
+                        button#rsvp-no-button.btn.btn-success(type='submit', name='rsvpsubmit') submit
                 #rsvp-yes(style='display:none')
                     if bus == null
                         .form-group
@@ -224,9 +234,12 @@ block dashboard_content
                         | Please click the two following links and read the
                         | documents carefully.
                     .form-group
-                        a.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
-                        a.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
-                        br
+                        label
+                            input#agreements-viewed(name='agreements-viewed', hidden=true)
+                            a#liability.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+                            a#code-of-conduct.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+                            br
+                    .form-group
                         .checkbox
                             label
                                 input#legal.checkbox(type='checkbox', name='legal', value='true')
@@ -234,7 +247,7 @@ block dashboard_content
                                 |  Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
                                 |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
                     .form-group
-                        button#rsvp-yes-button.btn.btn-red(type='submit', name='rsvpsubmit') submit
+                        button#rsvp-yes-button.btn.btn-danger(type='submit', name='rsvpsubmit') submit
         else
             if user.internal.going
                 p You told us that you are going to BigRed//Hacks.

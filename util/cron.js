@@ -12,19 +12,21 @@ module.exports.go = function go() {
     // Regular decision deadline processing
     const TIME_ZONE = 'America/New_York';
     const EVERY_EIGHT_HOURS = '00 00 */8 * * *';
-    const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    const DATE_FOR_WARNING = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp) - 1)); // One day in advance
-    const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (Number(config.admin.days_to_rsvp)));
+
+
+    let _nearDeadline = function _nearDeadline() {
+        // Constant needs to be here in order to be in scope when called by the CronJob
+        const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+        return this.internal.lastNotifiedAt < new Date(Date.now() - (this.internal.daysToRSVP - 1) * DAY_IN_MILLIS);
+    };
 
     new CronJob(EVERY_EIGHT_HOURS, function checkDecisionDeadlines() {
-        // TODO: Remove this error once we are confident this is running every 8 hours (#112)
-        console.log('[debug error] cron running');
         User.find({
             $and: [
                 {"internal.status": "Accepted"},
                 {"internal.notificationStatus": "Accepted"},
                 {"internal.going": null},
-                {"internal.lastNotifiedAt": {$lt: DATE_FOR_WARNING}}
+                {$where: _nearDeadline}
             ]
         }, function (err, users) {
             if (err) {
@@ -42,6 +44,8 @@ module.exports.go = function go() {
 
     // Warns or rejects a user if they are past deadline
     function _warnOrRejectUser(user, callback) {
+        const DAY_IN_MILLIS = 1000 * 60 * 60 * 24; // Redundant with previous constant, but needs to be here for scope
+        const DATE_FOR_REJECTION = new Date(Date.now() - DAY_IN_MILLIS * (user.internal.daysToRSVP));
         const config = {
             "from_email": "info@bigredhacks.com",
             "from_name": "BigRed//Hacks",

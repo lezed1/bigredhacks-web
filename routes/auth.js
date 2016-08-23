@@ -218,8 +218,6 @@ module.exports = function (io) {
                         return res.redirect('/register');
                     }
 
-                    //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
-
                     var newUser = new User({
                         name: {
                             first: req.body.firstname,

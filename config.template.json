@@ -7,12 +7,14 @@
     "mailchimp_api_key": "",
     "cookie_secret": "",
     "sendgrid_api_key": "",
-    "url": ""
+    "url": "",
+    "ical": "https://calendar.google.com/calendar/ical/cornell.edu_9dauk4h1ovouehcm2g70a7nb5o%40group.calendar.google.com/public/basic.ics"
   },
   "mailchimp": {
     "_comment": "Mailchimp list ids",
     "l_interested": "",
     "l_applicants": "",
+    "l_external_rsvpd": "",
     "l_cornell_accepted": "",
     "l_cornell_waitlisted": "",
     "l_cornell_applicants": ""
