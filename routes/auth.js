@@ -404,7 +404,6 @@ module.exports = function (io) {
                 //application questions are removed
                 req = validateCornell(req);
 
-
                 var errors = req.validationErrors();
                 if (errors) {
                     var errorParams = errors.map(function (x) {
@@ -434,8 +433,6 @@ module.exports = function (io) {
                             return res.redirect('/register/' + req.params.name);
                         }
 
-                        //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
-
                         var newUser = new User({
                             name: {
                                 first: req.body.firstname,
@@ -457,112 +454,78 @@ module.exports = function (io) {
                                 major: req.body.major
                             },
                             internal: {
-                                cornell_applicant: true
+                                cornell_applicant: true,
+                                status: "Pending"
                             },
                             app: {
                                 github: req.body.github,
                                 linkedin: req.body.linkedin,
                                 resume: file.filename,
-                                hackathonsAttended: req.body.hackathonsAttended
+                                hackathonsAttended: req.body.hackathonsAttended,
+                                questions: {
+                                    q1: req.body.q1,
+                                    q2: req.body.q2,
+                                    hardware: req.body.hardware.split(",")
+                                }
                             },
                             role: "user"
                         });
 
-
-                        //determine auto-acceptance or waitlist
-                        User.count({'internal.cornell_applicant': true}, function (err, count) {
+                        newUser.save(function (err, doc) {
                             if (err) {
-                                console.error(err);
-                                req.flash('Unexpected error.', file);
-                                return res.redirect('/register/' + req.params.name);
-                            }
-
-                            //auto accept applicants below a certain threshold
-                            if (count < config.admin.cornell_auto_accept) {
-                                newUser.internal.status = "Accepted";
+                                // If it failed, return error
+                                console.log(err);
+                                req.flash("error", "An error occurred.");
+                                res.render('register_cornell', {
+                                    urlparam: req.params.name,
+                                    title: 'Register',
+                                    error: req.flash('error'),
+                                    input: req.body,
+                                    enums: enums,
+                                    college: college
+                                });
                             } else {
-                                newUser.internal.status = "Waitlisted";
-                            }
-
-
-                            newUser.save(function (err, doc) {
-                                if (err) {
-                                    // If it failed, return error
-                                    console.log(err);
-                                    req.flash("error", "An error occurred.");
-                                    res.render('register_cornell', {
-                                        urlparam: req.params.name,
-                                        title: 'Register',
-                                        error: req.flash('error'),
-                                        input: req.body,
-                                        enums: enums,
-                                        limit: config.admin.cornell_auto_accept,
-                                        college: college
-                                    });
-                                }
-                                else {
-
-                                    if (newUser.internal.status == "Accepted") {
-                                        var mailing_list = config.mailchimp.l_cornell_accepted;
-                                    } else {
-                                        var mailing_list = config.mailchimp.l_cornell_waitlisted;
+                                const MAILING_LIST = config.mailchimp.l_cornell_registered;
+                                helper.addSubscriber(MAILING_LIST, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+                                    if (err) {
+                                        console.error(err);
                                     }
 
-                                    helper.addSubscriber(mailing_list, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+                                    //send email and redirect to home page
+                                    req.login(newUser, function (err) {
                                         if (err) {
                                             console.log(err);
                                         }
-                                        else {
-                                            console.log(result);
-                                        }
 
-                                        //send email and redirect to home page
-                                        req.login(newUser, function (err) {
-                                            if (err) {
-                                                console.log(err);
-                                            }
-                                            if (newUser.internal.status == "Accepted") {
-                                                var email_subject = "BigRed//Hacks Registration Confirmation";
-                                                var template_content =
-                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                    "that you're registered for BigRed//Hacks 2016! " +
-                                                    "We'll be sending a lot more logistical information soon." + "</p><p>" +
-                                                    "You can log in to our website any time to update your resume " +
-                                                    "and view logistic information as we post it." + "</p><p>" +
-                                                    "If you haven't already, make sure to like us on Facebook and " +
-                                                    "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
-                                            } else {
-                                                email_subject = "BigRed//Hacks Wait List Confirmation";
-                                                template_content =
-                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                    "that we have received your application and that you have been added to our wait list." + "</p><p>" +
-                                                    "You can log in to our website any time to view your status or update " +
-                                                    "your resume.  We'll be sending out wait list status updates soon." + "</p><p>" +
-                                                    "If you haven't already, make sure to like us on Facebook and " +
-                                                    "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
-                                            }
+                                        const email_subject = "BigRed//Hacks Application Confirmation";
+                                        let template_content =
+                                            "<p>Hi " + newUser.name.full + ",</p><p>" +
+                                            "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                            "that we have received your application." + "</p><p>" +
+                                            "You can log in to our website any time to view your status or update " +
+                                            "your resume.  We will initially have a lottery to admit Cornell students. " +
+                                            "After that, Cornellians will be admitted off the waitlist in order of registration." + "</p><p>" +
+                                            "If you haven't already, make sure to like us on Facebook and " +
+                                            "follow us on Twitter!" + "</p><p>" +
+                                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
 
-                                            var config = {
-                                                "subject": email_subject,
-                                                "from_email": "info@bigredhacks.com",
-                                                "from_name": "BigRed//Hacks",
-                                                "to": {
-                                                    "email": newUser.email,
-                                                    "name": newUser.name.first + " " + newUser.name.last,
-                                                }
-                                            };
-                                            email.sendCustomEmail(template_content, config);
-                                            res.redirect('/user/dashboard');
-                                        })
-                                    })
-                                }
-                            });
-                        })
-                    });
+                                        var config = {
+                                            "subject": email_subject,
+                                            "from_email": "info@bigredhacks.com",
+                                            "from_name": "BigRed//Hacks",
+                                            "to": {
+                                                "email": newUser.email,
+                                                "name": newUser.name.full
+                                            }
+                                        };
+
+                                        email.sendCustomEmail(template_content, config);
+                                        res.redirect('/user/dashboard');
+                                    });
+                                })
+                            }
+                        });
+                    })
                 }
             });
         });
