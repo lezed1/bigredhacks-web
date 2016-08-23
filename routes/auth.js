@@ -80,7 +80,6 @@ module.exports = function (io) {
                 res.render("register_cornell", {
                     urlparam: req.params.name,
                     title: college.name + " Registration",
-                    enums: enums,
                     error: req.flash('error'),
                     limit: config.admin.cornell_auto_accept,
                     college: college
@@ -145,7 +144,7 @@ module.exports = function (io) {
     }
 
     // Cornell has its own set of fields to validate
-    function validateCornell (req) {
+    function _validateCornell (req) {
         //todo reorder validations to be consistent with form
         return validator.validate(req, [
             'email',
@@ -398,9 +397,7 @@ module.exports = function (io) {
                 req.files = files;
                 var resume = files.resume[0];
 
-                //todo reorder validations to be consistent with form
-                //application questions are removed
-                req = validateCornell(req);
+                req = _validateCornell(req);
 
                 var errors = req.validationErrors();
                 if (errors) {
@@ -452,8 +449,7 @@ module.exports = function (io) {
                                 major: req.body.major
                             },
                             internal: {
-                                cornell_applicant: true,
-                                status: "Pending"
+                                cornell_applicant: true
                             },
                             app: {
                                 github: req.body.github,
@@ -474,14 +470,7 @@ module.exports = function (io) {
                                 // If it failed, return error
                                 console.log(err);
                                 req.flash("error", "An error occurred.");
-                                res.render('register_cornell', {
-                                    urlparam: req.params.name,
-                                    title: 'Register',
-                                    error: req.flash('error'),
-                                    input: req.body,
-                                    enums: enums,
-                                    college: college
-                                });
+                                return res.redirect('/register/' + req.params.name);
                             } else {
                                 const MAILING_LIST = config.mailchimp.l_cornell_registered;
                                 helper.addSubscriber(MAILING_LIST, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
@@ -518,7 +507,7 @@ module.exports = function (io) {
                                         };
 
                                         email.sendCustomEmail(template_content, config);
-                                        res.redirect('/user/dashboard');
+                                        return res.redirect('/user/dashboard');
                                     });
                                 })
                             }
