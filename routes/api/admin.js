@@ -66,6 +66,10 @@ router.post('/rollingDecision', makeRollingAnnouncement);
 
 router.post('/deadlineOverride', rsvpDeadlineOverride);
 
+router.post('/cornellLottery', cornellLottery);
+
+router.post('/cornellWaitlist', cornellWaitlist);
+
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
  * @apiname SetStatus
@@ -913,6 +917,118 @@ function rsvpDeadlineOverride(req, res, next) {
 
         user.internal.daysToRSVP = req.body.daysToRSVP;
         user.save(util.dbSaveCallback(res));
+    });
+}
+
+/**
+ * @api {POST} /api/admin/cornellLottery Executes a gender-balanced (50-50) lottery for Cornell students, but does not send decision emails.
+ *              If, by some chance, the lottery runs out of a gender to accept, it falls back to accepting other genders.
+ *              Non-male-or-female genders are grouped under male for the purpose of preventing system-gaming and stats-ruining.
+ *              All non-accepted students are moved to waitlist.
+ * @apiname CornellLottery
+ * @apigroup Admin
+ *
+ * @apiParam {Number} numberToAccept
+ **/
+function cornellLottery(req, res, next) {
+    if (!req.body.numberToAccept || req.body.numberToAccept < 0) {
+        return res.status(500).send('Please provide a numberToAccept >= 0');
+    }
+    // Find all non-accepted Cornell students
+    User.find( { $and: [
+        {'internal.cornell_applicant' : true},
+        {'internal.status' : {$ne : 'Accepted'}}
+    ]}, function (err, pendings) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send(err);
+        }
+
+        // Filter into sets for making decisions
+        let notFemale, female;
+        notFemale = []; female = [];
+        if (user.gender == "Female") {
+            female.push(user);
+        } else {
+            notFemale.push(user);
+        }
+
+        let accepted = [];
+        while (accepted.length < req.body.numberToAccept && (female.length || notFemale.length)) {
+            let _drawLottery = function _drawLottery(pool) {
+                let randomIndex = Math.floor((Math.random() * pool.length));
+                let winner = pool[randomIndex];
+                accepted.push(winner);
+                pool.splice(randomIndex, 1);
+            };
+
+            _drawLottery(female);
+            if (accepted.length >= req.body.numberToAccept) break;
+            _drawLottery(notFemale);
+        }
+
+        // Save decisions
+        accepted.forEach(x => x.internal.status = 'Accepted');
+        notFemale.forEach(x => x.internal.status = 'Waitlisted');
+        female.forEach(x => x.internal.status = 'Waitlisted');
+
+        async.parallel( [
+            function (cb) {
+                async.each(accepted, function(user, callback) {user.save(callback)}, cb);
+            },
+            function (cb) {
+                async.each(notFemale, function(user, callback) {user.save(callback)}, cb);
+            },
+            function (cb) {
+                async.each(female, function(user, callback) {user.save(callback)}, cb);
+            }
+        ], function(err, res){
+            if (err) {
+                console.error('ERROR in lottery: ' + err);
+                req.flash('error', 'Error in lottery');
+                return res.redirect('/admin/dashboard');
+            }
+
+            req.flash('success', 'Lottery successfully performed');
+            return res.redirect('/admin/dashboard');
+        });
+    });
+}
+
+/**
+ * @api {POST} /api/admin/cornellWaitlist Moves numberToAccept Cornell students out of waitlist and into accepted pool in app date order.
+ * @apiname CornellWaitlist
+ * @apigroup Admin
+ *
+ * @apiParam {Number} numberToAccept
+ **/
+function cornellWaitlist(req, res, next) {
+    // Find all non-accepted Cornell students
+    if (!req.body.numberToAccept || req.body.numberToAccept <= 0){
+        return res.status(500).send('Need a positive numberToAccept');
+    }
+
+    User.find( { $and: [
+        {'internal.cornell_applicant' : true},
+        {'internal.status' : {$ne : 'Accepted'}}
+    ]}).sort( {'created_at' : 'desc'} ).exec(function (err, pendings) {
+        let numAccepted = 0;
+        pendings.forEach(function (student) {
+            if (numAccepted < req.body.numberToAccept) {
+                pendings[i].internal.status = 'Accepted';
+                numAccepted++;
+            }
+        });
+
+        async.each(pendings, function(student, cb) {student.save(cb)}, function(err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send(err);
+            }
+
+            req.flash('success', 'Successfully moved ' + numAccepted + ' students off the waitlist!');
+            return res.redirect('/admin/dashboard');
+        });
     });
 }
 
