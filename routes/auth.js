@@ -472,8 +472,17 @@ module.exports = function (io) {
                                 req.flash("error", "An error occurred.");
                                 return res.redirect('/register/' + req.params.name);
                             } else {
-                                const MAILING_LIST = config.mailchimp.l_cornell_registered;
-                                helper.addSubscriber(MAILING_LIST, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+                                async.parallel([
+                                    function onWaitList(cb2) {
+                                        // All Cornell students are on the waitlist when registering. The pending status
+                                        // means that nobody has been accepted yet, since once we run a lottery,
+                                        // all non-winners are moved onto waitlist.
+                                        helper.addSubscriber(config.mailchimp.l_cornell_waitlisted, newUser.email, newUser.name.first, newUser.name.last, cb2);
+                                    },
+                                    function onAppList(cb2) {
+                                        helper.addSubscriber(config.mailchimp.l_cornell_applicants, newUser.email, newUser.name.first, newUser.name.last, cb2);
+                                    }
+                                ], function(err) {
                                     if (err) {
                                         console.error(err);
                                     }

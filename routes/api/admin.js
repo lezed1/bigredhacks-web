@@ -172,14 +172,14 @@ function setUserRole(req, res, next) {
  */
 function makeRollingAnnouncement(req, res, next) {
     const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
+    const WAITLIST_ID = config.mailchimp.l_cornell_waitlisted;
+    const ACCEPTED_ID = config.mailchimp.l_cornell_accepted;
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
             // Do not want to overload by doing too many requests, so this will limit the async
             const maxRequestsAtATime = 3;
             async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
-                // TODO: Remove once we are more confident about this code (Issue #64)
-                console.log('beginning email tranaction for ' + recip.email);
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -196,15 +196,27 @@ function makeRollingAnnouncement(req, res, next) {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
                         recip.internal.daysToRSVP = DAYS_TO_RSVP;
-                        recip.save(function(err) {
-                            if (err) {
-                                console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
-                                return void callback(err);
-                            } else {
-                                // TODO: Do not log this once we are more confident about this code (Issue #64)
-                                console.log(recip.email + ' has successfully been sent their new decision');
-                                return void callback();
+
+                        async.parallel([
+                            function saveUser(cb) {
+                                recip.save(cb);
+                            },
+                            function offWaitlist(cb) {
+                                if (recip.internal.cornell_applicant) {
+                                    helper.removeSubscriber(WAITLIST_ID, recip.email, cb);
+                                } else {
+                                    cb();
+                                }
+                            },
+                            function onAcceptedList(cb) {
+                                if (recip.internal.cornell_applicant) {
+                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, cb);
+                                } else {
+                                    cb();
+                                }
                             }
+                        ], function (err) {
+                            return void callback(err);
                         });
                     }
                 })
@@ -946,8 +958,8 @@ function cornellLottery(req, res, next) {
         }
 
         // Filter into sets for making decisions
-        let notFemale, female;
-        notFemale = []; female = [];
+        let notFemale = [];
+        let female = [];
         pendings.forEach(function(user) {
             if (user.gender == "Female") {
                 female.push(user);
@@ -1017,7 +1029,7 @@ function cornellWaitlist(req, res, next) {
         {'internal.cornell_applicant' : true},
         {'internal.status' : {$ne : 'Accepted'}},
         {'internal.status' : {$ne : 'Rejected'}}
-    ]}).sort( {'created_at' : 'desc'} ).exec(function (err, pendings) {
+    ]}).sort( {'created_at' : 'asc'} ).exec(function (err, pendings) {
         let numAccepted = 0;
         pendings.forEach(function (student) {
             if (numAccepted < req.body.numberToAccept) {
