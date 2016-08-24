@@ -937,7 +937,8 @@ function cornellLottery(req, res, next) {
     // Find all non-accepted Cornell students
     User.find( { $and: [
         {'internal.cornell_applicant' : true},
-        {'internal.status' : {$ne : 'Accepted'}}
+        {'internal.status' : {$ne : 'Accepted'}},
+        {'internal.status' : {$ne : 'Rejected'}}
     ]}, function (err, pendings) {
         if (err) {
             console.error(err);
@@ -947,19 +948,23 @@ function cornellLottery(req, res, next) {
         // Filter into sets for making decisions
         let notFemale, female;
         notFemale = []; female = [];
-        if (user.gender == "Female") {
-            female.push(user);
-        } else {
-            notFemale.push(user);
-        }
+        pendings.forEach(function(user) {
+            if (user.gender == "Female") {
+                female.push(user);
+            } else {
+                notFemale.push(user);
+            }
+        });
 
         let accepted = [];
         while (accepted.length < req.body.numberToAccept && (female.length || notFemale.length)) {
             let _drawLottery = function _drawLottery(pool) {
-                let randomIndex = Math.floor((Math.random() * pool.length));
-                let winner = pool[randomIndex];
-                accepted.push(winner);
-                pool.splice(randomIndex, 1);
+                if (pool.length > 0) {
+                    let randomIndex = Math.floor((Math.random() * pool.length));
+                    let winner = pool[randomIndex];
+                    accepted.push(winner);
+                    pool.splice(randomIndex, 1);
+                }
             };
 
             _drawLottery(female);
@@ -968,9 +973,9 @@ function cornellLottery(req, res, next) {
         }
 
         // Save decisions
-        accepted.forEach(x => x.internal.status = 'Accepted');
-        notFemale.forEach(x => x.internal.status = 'Waitlisted');
-        female.forEach(x => x.internal.status = 'Waitlisted');
+        accepted.forEach(function(x) {x.internal.status = 'Accepted'});
+        notFemale.forEach(function(x) {x.internal.status = 'Waitlisted'});
+        female.forEach(function(x) {x.internal.status = 'Waitlisted'});
 
         async.parallel( [
             function (cb) {
@@ -982,14 +987,14 @@ function cornellLottery(req, res, next) {
             function (cb) {
                 async.each(female, function(user, callback) {user.save(callback)}, cb);
             }
-        ], function(err, res){
+        ], function(err){
             if (err) {
                 console.error('ERROR in lottery: ' + err);
                 req.flash('error', 'Error in lottery');
                 return res.redirect('/admin/dashboard');
             }
 
-            req.flash('success', 'Lottery successfully performed');
+            req.flash('success', 'Lottery successfully performed. ' + accepted.length + ' have been accepted.');
             return res.redirect('/admin/dashboard');
         });
     });
@@ -1010,12 +1015,13 @@ function cornellWaitlist(req, res, next) {
 
     User.find( { $and: [
         {'internal.cornell_applicant' : true},
-        {'internal.status' : {$ne : 'Accepted'}}
+        {'internal.status' : {$ne : 'Accepted'}},
+        {'internal.status' : {$ne : 'Rejected'}}
     ]}).sort( {'created_at' : 'desc'} ).exec(function (err, pendings) {
         let numAccepted = 0;
         pendings.forEach(function (student) {
             if (numAccepted < req.body.numberToAccept) {
-                pendings[i].internal.status = 'Accepted';
+                student.internal.status = 'Accepted';
                 numAccepted++;
             }
         });
