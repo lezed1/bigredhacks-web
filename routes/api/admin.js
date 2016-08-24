@@ -202,14 +202,14 @@ function makeRollingAnnouncement(req, res, next) {
                                 recip.save(cb);
                             },
                             function offWaitlist(cb) {
-                                if (recip.internal.cornell_applicant) {
+                                if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
                                     helper.removeSubscriber(WAITLIST_ID, recip.email, cb);
                                 } else {
                                     cb();
                                 }
                             },
                             function onAcceptedList(cb) {
-                                if (recip.internal.cornell_applicant) {
+                                if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
                                     helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, cb);
                                 } else {
                                     cb();
