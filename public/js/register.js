@@ -207,7 +207,7 @@ $('document').ready(function () {
     });
 });
 
-// Make buttons more transparent after clicked on
+// Make buttons success-colored after clicked on
 $('#liability-cornell').click(function(){
     $(this)
         .removeClass('btn-danger')
