@@ -203,14 +203,26 @@ function makeRollingAnnouncement(req, res, next) {
                             },
                             function offWaitlist(cb) {
                                 if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
-                                    helper.removeSubscriber(WAITLIST_ID, recip.email, cb);
+                                    // We can get errors for non-termination reasons, so callback will only log error
+                                    helper.removeSubscriber(WAITLIST_ID, recip.email, function(err) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        cb();
+                                    });
                                 } else {
                                     cb();
                                 }
                             },
                             function onAcceptedList(cb) {
                                 if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
-                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, cb);
+                                    // We can get errors for non-termination reasons, so callback will only log error
+                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, function(err) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        cb();
+                                    });
                                 } else {
                                     cb();
                                 }
