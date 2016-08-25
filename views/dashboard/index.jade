@@ -25,70 +25,73 @@ block dashboard_content
 
     //-General (Non-Cornell) decision content
     if (!cornellian)
-        if status == "rejected"
-            p.long-text
-                | Thank you for applying for BigRed//Hacks! With so many hackathons happening this year,
-                |  we're honored that we were on your list.
-            p.long-text
-                | Unfortunately, we aren't able to offer you a spot at BigRed//Hacks #{new Date().getFullYear()}. We had a
-                |  record number of applications and a very limited amount of space. But know that we still think you're
-                |  awesome, and would love for you to apply again for BigRed//Hacks #{new Date().getFullYear() + 1}!
-            p.long-text All the best for the future, and keep on hacking!
-            p BigRed//Hacks Team
+        case status
+            when "rejected"
+                p.long-text
+                    | Thank you for applying for BigRed//Hacks! With so many hackathons happening this year,
+                    |  we're honored that we were on your list.
+                p.long-text
+                    | Unfortunately, we aren't able to offer you a spot at BigRed//Hacks #{new Date().getFullYear()}. We had a
+                    |  record number of applications and a very limited amount of space. But know that we still think you're
+                    |  awesome, and would love for you to apply again for BigRed//Hacks #{new Date().getFullYear() + 1}!
+                p.long-text All the best for the future, and keep on hacking!
+                p BigRed//Hacks Team
 
-        else if status == "waitlisted"
-            p.long-text
-                | Thank you for applying for BigRed//Hacks! With so many hackathons
-                |  happening this year, we're honored that we were on your list.
-            p.long-text
-                | We had a record number of applications and a very limited amount of space. While we
-                |  aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon
-                |  as one becomes available. Last year, we were able to accept a lot of hackers from our waitlist, so check
-                |  your email often!
-            p.long-text
-                | If you aren't interested in coming to BigRed//Hacks at all anymore, then please check
-                |  the box below. We'll be sad, but it'll be super helpful.
-            p.long-text All the best for the future, and keep on hacking!
-            p BigRed//Hacks Team
-            .form-group
-                .checkbox
-                    label
-                        input#notinterested.checkbox(type='checkbox', value='', checked=user.internal.not_interested)
-                        | I'm not interested in going anymore.
+            when "waitlisted"
+                p.long-text
+                    | Thank you for applying for BigRed//Hacks! With so many hackathons
+                    |  happening this year, we're honored that we were on your list.
+                p.long-text
+                    | We had a record number of applications and a very limited amount of space. While we
+                    |  aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon
+                    |  as one becomes available. Last year, we were able to accept a lot of hackers from our waitlist, so check
+                    |  your email often!
+                p.long-text
+                    | If you aren't interested in coming to BigRed//Hacks at all anymore, then please check
+                    |  the box below. We'll be sad, but it'll be super helpful.
+                p.long-text All the best for the future, and keep on hacking!
+                p BigRed//Hacks Team
+                .form-group
+                    .checkbox
+                        label
+                            input#notinterested.checkbox(type='checkbox', value='', checked=user.internal.not_interested)
+                            | I'm not interested in going anymore.
 
-        else if status == "accepted"
-            p.long-text
-                | Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks #{new Date().getFullYear()},
-                |  taking place on September 16-18 at Cornell University. You'll be one of 400 hackers from universities
-                |  all across the U.S. coming together to hack, build, and learn.
-            if !user.internal.cornell_applicant
-                if (user.internal.going == null)
-                    if (deadline.active)
+            when "accepted"
+                p.long-text
+                    | Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks #{new Date().getFullYear()},
+                    |  taking place on September 16-18 at Cornell University. You'll be one of 400 hackers from universities
+                    |  all across the U.S. coming together to hack, build, and learn.
+                if !user.internal.cornell_applicant
+                    if (user.internal.going == null)
+                        if (deadline.active)
+                            p.long-text
+                                | Because the event is fast approaching, <b style="color: #4a90e2">you'll need to RSVP within #{deadline.message},</b>
+                                |  or you risk losing your spot.
+                        else
+                            p
+                                | You have not responded within the window of #{deadline.interval} we requested. We may change your application
+                                |  status to rejected at any moment to make room for another applicant, but you may still RSVP
+                                |  until we do that if you still wish to attend.
                         p.long-text
-                            | Because the event is fast approaching, <b style="color: #4a90e2">you'll need to RSVP within #{deadline.message},</b>
-                            |  or you risk losing your spot.
-                    else
-                        p
-                            | You have not responded within the window of #{deadline.interval} we requested. We may change your application
-                            |  status to rejected at any moment to make room for another applicant, but you may still RSVP
-                            |  until we do that if you still wish to attend.
-                    p.long-text
-                        | RSVPing involves two steps: confirming your mode of transportation
-                        |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
-                        |  Major League Hacking's code of conduct.
-                        |  Take a look at our #[a(href="/user/travel") travel guide] if you need travel suggestions.
+                            | RSVPing involves two steps: confirming your mode of transportation
+                            |  (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
+                            |  Major League Hacking's code of conduct.
+                            |  Take a look at our #[a(href="/user/travel") travel guide] if you need travel suggestions.
 
-            p.long-text
-                | We'll be sending lots more information as we get closer to the event, so stay tuned!
-            p.long-text
-                | Please join our
-                a(href='https://www.facebook.com/groups/1628643787421474/')&nbsp;BigRed//Hacks #{new Date().getFullYear()} Hackers
-                |  Facebook group to find partners and plan travel with other students.
-            p.long-text Looking forward to seeing you in Ithaca,
-            p BigRed//Hacks Team
-            br
-    //-Cornell decision content
-    else if (cornellian)
+                p.long-text
+                    | We'll be sending lots more information as we get closer to the event, so stay tuned!
+                p.long-text
+                    | Please join our
+                    a(href='https://www.facebook.com/groups/1628643787421474/')&nbsp;BigRed//Hacks #{new Date().getFullYear()} Hackers
+                    |  Facebook group to find partners and plan travel with other students.
+                p.long-text Looking forward to seeing you in Ithaca,
+                p BigRed//Hacks Team
+                br
+
+
+        //-Cornell decision content
+    else
         if status == "accepted"
             p.long-text
                 | Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks #{new Date().getFullYear()},
@@ -219,15 +222,16 @@ block dashboard_content
                     .form-group
                         button#rsvp-no-button.btn.btn-success(type='submit', name='rsvpsubmit') submit
                 #rsvp-yes(style='display:none')
-                    if bus == null
-                        .form-group
-                            label(for='receipt') Travel Receipt (.pdf, .jpg, .png, max: 15MB) *
-                            p
-                                | Upload a copy of receipt for a roundtrip ticket. If you
-                                |  are driving, then include a screenshot of your route on Google Maps.
-                            .wrapper
-                                input#receipt.form-control.filepicker-bootstrap(data-label='upload', type='file', name='receipt', accept='.pdf,image/jpg,image/png')
-                    br
+                if bus == null
+                        if (!cornellian)
+                            .form-group
+                                label(for='receipt') Travel Receipt (.pdf, .jpg, .png, max: 15MB) *
+                                p
+                                    | Upload a copy of receipt for a roundtrip ticket. If you
+                                    |  are driving, then include a screenshot of your route on Google Maps.
+                                .wrapper
+                                    input#receipt.form-control.filepicker-bootstrap(data-label='upload', type='file', name='receipt', accept='.pdf,image/jpg,image/png')
+                        br
                     p We participate in Major League Hacking (MLH) as a MLH Member Event. You authorize us to share certain application/registration information for event administration, ranking, MLH administration, pre and post-event informational e-mails, and occasional messages about hackathons in line with the MLH Privacy Policy.
                     p
                         | Please click the two following links and read the
