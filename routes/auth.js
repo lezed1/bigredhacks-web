@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -19,9 +20,6 @@ var MAX_FILE_SIZE = 1024 * 1024 * 15;
 var config = require('../config.js');
 var email = require('../util/email');
 var uid = require("uid2");
-
-
-
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
