@@ -59,6 +59,7 @@ mixin generateUrlList(listItems, active)
             if (item.hasOwnProperty("results_released") && item.results_released && !middlehelp.isResultsReleased()) continue;
             if (item.hasOwnProperty("dayof") && item.dayof && !middlehelp.isDayof()) continue;
             if (item.hasOwnProperty("accepted") && item.accepted && user && (user.internal.status !== "Accepted" || user.internal.notificationStatus !== "Accepted")) continue;
+            if (item.hasOwnProperty("external") && item.external && user && (user.internal.cornell_applicant)) continue;
             var classes = [];
             if (active == item.url) classes.push("active");
         li: a(href=item.url,class=classes) #{item.name}
