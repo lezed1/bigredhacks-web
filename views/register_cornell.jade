@@ -51,7 +51,7 @@ block append school
         label(for='yearDropdown') academic year *
         select#yearDropdown.form-control(name='yearDropdown', required='')
             option(value='') select
-            +generateOptions(en.year, {selected: (input.yearDropdown || "")})
+            +generateOptions(en.yearNoHighSchool, {selected: (input.yearDropdown || "")})
     .form-group
         label(for='college') full school name *
         br
@@ -110,8 +110,8 @@ block append terms
     br
     label Please carefully read the two documents below:
     .form-group
-        a#liability.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
-        a#code-of-conduct.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+        a#liability-cornell.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+        a#code-of-conduct-cornell.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
 
 block no_terms
 

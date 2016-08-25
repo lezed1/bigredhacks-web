@@ -207,5 +207,14 @@ $('document').ready(function () {
     });
 });
 
-
-
+// Make buttons more transparent after clicked on
+$('#liability-cornell').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+});
+$('#code-of-conduct-cornell').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+});

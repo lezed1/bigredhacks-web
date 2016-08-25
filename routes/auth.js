@@ -283,8 +283,8 @@ module.exports = function (io) {
                                     var email_body =
                                         "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                         "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                        "that we have received your application." + "</p><p>" +
-                                        "You can log in to our website any time until the application deadline " +
+                                        "that we have received your registration." + "</p><p>" +
+                                        "You can log in to our website any time until the registration deadline " +
                                         "to update your information or add team members." + "</p><p>" +
                                         "If you haven't already, make sure to like us on <a href='https://www.facebook.com/bigredhacks/' target='_blank'>Facebook</a> and " +
                                         "follow us on <a href='https://twitter.com/bigredhacks'>Twitter</a>!" + "</p><p>" +
@@ -491,11 +491,11 @@ module.exports = function (io) {
                                             console.log(err);
                                         }
 
-                                        const email_subject = "BigRed//Hacks Application Confirmation";
+                                        const email_subject = "BigRed//Hacks Registration Confirmation";
                                         let template_content =
                                             "<p>Hi " + newUser.name.full + ",</p><p>" +
                                             "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                            "that we have received your application." + "</p><p>" +
+                                            "that we have received your registration." + "</p><p>" +
                                             "You can log in to our website any time to view your status or update " +
                                             "your resume.  We will initially have a lottery to admit Cornell students. " +
                                             "After that, Cornellians will be admitted off the waitlist in order of registration." + "</p><p>" +
