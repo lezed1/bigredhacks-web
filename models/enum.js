@@ -7,6 +7,7 @@ var _ = require('underscore');
 var en = {
     user: { //user params enforce database integrity
         year: "High School/Freshman/Sophomore/Junior/Senior/Graduate Student".split("/"),
+        yearNoHighSchool: "Freshman/Sophomore/Junior/Senior/Graduate Student".split("/"),
         dietary: "None Vegetarian Gluten-free".split(" "),
         gender: "Female/Male/Other/Prefer Not to Disclose".split("/"),
         tshirt: "XS/S/M/L/XL".split("/"),

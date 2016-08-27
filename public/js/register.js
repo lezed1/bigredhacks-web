@@ -207,5 +207,14 @@ $('document').ready(function () {
     });
 });
 
-
-
+// Make buttons success-colored after clicked on
+$('#liability-cornell').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+});
+$('#code-of-conduct-cornell').click(function(){
+    $(this)
+        .removeClass('btn-danger')
+        .addClass('btn-success');
+});

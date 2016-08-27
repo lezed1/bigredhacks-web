@@ -237,7 +237,7 @@ $('#rsvpForm').validate({
     }
 });
 
-// Make buttons more transparent after clicked on
+// Make buttons success-colored after clicked on
 $('#liability').click(function(){
     $(this)
         .removeClass('btn-danger')

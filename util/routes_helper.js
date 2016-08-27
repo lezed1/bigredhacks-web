@@ -187,4 +187,28 @@ helper.addSubscriber = function (listid, email, fname, lname, callback) {
     });
 };
 
+/**
+ * remove a subscriber from a mailing list
+ * @param listid mailchimp listid
+ * @param email email to send to
+ * @param callback
+ */
+helper.removeSubscriber = function (listid, email, callback) {
+    var mcReq = {
+        id: listid,
+        email: {email: email},
+        double_optin: false,
+        merge_vars: {
+            EMAIL: email,
+        }
+    };
+
+    // submit subscription request to mail chimp
+    mc.lists.unsubscribe(mcReq, function (data) {
+        callback(null, data);
+    }, function (error) {
+        callback(error);
+    });
+};
+
 module.exports = helper;

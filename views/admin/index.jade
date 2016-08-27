@@ -20,7 +20,7 @@ block append admin_content
         li(role='presentation')
             a(href='#announcements', aria-controls='announcements', role='tab', data-toggle='tab') Announcements
         li(role='presentation')
-            a(href='#rolling-decisions', aria-controls='rolling-decisions', role='tab', data-toggle='tab') Rolling Decisions
+            a(href='#decisions', aria-controls='decisions', role='tab', data-toggle='tab') Decisions
 
     //- Tab panes
     .tab-content
@@ -97,13 +97,28 @@ block append admin_content
                         | &nbsp;Twitter
                     br
                 .form-group
-                    button#announcementMake.btn.btn-blue(onclick="return confirm('Are you sure?')") Announce
-        #rolling-decisions.tab-pane(role='tabpanel')
-            h2 Notify Decisions
-            p Send an email notifying application decisions to all who have not received their latest decision.
-            form#notify-form(method='post', action='/api/admin/rollingDecision')
-                .form-group.np-enabled
-                    button#notifyMake.btn.btn-blue(type='submit' onclick="return confirm('Are you sure? This will email new decisions!')") Make Rolling Decision
-            span Will affect #{decisionAnnounces} people.
+                    button#announcementMake.btn.btn-success(onclick="return confirm('Are you sure?')") Announce
+        #decisions.tab-pane(role='tabpanel')
+            .notify-decisions-section
+                h2 Notify Decisions
+                p Send an email notifying application decisions to all who have not received their latest decision.
+                form#notify-form(method='post', action='/api/admin/rollingDecision')
+                    .form-group.np-enabled
+                        button#notifyMake.btn.btn-success(type='submit' onclick="return confirm('Are you sure? This will email new decisions!')") Make Rolling Decision
+                span Will affect #{decisionAnnounces} people.
+            .lottery-section
+                h2 Run Lottery
+                p Run a gender-balanced lottery for Cornell students.
+                form#lottery-form(method='post', action='/api/admin/cornellLottery')
+                    .form-group.np-enabled
+                        input#lottery-amount(type='Number' name='numberToAccept' placeholder='amount')
+                        button#lottery-make.btn.btn-success(type='submit' onclick="return confirm('Are you sure?')") Run Lottery
+            .waitlist-section
+                h2 Accept off of Waitlist
+                p Accept Cornell students off the waitlist based on application date.
+                form#waitlist-form(method='post', action='/api/admin/cornellWaitlist')
+                    .form-group.np-enabled
+                        input#waitlist-amount(type='Number' name='numberToAccept' placeholder='amount')
+                        button#waitlist-make.btn.btn-success(type='submit' onclick="return confirm('Are you sure?')") Move Off Waitlist
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...

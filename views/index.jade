@@ -79,10 +79,6 @@ block append content
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
                                     | &nbsp;&nbsp;&nbsp;
                                     a.btn.btn-blue(href="/login") login
-                                else
-                                    a.btn.btn-blue(href="/register/cornelluniversity") cornell register
-                                    | &nbsp;&nbsp;&nbsp;
-                                    a.btn.btn-blue(href="/login") login
 
                 //- section about
                 //+sectionHeading("Be a part of something big")
@@ -115,7 +111,7 @@ block append content
                 p days until
                 p BigRed//Hacks!
 
-        section#schedule.home-section.text-center
+        section#schedule.schedule
             .section-heading.container
                 h2(style='float:left;') Schedule
             .driftCloud1(data-100-bottom="left:40%;" data-top="left:100%;")
@@ -125,47 +121,54 @@ block append content
                 .cloud5
                 .cloud6
             .container
-                table.table
-                    thead
-                        tr
-                            th(colspan='3') friday, sept 16
-                    tbody
-                        tr
-                            td 4:30 pm - 6:00 pm
-                            td participant registration
-                            td
-                                a(href='https://www.google.com/maps/place/Kennedy+Hall/@42.4486792,-76.4814527,18z/')
-                                    | call
-                                    | auditorium
-                        tr
-                            td 6:00 pm
-                            td opening ceremony
-                            td call auditorium
-                        tr
-                            td 8:00 pm
-                            td hacking begins
-                            td
-                                a(href='https://www.google.com/maps/place/Physical+Sciences+Bldg/@42.4486792,-76.4814527,18z/')
-                                    | physical
-                                    | sciences building
-                table.table
-                    thead
-                        tr
-                            th(colspan='3') sunday, sept 18
-                    tbody
-                        tr
-                            td 8:00 am
-                            td hacking ends
-                            td physical sciences building
-                        tr
-                            td 9:00 am - 11:00 am
-                            td project expo
-                            td physical sciences building
-                        tr
-                            td 12:00 pm - 2:00 pm
-                            td closing ceremony
-                            td call auditorium
-                br
+                .custom-table
+                    .heading
+                        h3 friday, 9/16
+                        .time
+                            p 4:30 - 6:30 pm
+                        .data
+                            p participant registration
+                            h5 call auditorium
+                        .time
+                            p 6:00 pm
+                        .data
+                            p opening ceremony
+                            h5 call auditorium
+                        .time
+                            p 8:00 pm
+                        .data
+                            p hacking begins
+                            h5 physical sciences building
+                    .heading
+                        h3 sunday, 9/18
+                        .time
+                            p 8:00 am
+                        .data
+                            p hacking ends
+                            h5 physical sciences building
+                        .time
+                            p 9:00 am - 11:00 am
+                        .data
+                            p project expo
+                            h5 physical sciences building
+                        .time
+                            p 12:00 pm - 2:00 pm
+                        .data
+                            p closing ceremony
+                            h5 call auditorium
+
+        section#sustainable.sustainable
+
+            .content
+                +sectionHeading("Sustainable hacks")
+                .container
+                    br
+                    p
+                        | Passionate about the environment? This year, we will have prizes for the best sustainable hacks.
+                        | Band together with other like-minded students to solve some of the most pressing issues facing our planet’s future.
+                    p We will provide mentors and resources necessary for your hack to succeed!
+                    br
+
         section.hillholder
             .hill
         section#whaleDiv
@@ -174,25 +177,9 @@ block append content
             .preload-01
     section.waterholder
         .water
-            section#sustainable.sustainable
-
-                .content
-                    +sectionHeading("Sustainable hacks")
-                    .container
-                        br
-                        p
-                            | Passionate about the environment? This year, we will have prizes for the best sustainable hacks.
-                            | Band together with other like-minded students to solve some of the most pressing issues facing our planet’s future.
-                        p We will provide mentors and resources necessary for your hack to succeed!
-                        br
 
             //- Section: faq
-
             section#faq.faq
-
-                //.wave1
-                //.wave2
-                //.wave3
                 +sectionHeading("Frequently Asked Questions")
                 .container
                     dl
@@ -377,12 +364,15 @@ block append content
                             span(aria-hidden='true') ×
                         h4.modal-title Where do you go to school?
                     .modal-body.hidden
-                        p Cornell University students won't be able to register until September, but in the meantime, add yourself to the mailing list. You'll receive an email when we open registration.
+                        p Cornell University students won't be able to register until August 25th, but in the meantime, add yourself to the mailing list. You'll receive an email when we open registration.
                         .form-group
                             label(for='cornellEmail') email address *
                             input#cornellEmail.form-control(type='email', name='cornellEmail', placeholder='bigredhacks@cornell.edu', value='', required='')
                     #regFooter.modal-footer
-                        button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
+                        if middlehelp.isCornellRegistrationOpen()
+                            a.btn.btn-blue.reg-select(href='/register/cornelluniversity') Cornell/Ithaca
+                        else
+                            button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
                         a.btn.btn-blue.reg-select(href='/register') Somewhere else
                         button#cornell-submit.btn.btn-blue.hidden(type='submit') Submit
 

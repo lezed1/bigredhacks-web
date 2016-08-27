@@ -415,8 +415,8 @@ module.exports = function (io) {
                         );
                     };
 
-                    //travel receipt required if no bus
-                    if (bus == null) {
+                    //travel receipt required if no bus and not from cornell
+                    if (bus == null && !req.user.internal.cornell_applicant) {
                         //fail if no receipt uploaded
                         if (!receipt) {
                             req.flash('error', "Please upload a travel receipt.");
