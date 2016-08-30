@@ -12,6 +12,8 @@ The greatest hackathon management app of all time.
 * New features should always go in a new branch. To create a new branch, run `git checkout -b ISSUE#_Brief-Summary`, naming the branch as appropriate.
 * Reference an issue number from within a commit to [close it](https://help.github.com/articles/closing-issues-via-commit-messages/) or to associate it for further discussion. 
 * To push, run `git push <branch> HEAD`.
+* When your code is ready for review, create a pull request. Make sure you change the base if your branch is not based off of develop.
+* When you get two sign-offs, and after your tests pass, press the green button in the pull request to merge your commits.
 
 ###Setup Instructions
 1. Make sure node.js and mongoDB are installed, with the latter running.
