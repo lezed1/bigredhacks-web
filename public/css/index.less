@@ -469,13 +469,17 @@ section {
 }
 
 .schedule-table {
-  column-count: 2;
   .heading {
     break-before: column;
   }
 
 }
 
+@media (min-width: 767px){
+  .schedule-table {
+    column-count: 2;
+  }
+}
 
 .sustainable {
   z-index: 50;
