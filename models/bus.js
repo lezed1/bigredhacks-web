@@ -22,7 +22,8 @@ var busSchema = new mongoose.Schema({
         email: String,
         college: String,
         id: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
-    }
+    },
+    customMessage: {type: String}
 });
 
 

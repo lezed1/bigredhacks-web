@@ -73,6 +73,13 @@ block admin_content
                                         span No bus captain assigned at the moment.
                                     else
                                         span #{bus.captain.name} (#{bus.captain.email})
+                                li.custom-message
+                                    b Custom Message:
+                                    .form-group.display-group
+                                        p.custom-message-par=bus.customMessage
+                                    .form-group.edit-group
+                                        input.edit-custom-message.form-control(type='text', name='maxcapacitynumber', value=bus.customMessage)
+
                             .modifybus.display-group
                                 button.btn.btn-success.editbus(type='button', name='editbus') edit
                                 button.btn.btn-danger.removebus(type='button', name='removebus') remove

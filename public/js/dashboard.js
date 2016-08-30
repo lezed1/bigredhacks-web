@@ -55,9 +55,7 @@ $(document).ready(function () {
                 busid: busid,
                 decision: decision
             },
-            success: function (data) {
-                callback(data);
-            },
+            success: callback,
             error: function (e) {
                 if (decision.toLowerCase() == "optout") {
                     alert('Error opting out! Please contact us at info@bigredhacks.com');
@@ -69,33 +67,42 @@ $(document).ready(function () {
         });
     };
 
-
     //Sign up for bus
-    $("#signup").on('click', function () {
+    $(".buttonParent").on('click', function () {
+        var btnId = $(this).find('input').prop('id');
         var businfobox = $(this).parents(".businfobox");
-        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
-            userBusDecision(businfobox.data("busid"), "signup", function (data) {
-                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) + 1;
-                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
-                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
-                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Signed Up")
-            });
-        }
+        userBusDecision(businfobox.data("busid"), btnId, function (data) {
+            var newMemberNumber = parseInt(businfobox.find(".currentnumber").data("currentnumber"));
+            var decisionText, newClass, propValue, newId;
+            if (btnId == 'signup') {
+                newMemberNumber++;
+                decisionText = 'Signed Up';
+                newClass = 'btn btn-danger';
+                propValue = 'opt out';
+                newId = 'optout';
+                $("#signup-message").show();
+                $("#optout-message").hide();
+            } else {
+                newMemberNumber--;
+                decisionText = 'Opt Out';
+                newClass = 'btn btn-success';
+                propValue = 'sign up';
+                newId = 'signup';
+                $("#optout-message").show();
+                $("#signup-message").hide();
+            }
+            
+            businfobox.find(".currentnumber").html(newMemberNumber.toString());
+            businfobox.find(".currentnumber").data("currentnumber", newMemberNumber.toString());
+            businfobox.find(".userbusdecision").html(decisionText);
+            $('#' + btnId).prop ({
+                id: newId,
+                value: propValue,
+                name: newId,
+                class: newClass
+            })
+        });
     });
-
-    //Opt out of bus
-    $("#optout").on('click', function () {
-        var businfobox = $(this).parents(".businfobox");
-        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
-            userBusDecision(businfobox.data("busid"), "optout", function (data) {
-                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) - 1;
-                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
-                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
-                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Opt Out")
-            });
-        }
-    });
-
 });
 
 
@@ -230,7 +237,7 @@ $('#rsvpForm').validate({
     }
 });
 
-// Make buttons more transparent after clicked on
+// Make buttons success-colored after clicked on
 $('#liability').click(function(){
     $(this)
         .removeClass('btn-danger')

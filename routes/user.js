@@ -393,8 +393,30 @@ module.exports = function (io) {
                     if (err) {
                         console.log(err);
                     }
-                    //travel receipt required if no bus
-                    if (bus == null) {
+                    // Shared function between control flow
+                    let _saveAndSubscribe = function _saveAndSubscribe() {
+                        async.parallel([
+                                function(cb) {
+                                    req.user.save(cb)
+                                },
+                                function(cb) {
+                                    helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
+                                }
+                            ], function(err, result) {
+                                if (err) {
+                                    console.error(err);
+                                    req.flash('error', 'An internal error has occurred.');
+                                } else {
+                                    req.flash('success', 'We have received your response!');
+                                }
+
+                                return res.redirect('/user/dashboard');
+                            }
+                        );
+                    };
+
+                    //travel receipt required if no bus and not from cornell
+                    if (bus == null && !req.user.internal.cornell_applicant) {
                         //fail if no receipt uploaded
                         if (!receipt) {
                             req.flash('error', "Please upload a travel receipt.");
@@ -412,26 +434,11 @@ module.exports = function (io) {
                                 req.flash('error', file);
                                 return res.redirect('/user/dashboard');
                             } else {
-                                req.flash('success', 'We have received your response!');
-                                req.user.internal.travel_receipt = file.filename;
-                                req.user.save(function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-
-                                    return res.redirect('/user/dashboard');
-                                });
+                                return _saveAndSubscribe();
                             }
                         })
-                    }
-                    else {
-                        req.flash('success', 'We have received your response!');
-                        req.user.save(function (err) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            return res.redirect('/user/dashboard');
-                        });
+                    } else {
+                        return _saveAndSubscribe();
                     }
                 });
             } else {

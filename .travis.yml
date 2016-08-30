@@ -1,0 +1,23 @@
+language: node_js
+sudo: required
+services:
+  - docker
+cache:
+   directories:
+     - node_modules
+node_js:
+  - node
+before_install:
+  - npm install -g node-gyp
+  - npm install -g grunt-cli grunt
+before_script:
+  - npm install
+  - npm install -g standard
+  - docker-compose build
+  - docker-compose up -d
+  - sleep 3
+  - ./bin/start-server.sh
+script:
+  - npm test
+after_script:
+  - docker-compose kill
