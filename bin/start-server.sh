@@ -3,4 +3,4 @@
 # Currently used by Travis to run integration tests.
 
 npm start &
-sleep 10
+sleep 20

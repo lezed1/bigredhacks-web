@@ -15,8 +15,8 @@ before_script:
   - npm install -g standard
   - docker-compose build
   - docker-compose up -d
+  - sleep 3
   - ./bin/start-server.sh
-  - sleep 30
 script:
   - npm test
 after_script:
