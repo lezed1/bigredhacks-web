@@ -68,7 +68,8 @@ router.post('/rollingDecision', makeRollingAnnouncement);
 
 router.post('/deadlineOverride', rsvpDeadlineOverride);
 
-router.post('hardware/transaction', transactHardware);
+router.post('/hardware/transaction', transactHardware);
+router.post('/hardware/inventory', setInventory);
 
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
@@ -920,6 +921,59 @@ function rsvpDeadlineOverride(req, res, next) {
 }
 
 /**
+ * @api {POST} /api/admin/hardware/inventory Set our internal hardware inventory.
+ * @apiname TransactHardware
+ * @apigroup Admin
+ *
+ * @apiParam {Number} quantity The quantity of hardware we own
+ * @apiParam {String} name The unique name of the hardware
+ **/
+function setInventory({body}, res, next) {
+    if (!body || !body.quantity || !body.name) {
+        return res.status(500).send('Missing quantity or name');
+    }
+
+    if (body.quantity <= 0) {
+        Inventory.find({name:body.name}).remove(function(err, result) {
+           if (err) {
+               return res.status(500).send(err);
+           }
+
+            return res.redirect('/admin/hardware');
+        });
+    } else {
+        Inventory.findOne({name:body.name}, function(err, item) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (!item) {
+                item = new Inventory ({
+                    name: body.name,
+                    quantityAvailable: body.quantity,
+                    quantityOwned: body.quantity
+                });
+            }
+
+            let itemsTransacted = item.quantityOwned - item.quantityAvailable;
+            if (body.quantity < itemsTransacted) {
+                return res.status(500).send('This change would create more items checked-out than available!');
+            } else {
+                item.quantityOwned = body.quantity;
+                item.quantityAvailable = item.quantityOwned - itemsTransacted;
+                item.save(function(err) {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+
+                    return res.redirect('/admin/hardware');
+                });
+            }
+        });
+    }
+}
+
+/**
  * @api {POST} /api/admin/hardware/transaction Check in or out hardware
  * @apiname TransactHardware
  * @apigroup Admin
@@ -933,6 +987,8 @@ function transactHardware({body}, res, next) {
     if (body.checkingOut === undefined || !body.email || body.quantity == undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
+
+    body.quantity = Number(body.quantity); // This formats as a string by default
 
     if (body.quantity < 1) {
         return res.status(500).send('Please send a positive quantity');
@@ -960,7 +1016,7 @@ function transactHardware({body}, res, next) {
             }
 
             if (body.checkingOut) {
-                if (item.quantityAvailable - body.quantity >= 0) {
+                if (result.item.quantityAvailable - body.quantity >= 0) {
                     if (!transaction) {
                         transaction = new InventoryTransaction({
                             student: result.student.id,
@@ -970,9 +1026,9 @@ function transactHardware({body}, res, next) {
                     }
 
                     transaction.quantity += body.quantity;
-                    item.quantityAvailable -= body.quantity;
+                    result.item.quantityAvailable -= body.quantity;
 
-                    item.save(function(err) {
+                    result.item.save(function(err) {
                         if (err) {
                             console.error(err);
                             return res.status(500).send('Could not save item');
@@ -983,7 +1039,7 @@ function transactHardware({body}, res, next) {
                                 return res.status(500).send('Error: could not save transaction');
                             }
 
-                            return res.sendStatus(200);
+                            return res.redirect('/admin/hardware');
                         });
                     });
                 } else {
@@ -996,14 +1052,14 @@ function transactHardware({body}, res, next) {
                     return res.status(500).send('User has not checked out that many items of that type!');
                 }
 
-                if (item.quantityAvailable + body.quantity >= item.quantityOwned) {
+                if (result.item.quantityAvailable + body.quantity >= result.item.quantityOwned) {
                     console.error('ERROR: return quantity exceeds owned quantity, ignoring this error');
                 }
 
                 transaction.quantity -= body.quantity;
-                item.quantityAvailable += body.quantity;
+                result.item.quantityAvailable += body.quantity;
 
-                item.save(function(err) {
+                result.item.save(function(err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');
@@ -1015,7 +1071,7 @@ function transactHardware({body}, res, next) {
                                 return res.status(500).send('Error: could not remove transaction');
                             }
 
-                            return res.sendStatus(200);
+                            return res.redirect('/admin/hardware');
                         });
                     } else {
                         transaction.save(function(err) {
@@ -1023,7 +1079,7 @@ function transactHardware({body}, res, next) {
                                 return res.status(500).send('Error: could not save transaction');
                             }
 
-                            return res.sendStatus(200);
+                            return res.redirect('/admin/hardware');
                         });
                     }
                 });

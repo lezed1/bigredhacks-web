@@ -16,6 +16,8 @@ var Team = require('../models/team.js');
 var Bus = require('../models/bus.js');
 var Reimbursements = require('../models/reimbursements.js');
 var TimeAnnotation = require('../models/time_annotation.js');
+var Inventory = require('../models/inventory.js');
+var InventoryTransaction = require('../models/inventory_transaction.js');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = {role: "user"};
@@ -617,7 +619,20 @@ router.get('/stats', function (req, res, next) {
  * @apiGroup AdminAuth
  */
     router.get('/hardware', function (req, res, next) {
-        res.render('admin/hardware');
+        async.parallel({
+            inventory: function inventory(cb) {
+                Inventory.find({}, null, {sort: {name: 'asc'}}, cb);
+            },
+            transactions: function transactions(cb) {
+                InventoryTransaction.find().populate('student inventory_id').exec(cb);
+            }
+        }, function(err, result) {
+            if (err) {
+                console.error(err);
+            }
+
+            res.render('admin/hardware', result);
+        });
     });
 
 /**
