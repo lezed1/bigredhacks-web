@@ -27,7 +27,6 @@ var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth')(app.io);
 var middle = require('./routes/middleware');
 
-app.locals.moment = require('moment');
 var passport = require("passport");
 
 //mongoose setup
@@ -142,6 +141,7 @@ app.use(function (err, req, res, next) {
 app.locals.viewHelper = require("./util/views_helper.js");
 app.locals.enums = require("./models/enum.js");
 app.locals.middlehelp = require("./routes/middleware").helper;
+app.locals.moment = require('moment');
 
 //@todo move to setup
 //@todo force synchronous
