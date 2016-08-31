@@ -17,7 +17,7 @@ block append main_content
                 for announcement in announcements.reverse()
                     tr
                         td #{announcement.message}
-                        td #{announcement.time}
+                        td #{moment(announcement.time).from()}
         .schedule
             h1 Schedule
                 .agenda

@@ -27,6 +27,7 @@ var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth')(app.io);
 var middle = require('./routes/middleware');
 
+app.locals.moment = require('moment');
 var passport = require("passport");
 
 //mongoose setup
