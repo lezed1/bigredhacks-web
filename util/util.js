@@ -113,4 +113,22 @@ util.grabCalendar = function grabCalendar(callback) {
     }
 };
 
+/**
+ * TODO: Refactor routes/user.js to reuse this function
+ * Return distance in miles between two coordinates/points
+ * @param coordinate1 [lon,lat] coordinate pair of first point
+ * @param coordinate2 [lon,lat] coordinate pair of second point
+ * @returns {number} represents distance in miles between the two colleges
+ */
+util.distanceBetweenPointsInMiles = function distanceBetweenPointsInMiles(coordinate1, coordinate2) {
+    var radius = 3958.754641; // Radius of the earth in miles
+    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
+    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
+        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = radius * c; // Distance in miles
+    return distance;
+};
+
 module.exports = util;
