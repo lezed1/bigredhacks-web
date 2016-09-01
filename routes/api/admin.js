@@ -1086,10 +1086,14 @@ function csvBus(req, res, next) {
         colleges: function colleges(cb) {
             Colleges.find({}, cb);
         }
-    }, function(err, {students, buses, colleges}) {
+    }, function(err, result) {
         if (err) {
             return console.error(err);
         }
+
+        let students = result.students;
+        let buses = result.buses;
+        let colleges = result.colleges;
 
         const MAX_BUS_PROXIMITY = 50; // TODO: Reuse this from routes/user.js
         let emailLists = {};
