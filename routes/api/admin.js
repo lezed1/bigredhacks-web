@@ -1065,7 +1065,7 @@ function cornellWaitlist(req, res, next) {
 }
 
 /**
- * @api {GET} /api/admin/csvBus Returns a csv of emails along bus routes for accepted students
+ * @api {GET} /api/admin/CsvBus Returns a csv of emails along bus routes for accepted students
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
