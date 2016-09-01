@@ -1065,17 +1065,20 @@ function cornellWaitlist(req, res, next) {
 }
 
 /**
- * @api {GET} /api/admin/csvBus Returns a csv of emails for requested bus information
+ * @api {GET} /api/admin/csvBus Returns a csv of emails along bus routes for accepted students
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
- * @apiParam {Boolean} optInOnly
- * @apiParam {Boolean} rsvpOnly
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in TODO: Implement
+ * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
     async.parallel({
         students: function students(cb) {
-            User.find({}, cb);
+            User.find({ $and : [
+                {'internal.status' : 'Accepted'},
+                {'internal.cornell_applicant' : false}
+                    ]}, cb);
         },
         buses: function bus(cb) {
             Bus.find({}, cb);
