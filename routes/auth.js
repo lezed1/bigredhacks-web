@@ -86,33 +86,6 @@ module.exports = function (io) {
         });
     });
 
-
-    /**
-     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
-     * @param name
-     * @param callback
-     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
-     * @private
-     */
-    function _findCollegeFromFilteredParam(name, callback) {
-        var collegeName = "";
-
-        //todo refactor
-        var schools = {
-            cornelltech: "Cornell Tech",
-            cornelluniversity: "Cornell University",
-            temple: "Temple University"
-        };
-
-        if (schools.hasOwnProperty(name)) {
-            collegeName = schools[name];
-        } else {
-            return callback(null, null);
-        }
-
-        College.findOne({name: collegeName}, callback);
-    }
-
     /**
      *
      * @param req User submitted object from registration
@@ -311,6 +284,31 @@ module.exports = function (io) {
     });
 
     /**
+     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
+     * @param name
+     * @param callback
+     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
+     * @private
+     */
+    function _findCollegeFromFilteredParam(name, callback) {
+        var collegeName = "";
+
+        //todo refactor
+        var schools = {
+            cornelltech: "Cornell Tech",
+            cornelluniversity: "Cornell University"
+        };
+
+        if (schools.hasOwnProperty(name)) {
+            collegeName = schools[name];
+        } else {
+            return callback(null, null);
+        }
+
+        College.findOne({name: collegeName}, callback);
+    }
+
+    /**
      * @api {GET} /register/:name GET registration page for Cornell (University and Tech) Students.
      * @apiName Register
      * @apiGroup Auth
@@ -337,30 +335,6 @@ module.exports = function (io) {
             }
         });
     });
-
-
-    /**
-     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
-     * @param name
-     * @param callback
-     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
-     * @private
-     */
-    function _findCollegeFromFilteredParam(name, callback) {
-        var collegeName = "";
-
-        //todo cleanup with underscore
-        if (name == "cornelltech") {
-            collegeName = "Cornell Tech";
-        }
-        else if (name == "cornelluniversity") {
-            collegeName = "Cornell University";
-        }
-        else {
-            return callback(null, null);
-        }
-        College.findOne({name: collegeName}, callback);
-    }
 
     /**
      * Return if a student is from cornell
