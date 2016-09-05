@@ -156,7 +156,7 @@ block dashboard_content
                                 li(data-collegeid=stop.collegeid)
                                     span.collegename= stop.collegename
                     li
-                        b Current Number on Bus:
+                        b Current Number on Bus:&nbsp;
                         span.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
                     li.maxcapacity
                         b Max Capacity:&nbsp;
@@ -168,7 +168,6 @@ block dashboard_content
                             span.userbusdecision Signed Up
                         else
                             span.userbusdecision Opt Out
-
                     if (user.internal.going)
                         if (bus.captain != null && bus.captain.name != null)
                             li.buscaptain
@@ -187,11 +186,11 @@ block dashboard_content
                                             td #{memb.email}
                                             td #{memb.college}
                         else
-                            b
-                            | We need a bus captain for your route! Email
-                            a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
-                            |  if you'd like to help out.
-
+                            br
+                            p
+                                | We need a bus captain for your route! Email
+                                a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                                |  if you'd like to help out.
                         if (!bus.confirmed)
                             p
                                 | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
@@ -204,8 +203,8 @@ block dashboard_content
                         else
                             p.long-text
                                 | This bus route has been <b>confirmed</b>.
-                                | Please sign up to secure your spot on the bus
-                                a(href="https://www.sharethebus.com/events/bigredhacks?outgoingCity=Buffalo%20-%20University%20at%20Buffalo&tripType=shuttle")  here.
+                                | Please sign up to secure your spot on the bus at
+                                a(href="https://www.sharethebus.com/events/bigredhacks")  https://www.sharethebus.com/events/bigredhacks.
                                 |  Signing up requires a $20 deposit that will be refunded upon arriving at Cornell.
                             if (bus.customMessage)
                                 p= bus.customMessage
