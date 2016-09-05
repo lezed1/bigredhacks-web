@@ -202,8 +202,10 @@ block dashboard_content
                                 | By opting in, you are only expressing your interest in riding the bus. We will reach out about
                                 | this deposit later on if we decide to send a bus on this route.
                         else
-                            p
+                            p.long-text
                                 | This bus route has been <b>confirmed</b>.
+                                | Please sign up to secure your spot on the bus
+                                a(href="https://www.sharethebus.com/events/bigredhacks?outgoingCity=Buffalo%20-%20University%20at%20Buffalo&tripType=shuttle") here. Signing up requires a $20 deposit that will be refunded upon arriving at Cornell.
                             if (bus.customMessage)
                                 p= bus.customMessage
                         .busselection
