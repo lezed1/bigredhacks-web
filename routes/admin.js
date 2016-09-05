@@ -16,8 +16,9 @@ var Team = require('../models/team.js');
 var Bus = require('../models/bus.js');
 var Reimbursements = require('../models/reimbursements.js');
 var TimeAnnotation = require('../models/time_annotation.js');
-var Inventory = require('../models/inventory.js');
-var InventoryTransaction = require('../models/inventory_transaction.js');
+var HardwareItem = require('../models/hardware_item.js');
+var HardwareItemCheckout = require('../models/hardware_item_checkout.js');
+var HardwareItemTransaction = require('../models/hardware_item_transaction.js');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = {role: "user"};
@@ -621,10 +622,13 @@ router.get('/stats', function (req, res, next) {
     router.get('/hardware', function (req, res, next) {
         async.parallel({
             inventory: function inventory(cb) {
-                Inventory.find({}, null, {sort: {name: 'asc'}}, cb);
+                HardwareItem.find({}, null, {sort: {name: 'asc'}}, cb);
+            },
+            checkouts: function checkouts(cb) {
+                HardwareItemCheckout.find().populate('student_id inventory_id').exec(cb);
             },
             transactions: function transactions(cb) {
-                InventoryTransaction.find().populate('student inventory_id').exec(cb);
+                HardwareItemTransaction.find().populate('studentId').exec(cb);
             }
         }, function(err, result) {
             if (err) {

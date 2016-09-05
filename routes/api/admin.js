@@ -13,8 +13,9 @@ var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
 var TimeAnnotation = require('../../models/time_annotation.js');
 var Announcement = require('../../models/announcement.js');
-var Inventory = require('../../models/inventory.js');
-var InventoryTransaction = require('../../models/inventory_transaction.js');
+var Inventory = require('../../models/hardware_item.js');
+var InventoryTransaction = require('../../models/hardware_item_checkout.js');
+var HardwareItemTransaction = require('../../models/hardware_item_transaction.js');
 
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
@@ -958,47 +959,41 @@ function rsvpDeadlineOverride(req, res, next) {
  * @apiParam {Number} quantity The quantity of hardware we own
  * @apiParam {String} name The unique name of the hardware
  **/
-function setInventory({body}, res, next) {
+function setInventory(req, res, next) {
+    let body = req.body;
     if (!body || !body.quantity || !body.name) {
         return res.status(500).send('Missing quantity or name');
     }
 
     if (body.quantity <= 0) {
-        Inventory.find({name:body.name}).remove(function(err, result) {
-           if (err) {
-               return res.status(500).send(err);
-           }
+        Inventory.find({name: body.name}).remove(function (err, result) {
+            if (err) {
+                return res.status(500).send(err);
+            }
 
             return res.redirect('/admin/hardware');
         });
     } else {
-        Inventory.findOne({name:body.name}, function(err, item) {
+        Inventory.findOne({name: body.name}, function (err, item) {
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (!item) {
-                item = new Inventory ({
+                item = new Inventory({
                     name: body.name,
                     quantityAvailable: body.quantity,
                     quantityOwned: body.quantity
                 });
             }
 
-            let itemsTransacted = item.quantityOwned - item.quantityAvailable;
-            if (body.quantity < itemsTransacted) {
-                return res.status(500).send('This change would create more items checked-out than available!');
-            } else {
-                item.quantityOwned = body.quantity;
-                item.quantityAvailable = item.quantityOwned - itemsTransacted;
-                item.save(function(err) {
-                    if (err) {
-                        return res.status(500).send(err);
-                    }
+            item.modifyOwnedQuantity(body.quantity, function (err) {
+                if (err) {
+                    return res.status(500).send(err);
+                }
 
-                    return res.redirect('/admin/hardware');
-                });
-            }
+                return res.redirect('/admin/hardware');
+            });
         });
     }
 }
@@ -1014,7 +1009,7 @@ function setInventory({body}, res, next) {
  * @apiParam {String} name The unique name of the hardware being transacted
  **/
 function transactHardware({body}, res, next) {
-    if (body.checkingOut === undefined || !body.email || body.quantity == undefined || !body.name) {
+    if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
 
@@ -1025,10 +1020,10 @@ function transactHardware({body}, res, next) {
     }
 
     async.parallel({
-        student: function(cb) {
+        student: function (cb) {
             User.findOne({email: body.email}, cb);
         },
-        item: function(cb) {
+        item: function (cb) {
             Inventory.findOne({name: body.name}, cb);
         }
     }, function (err, result) {
@@ -1041,7 +1036,7 @@ function transactHardware({body}, res, next) {
         }
 
         InventoryTransaction.findOne({
-            student: result.student.id,
+            student_id: result.student.id,
             inventory_id: result.item.id
         }, function (err, transaction) {
             if (err) {
@@ -1052,19 +1047,17 @@ function transactHardware({body}, res, next) {
                 if (result.item.quantityAvailable - body.quantity >= 0) {
                     if (!transaction) {
                         transaction = new InventoryTransaction({
-                            student: result.student.id,
+                            student_id: result.student.id,
                             inventory_id: result.item.id,
                             quantity: 0
                         });
                     }
 
                     transaction.quantity += body.quantity;
-                    result.item.quantityAvailable -= body.quantity;
 
-                    result.item.save(function (err) {
+                    result.item.transaction(-body.quantity, function (err) {
                         if (err) {
-                            console.error(err);
-                            return res.status(500).send('Could not save item');
+                            return res.status(500).send(err);
                         }
 
                         transaction.save(function (err) {
@@ -1072,7 +1065,26 @@ function transactHardware({body}, res, next) {
                                 return res.status(500).send('Error: could not save transaction');
                             }
 
-                            return res.redirect('/admin/hardware');
+                            email.sendHardwareEmail(
+                                true,
+                                body.quantity,
+                                result.item.name,
+                                result.student.name.first,
+                                result.student.name.last,
+                                result.student.email,
+                                function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not send hardware transaction email');
+                                    }
+
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, true, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
                         });
                     });
                 } else {
@@ -1090,31 +1102,54 @@ function transactHardware({body}, res, next) {
                 }
 
                 transaction.quantity -= body.quantity;
-                result.item.quantityAvailable += body.quantity;
 
-                result.item.save(function (err) {
+                result.item.transaction(body.quantity, function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');
                     }
-
-                    if (transaction.quantity == 0) {
-                        transaction.remove(function (err) {
+                    email.sendHardwareEmail(
+                        false,
+                        body.quantity,
+                        result.item.name,
+                        result.student.name.first,
+                        result.student.name.last,
+                        result.student.email,
+                        function (err) {
                             if (err) {
-                                return res.status(500).send('Error: could not remove transaction');
+                                return res.status(500).send('Error: could not send hardware transaction email');
                             }
 
-                            return res.redirect('/admin/hardware');
-                        });
-                    } else {
-                        transaction.save(function (err) {
-                            if (err) {
-                                return res.status(500).send('Error: could not save transaction');
-                            }
+                            if (transaction.quantity == 0) {
+                                transaction.remove(function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not remove transaction');
+                                    }
 
-                            return res.redirect('/admin/hardware');
-                        });
-                    }
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, false, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
+                            } else {
+                                transaction.save(function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not save transaction');
+                                    }
+
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, false, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
+                            }
+                    });
                 });
             }
         });
@@ -1248,6 +1283,7 @@ function cornellWaitlist(req, res, next) {
  * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
+    
     async.parallel({
         students: function students(cb) {
             User.find({ $and : [

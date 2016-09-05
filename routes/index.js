@@ -6,7 +6,7 @@ var helper = require('../util/routes_helper');
 var middle = require('./middleware.js');
 var async = require('async');
 var Announcement = require ('../models/announcement.js');
-var Inventory = require ('../models/inventory.js');
+var Inventory = require ('../models/hardware_item.js');
 
 var config = require('../config.js');
 var util = require('../util/util');
