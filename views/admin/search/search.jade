@@ -71,7 +71,7 @@ block admin_content
                         label(for='gender') Gender:&nbsp;
                         select#gender.form-control(name='gender')
                             option(value='') select
-                            +generateOptions(["Female", "Male", "Other", "Prefer Not To Specify"], {selected: (input.gender || "")})
+                            +generateOptions(enums.user.gender, {selected: (input.gender || "")})
             fieldset
                 button#submit.btn.btn-primary(type='submit') search
     #searchresults.col-md-12
