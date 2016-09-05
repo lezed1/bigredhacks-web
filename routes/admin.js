@@ -582,7 +582,7 @@ router.get('/checkin', function (req, res, next) {
  */
 router.get('/stats', function (req, res, next) {
     async.parallel([
-            function (callback) {
+            function timeAnnotations(callback) {
                 TimeAnnotation.find({}, function (err, ann) {
                     if (err) {
                         console.error(err);
@@ -591,7 +591,7 @@ router.get('/stats', function (req, res, next) {
                     }
                 });
             },
-            function (callback) {
+            function userRegistrationDates(callback) {
                 const projection = 'created_at';
                 User.find({}, projection, function (err, users) {
                     if (err) {
@@ -600,12 +600,37 @@ router.get('/stats', function (req, res, next) {
                         callback(null, users);
                     }
                 });
+            },
+            function majorDistribution(callback) {
+                User.aggregate(
+                    [
+                        {
+                            $match:
+                            { "internal.going" : true }
+                        },
+                        {
+                            $group: {
+                                _id: "$school.major",
+                                count: {$sum: 1}
+                            }
+                        },
+                        {
+                            $sort: {"count" : -1}
+                        },
+                        {
+                            $project: {
+                                "_id" : 0,
+                                "major" : "$_id",
+                                "count" : "$count"
+                            }
+                        }
+                    ], callback);
             }
-
         ], function (err, results) {
             res.render('admin/stats', {
                 annotations: results[0],
                 users: results[1],
+                majors: results[2]
             });
         }
     );
