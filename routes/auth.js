@@ -118,7 +118,7 @@ module.exports = function (io) {
      * @param req User submitted object from registration
      * @returns {*} A validation object
      */
-    function validateAll (req) {
+    function validateAll(req) {
         //todo reorder validations to be consistent with form
         return validator.validate(req, [
             'email',
@@ -142,7 +142,7 @@ module.exports = function (io) {
     }
 
     // Cornell has its own set of fields to validate
-    function _validateCornell (req) {
+    function _validateCornell(req) {
         //todo reorder validations to be consistent with form
         return validator.validate(req, [
             'email',
@@ -362,6 +362,17 @@ module.exports = function (io) {
         College.findOne({name: collegeName}, callback);
     }
 
+    /**
+     * Return if a student is from cornell
+     * @param {Object} college
+     * @returns boolean True if college name is Cornell, else false. This is used to differentiate extra external
+     *          routes from cornell university
+     * @private
+     */
+    function _isCornellian(college) {
+        return college.name == "Cornell University";
+    }
+
 
     /**
      * @api {POST} /register/:name register a new user from a specific school
@@ -447,7 +458,7 @@ module.exports = function (io) {
                                 major: req.body.major
                             },
                             internal: {
-                                cornell_applicant: true
+                                cornell_applicant: _isCornellian(college)
                             },
                             app: {
                                 github: req.body.github,
@@ -480,7 +491,7 @@ module.exports = function (io) {
                                     function onAppList(cb2) {
                                         helper.addSubscriber(config.mailchimp.l_cornell_applicants, newUser.email, newUser.name.first, newUser.name.last, cb2);
                                     }
-                                ], function(err) {
+                                ], function (err) {
                                     if (err) {
                                         console.error(err);
                                     }
@@ -492,17 +503,30 @@ module.exports = function (io) {
                                         }
 
                                         const email_subject = "BigRed//Hacks Registration Confirmation";
-                                        let template_content =
-                                            "<p>Hi " + newUser.name.full + ",</p><p>" +
-                                            "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                            "that we have received your registration." + "</p><p>" +
-                                            "You can log in to our website any time to view your status or update " +
-                                            "your resume.  We will initially have a lottery to admit Cornell students. " +
-                                            "After that, Cornellians will be admitted off the waitlist in order of registration." + "</p><p>" +
-                                            "If you haven't already, make sure to like us on Facebook and " +
-                                            "follow us on Twitter!" + "</p><p>" +
-                                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
-
+                                        var template_content;
+                                        if (_isCornellian(college)) {
+                                            template_content =
+                                                "<p>Hi " + newUser.name.full + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that we have received your registration." + "</p><p>" +
+                                                "You can log in to our website any time to view your status or update " +
+                                                "your resume.  We will initially have a lottery to admit Cornell students. " +
+                                                "After that, Cornellians will be admitted off the waitlist in order of registration." + "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
+                                        } else {
+                                            template_content =
+                                                "<p>Hi " + newUser.name.full + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that we have received your registration." + "</p><p>" +
+                                                "You can log in to our website any time to view your status or update " +
+                                                "your resume.  We will notify you if you are removed from the waitlist." +
+                                                "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
+                                        }
                                         var config = {
                                             "subject": email_subject,
                                             "from_email": "info@bigredhacks.com",
@@ -547,7 +571,7 @@ module.exports = function (io) {
      */
     router.post('/login',
         /** TODO: Uncomment this before 2017 registration. In 2016 we have a mix of cases so this cannot be used yet.
-        function (req, res, next) {
+         function (req, res, next) {
             if (req.body.email) {
                 req.body.email = req.body.email.toLowerCase();
             }
