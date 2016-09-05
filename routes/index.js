@@ -5,7 +5,6 @@ var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var middle = require('./middleware.js');
 var async = require('async');
-
 var Announcement = require ('../models/announcement.js');
 var Inventory = require ('../models/inventory.js');
 

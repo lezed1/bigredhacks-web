@@ -39,6 +39,8 @@ router.post('/np/set', setNoParticipation);
 router.delete('/removeBus', removeBus);
 router.put('/updateBus', updateBus);
 
+router.get('/csvBus', csvBus);
+
 router.post('/busCaptain', setBusCaptain);
 router.delete('/busCaptain', deleteBusCaptain);
 
@@ -70,6 +72,9 @@ router.post('/deadlineOverride', rsvpDeadlineOverride);
 
 router.post('/hardware/transaction', transactHardware);
 router.post('/hardware/inventory', setInventory);
+
+router.post('/cornellLottery', cornellLottery);
+router.post('/cornellWaitlist', cornellWaitlist);
 
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
@@ -173,14 +178,14 @@ function setUserRole(req, res, next) {
  */
 function makeRollingAnnouncement(req, res, next) {
     const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
+    const WAITLIST_ID = config.mailchimp.l_cornell_waitlisted;
+    const ACCEPTED_ID = config.mailchimp.l_cornell_accepted;
     User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
         if (err) console.log(err);
         else {
             // Do not want to overload by doing too many requests, so this will limit the async
             const maxRequestsAtATime = 3;
             async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
-                // TODO: Remove once we are more confident about this code (Issue #64)
-                console.log('beginning email tranaction for ' + recip.email);
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -197,15 +202,39 @@ function makeRollingAnnouncement(req, res, next) {
                         recip.internal.notificationStatus = recip.internal.status;
                         recip.internal.lastNotifiedAt = Date.now();
                         recip.internal.daysToRSVP = DAYS_TO_RSVP;
-                        recip.save(function(err) {
-                            if (err) {
-                                console.error("ERROR: User with email " + recip.email + " has been informed of their new status, but that was not saved in the database!");
-                                return void callback(err);
-                            } else {
-                                // TODO: Do not log this once we are more confident about this code (Issue #64)
-                                console.log(recip.email + ' has successfully been sent their new decision');
-                                return void callback();
+
+                        async.parallel([
+                            function saveUser(cb) {
+                                recip.save(cb);
+                            },
+                            function offWaitlist(cb) {
+                                if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
+                                    // We can get errors for non-termination reasons, so callback will only log error
+                                    helper.removeSubscriber(WAITLIST_ID, recip.email, function(err) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        cb();
+                                    });
+                                } else {
+                                    cb();
+                                }
+                            },
+                            function onAcceptedList(cb) {
+                                if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
+                                    // We can get errors for non-termination reasons, so callback will only log error
+                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, function(err) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        cb();
+                                    });
+                                } else {
+                                    cb();
+                                }
                             }
+                        ], function (err) {
+                            return void callback(err);
                         });
                     }
                 })
@@ -314,6 +343,7 @@ function updateBus(req, res, next) {
         bus.name = req.body.busname; //bus route name
         bus.stops = req.body.stops;
         bus.capacity = parseInt(req.body.buscapacity);
+        bus.customMessage = req.body.customMessage;
         bus.save(function (err) {
             if (err) {
                 console.error(err);
@@ -1010,7 +1040,10 @@ function transactHardware({body}, res, next) {
             return res.status(500).send('No such item');
         }
 
-        InventoryTransaction.findOne({student: result.student.id, inventory_id: result.item.id}, function (err, transaction) {
+        InventoryTransaction.findOne({
+            student: result.student.id,
+            inventory_id: result.item.id
+        }, function (err, transaction) {
             if (err) {
                 return res.status(500).send(err);
             }
@@ -1028,13 +1061,13 @@ function transactHardware({body}, res, next) {
                     transaction.quantity += body.quantity;
                     result.item.quantityAvailable -= body.quantity;
 
-                    result.item.save(function(err) {
+                    result.item.save(function (err) {
                         if (err) {
                             console.error(err);
                             return res.status(500).send('Could not save item');
                         }
 
-                        transaction.save(function(err) {
+                        transaction.save(function (err) {
                             if (err) {
                                 return res.status(500).send('Error: could not save transaction');
                             }
@@ -1059,14 +1092,14 @@ function transactHardware({body}, res, next) {
                 transaction.quantity -= body.quantity;
                 result.item.quantityAvailable += body.quantity;
 
-                result.item.save(function(err) {
+                result.item.save(function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');
                     }
 
                     if (transaction.quantity == 0) {
-                        transaction.remove(function(err) {
+                        transaction.remove(function (err) {
                             if (err) {
                                 return res.status(500).send('Error: could not remove transaction');
                             }
@@ -1074,7 +1107,7 @@ function transactHardware({body}, res, next) {
                             return res.redirect('/admin/hardware');
                         });
                     } else {
-                        transaction.save(function(err) {
+                        transaction.save(function (err) {
                             if (err) {
                                 return res.status(500).send('Error: could not save transaction');
                             }
@@ -1085,6 +1118,209 @@ function transactHardware({body}, res, next) {
                 });
             }
         });
+    });
+}
+
+/**
+ * @api {POST} /api/admin/cornellLottery Executes a gender-balanced (50-50) lottery for Cornell students, but does not send decision emails.
+ *              If, by some chance, the lottery runs out of a gender to accept, it falls back to accepting other genders.
+ *              Non-male-or-female genders are grouped under male for the purpose of preventing system-gaming and stats-ruining.
+ *              All non-accepted students are moved to waitlist.
+ * @apiname CornellLottery
+ * @apigroup Admin
+ *
+ * @apiParam {Number} numberToAccept
+ **/
+function cornellLottery(req, res, next) {
+    if (!req.body.numberToAccept || req.body.numberToAccept < 0) {
+        return res.status(500).send('Please provide a numberToAccept >= 0');
+    }
+    // Find all non-accepted Cornell students
+    User.find( { $and: [
+        {'internal.cornell_applicant' : true},
+        {'internal.status' : {$ne : 'Accepted'}},
+        {'internal.status' : {$ne : 'Rejected'}}
+    ]}, function (err, pendings) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send(err);
+        }
+
+        // Filter into sets for making decisions
+        let notFemale = [];
+        let female = [];
+        pendings.forEach(function(user) {
+            if (user.gender == "Female") {
+                female.push(user);
+            } else {
+                notFemale.push(user);
+            }
+        });
+
+        let accepted = [];
+        while (accepted.length < req.body.numberToAccept && (female.length || notFemale.length)) {
+            let _drawLottery = function _drawLottery(pool) {
+                if (pool.length > 0) {
+                    let randomIndex = Math.floor((Math.random() * pool.length));
+                    let winner = pool[randomIndex];
+                    accepted.push(winner);
+                    pool.splice(randomIndex, 1);
+                }
+            };
+
+            _drawLottery(female);
+            if (accepted.length >= req.body.numberToAccept) break;
+            _drawLottery(notFemale);
+        }
+
+        // Save decisions
+        accepted.forEach(function(x) {x.internal.status = 'Accepted'});
+        notFemale.forEach(function(x) {x.internal.status = 'Waitlisted'});
+        female.forEach(function(x) {x.internal.status = 'Waitlisted'});
+
+        async.parallel( [
+            function (cb) {
+                async.each(accepted, function(user, callback) {user.save(callback)}, cb);
+            },
+            function (cb) {
+                async.each(notFemale, function(user, callback) {user.save(callback)}, cb);
+            },
+            function (cb) {
+                async.each(female, function(user, callback) {user.save(callback)}, cb);
+            }
+        ], function(err){
+            if (err) {
+                console.error('ERROR in lottery: ' + err);
+                req.flash('error', 'Error in lottery');
+                return res.redirect('/admin/dashboard');
+            }
+
+            req.flash('success', 'Lottery successfully performed. ' + accepted.length + ' have been accepted.');
+            return res.redirect('/admin/dashboard');
+        });
+    });
+}
+
+/**
+ * @api {POST} /api/admin/cornellWaitlist Moves numberToAccept Cornell students out of waitlist and into accepted pool in app date order.
+ * @apiname CornellWaitlist
+ * @apigroup Admin
+ *
+ * @apiParam {Number} numberToAccept
+ **/
+function cornellWaitlist(req, res, next) {
+    // Find all non-accepted Cornell students
+    if (!req.body.numberToAccept || req.body.numberToAccept <= 0){
+        return res.status(500).send('Need a positive numberToAccept');
+    }
+
+    User.find( { $and: [
+        {'internal.cornell_applicant' : true},
+        {'internal.status' : {$ne : 'Accepted'}},
+        {'internal.status' : {$ne : 'Rejected'}}
+    ]}).sort( {'created_at' : 'asc'} ).exec(function (err, pendings) {
+        let numAccepted = 0;
+        pendings.forEach(function (student) {
+            if (numAccepted < req.body.numberToAccept) {
+                student.internal.status = 'Accepted';
+                numAccepted++;
+            }
+        });
+
+        async.each(pendings, function(student, cb) {student.save(cb)}, function(err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send(err);
+            }
+
+            req.flash('success', 'Successfully moved ' + numAccepted + ' students off the waitlist!');
+            return res.redirect('/admin/dashboard');
+        });
+    });
+}
+
+/**
+ * @api {GET} /api/admin/CsvBus Returns a csv of emails along bus routes for accepted students
+ * @apiname CornellWaitlist
+ * @apigroup Admin
+ *
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in TODO: Implement
+ * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
+ **/
+function csvBus(req, res, next) {
+    async.parallel({
+        students: function students(cb) {
+            User.find({ $and : [
+                {'internal.status' : 'Accepted'},
+                {'internal.cornell_applicant' : false}
+                    ]}, cb);
+        },
+        buses: function bus(cb) {
+            Bus.find({}, cb);
+        },
+        colleges: function colleges(cb) {
+            Colleges.find({}, cb);
+        }
+    }, function(err, result) {
+        if (err) {
+            return console.error(err);
+        }
+
+        let students = result.students;
+        let buses = result.buses;
+        let colleges = result.colleges;
+
+        const MAX_BUS_PROXIMITY = 50; // TODO: Reuse this from routes/user.js
+        let emailLists = {};
+        for (let bus of buses) {
+            emailLists[bus.name] = {
+                name: bus.name,
+                emails: []
+            };
+        }
+
+        // Convert college list to college map
+        let collegeMap = {};
+        for (let college of colleges) {
+            collegeMap[college._id] = college;
+        }
+
+        // Perform expensive computation to map students to closest route.
+        for (let bus of buses) {
+            for (let stop of bus.stops) {
+                for (let student of students) {
+                    let stopCollege = collegeMap[stop.collegeid];
+                    let studentCollege = collegeMap[student.school.id];
+                    let dist = util.distanceBetweenPointsInMiles(stopCollege.loc.coordinates, studentCollege.loc.coordinates);
+                    if (dist < MAX_BUS_PROXIMITY) {
+                        if (!student.tempDist || student.tempDist > dist) {
+                            student.tempDist = dist;
+                            student.tempRoute = bus;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Populate emails
+        for (let student of students) {
+            if (student.tempRoute) {
+                emailLists[student.tempRoute.name].emails.push(student.email);
+            }
+        }
+
+        let csv = '';
+        // Populate csv
+        for (let z in emailLists) {
+            if (emailLists.hasOwnProperty(z)) {
+                let bus = emailLists[z];
+                csv += bus.name;
+                csv += '\n';
+                bus.emails.forEach(x=>csv+= x + ',\n');
+            }
+        }
+
+        return res.status(200).send(csv);
     });
 }
 

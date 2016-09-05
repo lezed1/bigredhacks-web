@@ -272,7 +272,7 @@ module.exports = function (io) {
                 req.flash('error', "Error parsing form.");
                 return res.redirect('/user/dashboard');
             }
-            //console.log(files);
+
             var resume = files.resumeinput[0];
             var options = {};
             // make sure the user has had a resume
@@ -283,28 +283,33 @@ module.exports = function (io) {
 
             helper.uploadFile(resume, options, function (err, file) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     req.flash('error', "File upload failed.");
-                }
-                if (typeof file === "string") {
+                    return res.redirect('/user/dashboard');
+                } else if (typeof file === "string") {
                     req.flash('error', file);
-                }
-                else {
-                    req.flash('success', 'Resume successfully updated');
-
-                    // Actually update user's resume
-                    var user = req.user;
-                    if (user) {
-                        user.app.resume = file.filename; // TODO: We may need to validate before saving here
-                        user.save ( function (err, doc) {
-                           if (err) console.log(err);
-                        });
-                    } else {
-                        console.log('No user sent, can\'t update resume!');
-                    }
+                    return res.redirect('/user/dashboard');
                 }
 
-                return res.redirect('/user/dashboard');
+                // Actually update user's resume
+                var user = req.user;
+                if (user) {
+                    user.app.resume = file.filename; // TODO: We may need to validate before saving here
+                    user.save ( function (err) {
+                       if (err)  {
+                           console.error(err);
+                           req.flash('error', 'Error in saving resume');
+                           return res.redirect('/user/dashboard');
+                       }
+
+                        req.flash('success', 'Resume successfully updated');
+                        return res.redirect('/user/dashboard');
+                    });
+                } else {
+                    console.error('No user sent, can\'t update resume!');
+                    req.flash('error', 'Error in user validation');
+                    return res.redirect('/user/dashboard');
+                }
             })
         })
     });
@@ -388,8 +393,30 @@ module.exports = function (io) {
                     if (err) {
                         console.log(err);
                     }
-                    //travel receipt required if no bus
-                    if (bus == null) {
+                    // Shared function between control flow
+                    let _saveAndSubscribe = function _saveAndSubscribe() {
+                        async.parallel([
+                                function(cb) {
+                                    req.user.save(cb)
+                                },
+                                function(cb) {
+                                    helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
+                                }
+                            ], function(err, result) {
+                                if (err) {
+                                    console.error(err);
+                                    req.flash('error', 'An internal error has occurred.');
+                                } else {
+                                    req.flash('success', 'We have received your response!');
+                                }
+
+                                return res.redirect('/user/dashboard');
+                            }
+                        );
+                    };
+
+                    //travel receipt required if no bus and not from cornell
+                    if (bus == null && !req.user.internal.cornell_applicant) {
                         //fail if no receipt uploaded
                         if (!receipt) {
                             req.flash('error', "Please upload a travel receipt.");
@@ -407,26 +434,11 @@ module.exports = function (io) {
                                 req.flash('error', file);
                                 return res.redirect('/user/dashboard');
                             } else {
-                                req.flash('success', 'We have received your response!');
-                                req.user.internal.travel_receipt = file.filename;
-                                req.user.save(function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-
-                                    return res.redirect('/user/dashboard');
-                                });
+                                return _saveAndSubscribe();
                             }
                         })
-                    }
-                    else {
-                        req.flash('success', 'We have received your response!');
-                        req.user.save(function (err) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            return res.redirect('/user/dashboard');
-                        });
+                    } else {
+                        return _saveAndSubscribe();
                     }
                 });
             } else {
