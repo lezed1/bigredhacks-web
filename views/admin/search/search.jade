@@ -67,6 +67,11 @@ block admin_content
                         select#notgoing.form-control(name='notgoing')
                             option(value='') select
                             +generateOptions([true, false], {selected: (input.notgoing || "")})
+                    .form-group
+                        label(for='gender') Gender:&nbsp;
+                        select#gender.form-control(name='gender')
+                            option(value='') select
+                            +generateOptions(enums.user.gender, {selected: (input.gender || "")})
             fieldset
                 button#submit.btn.btn-primary(type='submit') search
     #searchresults.col-md-12
