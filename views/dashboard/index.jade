@@ -124,101 +124,102 @@ block dashboard_content
                 | We're accepting Cornell students based on a lottery system this year.
                 | Keep an eye on this page and your email for a decision!
 
-    if (!cornellian)
-        //only show transportation, team, and rsvp sections for accepted applicants
         if status == "accepted"
-            +sectionHeading("Transportation")
 
-            if bus == null
-                p Allowance: $#{reimbursement.amount}
-                p.long-text
-                    | Allowances are based on the general cost of inexpensive transportation in your area. You may select any method
-                    |  of transportation, but we will only reimburse you up to the amount above. If you believe that this amount is unfair,
-                    |  then please reach out to us and we'll make adjustments as necessary.
-                p.long-text
-                    | Notes for drivers: We ask that you make every effort to carpool with as many students
-                    |  as possible in your school. We will provide a Facebook page for you to find others in your area. Parking
-                    |  is free at Cornell after 5pm on Friday through Sunday. We are not responsible for any fines for parking
-                    |  violations.
-                p
-                    | Please send any questions or concerns to
-                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
-                    | .
-            else
-                p= bus.message
-                .businfobox(data-busid=bus.id)
-                    .busname
-                    p#signup-message You have signed up for a bus!
-                    p#optout-message You have opted out of a bus!
-                    ul.businfo
-                        li.busstopslist
-                            b Bus Stops:
-                            ul.busstops
-                                for stop in bus.stops
-                                    li(data-collegeid=stop.collegeid)
-                                        span.collegename= stop.collegename
-                        li
-                            b Current Number on Bus:&nbsp;
-                            span.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
-                        li.maxcapacity
-                            b Max Capacity:&nbsp;
-                            span.maxcapacitynumber= bus.capacity
+            //only show transportation, team, and rsvp sections for accepted applicants
+            if (!cornellian)
+                +sectionHeading("Transportation")
 
-                        li
-                            b Your Current Bus Decision:&nbsp;
-                            if user.internal.busid == bus.id
-                                span.userbusdecision Signed Up
-                            else
-                                span.userbusdecision Opt Out
-                        if (user.internal.going)
-                            if (bus.captain != null && bus.captain.name != null)
-                                li.buscaptain
-                                    b Bus Captain:
-                                    |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
-                                if (user.internal.busCaptain)
-                                    h3 You are the bus captain for this route. Here is the current list of riders for your route:
-                                    table.table.table-striped
-                                        tr
-                                            th Name
-                                            th Email
-                                            th University
-                                        for memb in bus.members
-                                            tr
-                                                td #{memb.name}
-                                                td #{memb.email}
-                                                td #{memb.college}
-                            else
-                                br
-                                p
-                                    | We need a bus captain for your route! Email
-                                    a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
-                                    |  if you'd like to help out.
-                            if (!bus.confirmed)
-                                p
-                                    | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
-                                    | whether to send this bus.
-                                p
-                                    | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
-                                    | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
-                                    | By opting in, you are only expressing your interest in riding the bus. We will reach out about
-                                    | this deposit later on if we decide to send a bus on this route.
-                            else
-                                p.long-text
-                                    | This bus route has been <b>confirmed</b>.
-                                    | Please sign up to secure your spot on the bus at
-                                    a(href="https://www.sharethebus.com/events/bigredhacks")  https://www.sharethebus.com/events/bigredhacks.
-                                    |  Signing up requires a $20 deposit that will be refunded upon arriving at Cornell.
-                                if (bus.customMessage)
-                                    p= bus.customMessage
-                            .busselection
+                if bus == null
+                    p Allowance: $#{reimbursement.amount}
+                    p.long-text
+                        | Allowances are based on the general cost of inexpensive transportation in your area. You may select any method
+                        |  of transportation, but we will only reimburse you up to the amount above. If you believe that this amount is unfair,
+                        |  then please reach out to us and we'll make adjustments as necessary.
+                    p.long-text
+                        | Notes for drivers: We ask that you make every effort to carpool with as many students
+                        |  as possible in your school. We will provide a Facebook page for you to find others in your area. Parking
+                        |  is free at Cornell after 5pm on Friday through Sunday. We are not responsible for any fines for parking
+                        |  violations.
+                    p
+                        | Please send any questions or concerns to
+                        a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
+                        | .
+                else
+                    p= bus.message
+                    .businfobox(data-busid=bus.id)
+                        .busname
+                        p#signup-message You have signed up for a bus!
+                        p#optout-message You have opted out of a bus!
+                        ul.businfo
+                            li.busstopslist
+                                b Bus Stops:
+                                ul.busstops
+                                    for stop in bus.stops
+                                        li(data-collegeid=stop.collegeid)
+                                            span.collegename= stop.collegename
+                            li
+                                b Current Number on Bus:&nbsp;
+                                span.currentnumber(data-currentnumber=bus.members.length) #{bus.members.length}
+                            li.maxcapacity
+                                b Max Capacity:&nbsp;
+                                span.maxcapacitynumber= bus.capacity
+
+                            li
+                                b Your Current Bus Decision:&nbsp;
                                 if user.internal.busid == bus.id
-                                    .buttonParent
-                                       input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                    span.userbusdecision Signed Up
                                 else
-                                    .buttonParent
-                                       input#signup.btn.btn-success(type='button', value='sign up', name='signup')
-                        else
-                            p You must RSVP before you can sign up for the bus.
+                                    span.userbusdecision Opt Out
+                            if (user.internal.going)
+                                if (bus.captain != null && bus.captain.name != null)
+                                    li.buscaptain
+                                        b Bus Captain:
+                                        |  #{bus.captain.name} (#{bus.captain.college}, #{bus.captain.email})
+                                    if (user.internal.busCaptain)
+                                        h3 You are the bus captain for this route. Here is the current list of riders for your route:
+                                        table.table.table-striped
+                                            tr
+                                                th Name
+                                                th Email
+                                                th University
+                                            for memb in bus.members
+                                                tr
+                                                    td #{memb.name}
+                                                    td #{memb.email}
+                                                    td #{memb.college}
+                                else
+                                    br
+                                    p
+                                        | We need a bus captain for your route! Email
+                                        a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                                        |  if you'd like to help out.
+                                if (!bus.confirmed)
+                                    p
+                                        | This route is currently <b>TENTATIVE</b>. We will monitor RSVPs in order to decide
+                                        | whether to send this bus.
+                                    p
+                                        | We're doing buses differently this year. Later on, you'll have to make a $20 deposit in order to
+                                        | actually reserve your spot on the bus. This deposit will be fully refunded as long as you attend BigRed//Hacks.
+                                        | By opting in, you are only expressing your interest in riding the bus. We will reach out about
+                                        | this deposit later on if we decide to send a bus on this route.
+                                else
+                                    p.long-text
+                                        | This bus route has been <b>confirmed</b>.
+                                        | Please sign up to secure your spot on the bus at
+                                        a(href="https://www.sharethebus.com/events/bigredhacks")  https://www.sharethebus.com/events/bigredhacks.
+                                        |  Signing up requires a $20 deposit that will be refunded upon arriving at Cornell.
+                                    if (bus.customMessage)
+                                        p= bus.customMessage
+                                .busselection
+                                    if user.internal.busid == bus.id
+                                        .buttonParent
+                                           input#optout.btn.btn-danger(type='button', value='opt out', name='optout')
+                                    else
+                                        .buttonParent
+                                           input#signup.btn.btn-success(type='button', value='sign up', name='signup')
+                            else
+                                p You must RSVP before you can sign up for the bus.
 
             //Dashboard content for both General and Cornell
             +sectionHeading("RSVP")
