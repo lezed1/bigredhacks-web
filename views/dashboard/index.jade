@@ -124,9 +124,10 @@ block dashboard_content
                 | We're accepting Cornell students based on a lottery system this year.
                 | Keep an eye on this page and your email for a decision!
 
-    if (!cornellian)
+    if status == "accepted"
+
         //only show transportation, team, and rsvp sections for accepted applicants
-        if status == "accepted"
+        if (!cornellian)
             +sectionHeading("Transportation")
 
             if bus == null
@@ -220,92 +221,92 @@ block dashboard_content
                         else
                             p You must RSVP before you can sign up for the bus.
 
-            //Dashboard content for both General and Cornell
-            +sectionHeading("RSVP")
-            if (user.internal.going == null)
-                form#rsvpForm(method='post', action='/user/rsvp', enctype='multipart/form-data')
+        //Dashboard content for both General and Cornell
+        +sectionHeading("RSVP")
+        if (user.internal.going == null)
+            form#rsvpForm(method='post', action='/user/rsvp', enctype='multipart/form-data')
+                .form-group
+                    label(for='rsvpDropdown') Are you coming? *
+                    select#rsvpDropdown.form-control(name='rsvpDropdown', required='')
+                        option(value='') select
+                        +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
+                #rsvp-no(style='display:none')
                     .form-group
-                        label(for='rsvpDropdown') Are you coming? *
-                        select#rsvpDropdown.form-control(name='rsvpDropdown', required='')
-                            option(value='') select
-                            +generateOptions("yes no".split(" "), {selected: (input.rsvp || "")})
-                    #rsvp-no(style='display:none')
-                        .form-group
-                            button#rsvp-no-button.btn.btn-success(type='submit', name='rsvpsubmit') submit
-                    #rsvp-yes(style='display:none')
-                        if bus == null
-                                if (!cornellian)
-                                    .form-group
-                                        label(for='receipt') Travel Receipt (.pdf, .jpg, .png, max: 15MB) *
-                                        p
-                                            | Upload a copy of receipt for a roundtrip ticket. If you
-                                            |  are driving, then include a screenshot of your route on Google Maps.
-                                        .wrapper
-                                            input#receipt.form-control.filepicker-bootstrap(data-label='upload', type='file', name='receipt', accept='.pdf,image/jpg,image/png')
-                                br
-                            p We participate in Major League Hacking (MLH) as a MLH Member Event. You authorize us to share certain application/registration information for event administration, ranking, MLH administration, pre and post-event informational e-mails, and occasional messages about hackathons in line with the MLH Privacy Policy.
-                            p
-                                | Please click the two following links and read the
-                                | documents carefully.
-                            .form-group
-                                label
-                                    input#agreements-viewed(name='agreements-viewed', hidden=true)
-                                    a#liability.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
-                                    a#code-of-conduct.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
-                                    br
-                            .form-group
-                                .checkbox
-                                    label
-                                        input#legal.checkbox(type='checkbox', name='legal', value='true')
-                                        | I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and
-                                        |  Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
-                                        |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
-                            .form-group
-                                button#rsvp-yes-button.btn.btn-danger(type='submit', name='rsvpsubmit') submit
-            else
-                if user.internal.going
-                    p You told us that you are going to BigRed//Hacks.
-                    p
-                        | If you can't make it, please let us know at
-                        a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
-                        | .
-                else
-                    p
-                        | You told us that you weren't going to BigRed//Hacks.  If your
-                        | plans have changed, please let us know as know at
-                        a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
-                        | .
-                br
-
-            if (!cornellian)
-                +sectionHeading("my team")
-                div
-                    if middlehelp.isRegistrationOpen()
-                        p you may add up to 4 team members. cornell students do not have a team id, click the checkbox instead.
-                        form.form-inline(action='/user/team/add', method='POST')
-                            label enter teammate id
-                            span.label-helper me: #{user.pubid}
+                        button#rsvp-no-button.btn.btn-success(type='submit', name='rsvpsubmit') submit
+                #rsvp-yes(style='display:none')
+                    if bus == null
+                            if (!cornellian)
+                                .form-group
+                                    label(for='receipt') Travel Receipt (.pdf, .jpg, .png, max: 15MB) *
+                                    p
+                                        | Upload a copy of receipt for a roundtrip ticket. If you
+                                        |  are driving, then include a screenshot of your route on Google Maps.
+                                    .wrapper
+                                        input#receipt.form-control.filepicker-bootstrap(data-label='upload', type='file', name='receipt', accept='.pdf,image/jpg,image/png')
                             br
-                            .form-group
-                                label.sr-only(for='addteamid') enter teammate id
-                                input#addteamid.form-control(type='text', name='userid', placeholder='user id')
-                            button#addteamid-submit.btn.btn-blue(type='submit', disabled='') add a teammate
-                    ul.team-list
-                        if team.length == 0
-                            if middlehelp.isRegistrationOpen()
-                                p You are not in a team.
-                        else
-                            for member in team
-                                li= member.name
-                    if middlehelp.isRegistrationOpen()
-                        if team.length > 0
-                            a.btn.btn-blue(href="/user/team/leave") Remove yourself from this team.
-                if middlehelp.isRegistrationOpen()
-                    .form-group
-                        .checkbox
+                        p We participate in Major League Hacking (MLH) as a MLH Member Event. You authorize us to share certain application/registration information for event administration, ranking, MLH administration, pre and post-event informational e-mails, and occasional messages about hackathons in line with the MLH Privacy Policy.
+                        p
+                            | Please click the two following links and read the
+                            | documents carefully.
+                        .form-group
                             label
-                                input#cornellteamcheck.checkbox(type="checkbox",value="",checked=user.internal.teamwithcornell)
-                                | I plan to work with (a) Cornell student(s).
+                                input#agreements-viewed(name='agreements-viewed', hidden=true)
+                                a#liability.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+                                a#code-of-conduct.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+                                br
+                        .form-group
+                            .checkbox
+                                label
+                                    input#legal.checkbox(type='checkbox', name='legal', value='true')
+                                    | I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and
+                                    |  Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
+                                    |  understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
+                        .form-group
+                            button#rsvp-yes-button.btn.btn-danger(type='submit', name='rsvpsubmit') submit
+        else
+            if user.internal.going
+                p You told us that you are going to BigRed//Hacks.
+                p
+                    | If you can't make it, please let us know at
+                    a(href='mailto:info@bigredhacks.com?Subject=Transportation')&nbsp;info@bigredhacks.com
+                    | .
+            else
+                p
+                    | You told us that you weren't going to BigRed//Hacks.  If your
+                    | plans have changed, please let us know as know at
+                    a(href='mailto:info@bigredhacks.com?subject=Transportation')&nbsp;info@bigredhacks.com
+                    | .
+            br
+
+        if (!cornellian)
+            +sectionHeading("my team")
+            div
+                if middlehelp.isRegistrationOpen()
+                    p you may add up to 4 team members. cornell students do not have a team id, click the checkbox instead.
+                    form.form-inline(action='/user/team/add', method='POST')
+                        label enter teammate id
+                        span.label-helper me: #{user.pubid}
+                        br
+                        .form-group
+                            label.sr-only(for='addteamid') enter teammate id
+                            input#addteamid.form-control(type='text', name='userid', placeholder='user id')
+                        button#addteamid-submit.btn.btn-blue(type='submit', disabled='') add a teammate
+                ul.team-list
+                    if team.length == 0
+                        if middlehelp.isRegistrationOpen()
+                            p You are not in a team.
+                    else
+                        for member in team
+                            li= member.name
+                if middlehelp.isRegistrationOpen()
+                    if team.length > 0
+                        a.btn.btn-blue(href="/user/team/leave") Remove yourself from this team.
+            if middlehelp.isRegistrationOpen()
+                .form-group
+                    .checkbox
+                        label
+                            input#cornellteamcheck.checkbox(type="checkbox",value="",checked=user.internal.teamwithcornell)
+                            | I plan to work with (a) Cornell student(s).
 
     +sectionHeading("resume")
     a.btn.btn-blue(href=resumeLink, target='_blank') view my resume
