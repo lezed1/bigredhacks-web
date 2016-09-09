@@ -1055,7 +1055,7 @@ function transactHardware({body}, res, next) {
 
                     transaction.quantity += body.quantity;
 
-                    result.item.transaction(-body.quantity, function (err) {
+                    result.item.changeQuantity(-body.quantity, function (err) {
                         if (err) {
                             return res.status(500).send(err);
                         }
@@ -1097,13 +1097,9 @@ function transactHardware({body}, res, next) {
                     return res.status(500).send('User has not checked out that many items of that type!');
                 }
 
-                if (result.item.quantityAvailable + body.quantity >= result.item.quantityOwned) {
-                    console.error('ERROR: return quantity exceeds owned quantity, ignoring this error');
-                }
-
                 transaction.quantity -= body.quantity;
 
-                result.item.transaction(body.quantity, function (err) {
+                result.item.changeQuantity(body.quantity, function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');

@@ -628,7 +628,7 @@ router.get('/stats', function (req, res, next) {
                 HardwareItemCheckout.find().populate('student_id inventory_id').exec(cb);
             },
             transactions: function transactions(cb) {
-                HardwareItemTransaction.find().populate('studentId').exec(cb);
+                HardwareItemTransaction.find().populate('student_id').exec(cb);
             }
         }, function(err, result) {
             if (err) {

@@ -23,7 +23,7 @@ hardwareItemSchema.methods.modifyOwnedQuantity = function modifyOwnedQuantity(ne
     this.save(callback);
 };
 
-hardwareItemSchema.methods.transaction = function transaction(changeInQuantity, callback) {
+hardwareItemSchema.methods.changeQuantity = function changeQuantity(changeInQuantity, callback) {
     this.quantityAvailable += changeInQuantity;
     if (this.quantityAvailable > this.quantityOwned) {
         return callback('Quantity available exceeds quantity owned!');
@@ -35,7 +35,7 @@ hardwareItemSchema.methods.transaction = function transaction(changeInQuantity, 
 };
 
 // Hooks
-hardwareItemSchema.pre('save', function(next) {
+hardwareItemSchema.pre('save', function checkQuantityInvariant(next) {
     if (this.quantityAvailable > this.quantityOwned) {
         return next(new Error('Quantity Available Exceeds Quantity Owned'));
     }
