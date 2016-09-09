@@ -1073,12 +1073,22 @@ function cornellWaitlist(req, res, next) {
  * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
+    let query = [
+        {'internal.status' : 'Accepted'},
+        {'internal.cornell_applicant' : false}
+    ];
+
+    if (req.body.optInOnly) {
+        query.push({'internal.busid': {$ne : null}});
+    }
+
+    if (req.body.rsvpOnly) {
+        query.push({'internal.going' : true});
+    }
+
     async.parallel({
         students: function students(cb) {
-            User.find({ $and : [
-                {'internal.status' : 'Accepted'},
-                {'internal.cornell_applicant' : false}
-                    ]}, cb);
+            User.find({ $and : query}, cb);
         },
         buses: function bus(cb) {
             Bus.find({}, cb);
@@ -1090,7 +1100,7 @@ function csvBus(req, res, next) {
         if (err) {
             return console.error(err);
         }
-
+        
         let students = result.students;
         let buses = result.buses;
         let colleges = result.colleges;
