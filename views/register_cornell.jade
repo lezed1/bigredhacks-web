@@ -7,12 +7,17 @@ block vars
     - var actionUrl = "/register/" + urlparam; //- url the form should submit to
     - var multipart = true; //- whether the form has multipart data
     - var cornell_reg = (college.name == "Cornell University");
+    - var cornell_tech_reg = (college.name == "Cornell Tech");
 
 block append description
     if (cornell_reg)
         h1 Cornell Registration
         p This year, we're admitting Cornell students using a lottery system. Apply by <strong> September 6 </strong> to be entered!
         p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon. Don't miss this amazing event, sign up now!
+        p If you are a Cornell Tech student, please register <a href="/register/cornelltech">here</a>.
+    else if (cornell_tech_reg)
+        h1 Cornell Tech Registration
+        p This is a registration form for Cornell Tech students. After registering, please give us some time to process your registration.
     else
         h1 #{college.name} Registration
         p This is a special case late reigistration form. Registration is by permission only. After registering, you will be automatically waitlisted. If we have given you permission to attend, please leave us some time to unwaitlist you.
