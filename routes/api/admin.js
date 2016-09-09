@@ -1069,8 +1069,6 @@ function cornellWaitlist(req, res, next) {
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
- * @apiParam {Boolean} optInOnly Only grab emails of those opted in TODO: Implement
- * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
     let query = [
@@ -1100,7 +1098,7 @@ function csvBus(req, res, next) {
         if (err) {
             return console.error(err);
         }
-        
+
         let students = result.students;
         let buses = result.buses;
         let colleges = result.colleges;
