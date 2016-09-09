@@ -18,6 +18,17 @@ block append admin_content
             button#resume-save.btn.btn-blue(type='submit') Add
     div#annotationlist
 
+    h2 Major Distribution for RSVP'd
+    table#majors-table.table.table-striped
+        tr
+            th Major
+            th Quantity
+
+        for major in majors
+          tr
+            td #{major.major}
+            td #{major.count}
+
 block append footer
     script(src='//d3js.org/d3.v3.min.js')
     script(src='/js/vendor/c3.min.js')
