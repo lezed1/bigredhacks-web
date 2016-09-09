@@ -573,7 +573,6 @@ function schoolReimbursementsPost(req, res) {
             console.error(err);
             return res.sendStatus(500);
         }
-
         if (rem) {
             console.log("Entry already exists.");
             return res.sendStatus(500);
@@ -1069,6 +1068,8 @@ function cornellWaitlist(req, res, next) {
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in 
+ * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd
  **/
 function csvBus(req, res, next) {
     let query = [
