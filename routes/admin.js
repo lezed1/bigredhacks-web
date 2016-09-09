@@ -581,8 +581,8 @@ router.get('/checkin', function (req, res, next) {
  * @apiGroup AdminAuth
  */
 router.get('/stats', function (req, res, next) {
-    async.parallel([
-            function timeAnnotations(callback) {
+    async.parallel({
+            timeAnnotations: function timeAnnotations(callback) {
                 TimeAnnotation.find({}, function (err, ann) {
                     if (err) {
                         console.error(err);
@@ -591,7 +591,7 @@ router.get('/stats', function (req, res, next) {
                     }
                 });
             },
-            function userRegistrationDates(callback) {
+            userRegistrationDates: function userRegistrationDates(callback) {
                 const projection = 'created_at';
                 User.find({}, projection, function (err, users) {
                     if (err) {
@@ -601,12 +601,11 @@ router.get('/stats', function (req, res, next) {
                     }
                 });
             },
-            function majorDistribution(callback) {
+            majorDistribution: function majorDistribution(callback) {
                 User.aggregate(
                     [
                         {
-                            $match:
-                            { "internal.going" : true }
+                            $match: {"internal.going": true}
                         },
                         {
                             $group: {
@@ -619,22 +618,22 @@ router.get('/stats', function (req, res, next) {
                         },
                         {
                             $project: {
-                                "_id" : 0,
+                                "_id": 0,
                                 "major" : "$_id",
                                 "count" : "$count"
                             }
                         }
                     ], callback);
             }
-        ], function (err, results) {
+        },
+        function (err, results) {
             res.render('admin/stats', {
-                annotations: results[0],
-                users: results[1],
-                majors: results[2]
+                annotations: results.timeAnnotations,
+                users: results.userRegistrationDates,
+                majors: results.majorDistribution
             });
         }
     );
-
 });
 
 /**
