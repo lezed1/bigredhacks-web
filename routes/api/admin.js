@@ -1068,7 +1068,7 @@ function cornellWaitlist(req, res, next) {
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
- * @apiParam {Boolean} optInOnly Only grab emails of those opted in 
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in
  * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd
  **/
 function csvBus(req, res, next) {
