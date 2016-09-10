@@ -15,7 +15,9 @@
     "l_interested": {"type": "String"},
     "l_applicants": {"type": "String"},
     "l_cornell_accepted": {"type": "String"},
-    "l_cornell_waitlisted": {"type": "String"}
+    "l_cornell_waitlisted": {"type": "String"},
+    "l_external_rsvpd": {"type": "String"},
+    "l_cornell_applicants": {"type": "String"}
   },
   "admin": {
     "email": {"type": "String"},
