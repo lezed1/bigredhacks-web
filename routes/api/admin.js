@@ -37,6 +37,8 @@ router.post('/np/set', setNoParticipation);
 router.delete('/removeBus', removeBus);
 router.put('/updateBus', updateBus);
 
+router.get('/csvBus', csvBus);
+
 router.post('/busCaptain', setBusCaptain);
 router.delete('/busCaptain', deleteBusCaptain);
 
@@ -1059,6 +1061,91 @@ function cornellWaitlist(req, res, next) {
             req.flash('success', 'Successfully moved ' + numAccepted + ' students off the waitlist!');
             return res.redirect('/admin/dashboard');
         });
+    });
+}
+
+/**
+ * @api {GET} /api/admin/CsvBus Returns a csv of emails along bus routes for accepted students
+ * @apiname CornellWaitlist
+ * @apigroup Admin
+ *
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in TODO: Implement
+ * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
+ **/
+function csvBus(req, res, next) {
+    async.parallel({
+        students: function students(cb) {
+            User.find({ $and : [
+                {'internal.status' : 'Accepted'},
+                {'internal.cornell_applicant' : false}
+                    ]}, cb);
+        },
+        buses: function bus(cb) {
+            Bus.find({}, cb);
+        },
+        colleges: function colleges(cb) {
+            Colleges.find({}, cb);
+        }
+    }, function(err, result) {
+        if (err) {
+            return console.error(err);
+        }
+
+        let students = result.students;
+        let buses = result.buses;
+        let colleges = result.colleges;
+
+        const MAX_BUS_PROXIMITY = 50; // TODO: Reuse this from routes/user.js
+        let emailLists = {};
+        for (let bus of buses) {
+            emailLists[bus.name] = {
+                name: bus.name,
+                emails: []
+            };
+        }
+
+        // Convert college list to college map
+        let collegeMap = {};
+        for (let college of colleges) {
+            collegeMap[college._id] = college;
+        }
+
+        // Perform expensive computation to map students to closest route.
+        for (let bus of buses) {
+            for (let stop of bus.stops) {
+                for (let student of students) {
+                    let stopCollege = collegeMap[stop.collegeid];
+                    let studentCollege = collegeMap[student.school.id];
+                    let dist = util.distanceBetweenPointsInMiles(stopCollege.loc.coordinates, studentCollege.loc.coordinates);
+                    if (dist < MAX_BUS_PROXIMITY) {
+                        if (!student.tempDist || student.tempDist > dist) {
+                            student.tempDist = dist;
+                            student.tempRoute = bus;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Populate emails
+        for (let student of students) {
+            if (student.tempRoute) {
+                emailLists[student.tempRoute.name].emails.push(student.email);
+            }
+        }
+
+        let csv = '';
+        // Populate csv
+        for (let z in emailLists) {
+            if (emailLists.hasOwnProperty(z)) {
+                let bus = emailLists[z];
+                csv += bus.name;
+                csv += '\n';
+                bus.emails.forEach(x=>csv+= x + ',\n');
+            }
+        }
+
+        return res.status(200).send(csv);
     });
 }
 

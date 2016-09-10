@@ -3,13 +3,21 @@ extends _layout-unsecured
 
 block header
     link(href="/css/index.css", rel="stylesheet")
-    link(rel="stylesheet", href="/css/login.css")
+    link(rel="stylesheet", href="/css/live.css")
 
 block append main_content
     .container
         .announcements
             h1 Announcements
-                ul.announcementList
+            table#announcements-table.table.table-striped
+                tr
+                    th Message
+                    th Time
+
+                for announcement in announcements.reverse()
+                    tr
+                        td #{announcement.message}
+                        td #{moment(announcement.time).from()}
         .schedule
             h1 Schedule
                 .agenda

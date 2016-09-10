@@ -400,7 +400,9 @@ module.exports = function (io) {
                                     req.user.save(cb)
                                 },
                                 function(cb) {
-                                    helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
+                                    if (!req.user.internal.cornell_applicant) {
+                                        helper.addSubscriber(config.mailchimp.l_external_rsvpd, req.user.email, req.user.name.first, req.user.name.last, cb);
+                                    }
                                 }
                             ], function(err, result) {
                                 if (err) {

@@ -32,6 +32,9 @@ searchable.user = [
         fuzzytext: true
     },
     {
+        alias: "gender"
+    },
+    {
         alias: "collegeid",
         path: "school.id"
     },
