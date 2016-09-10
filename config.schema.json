@@ -1,0 +1,44 @@
+{
+  "setup": {
+    "_comment": "Secret api keys.",
+    "AWS_access_key": {"type": "String"},
+    "AWS_secret_key": {"type": "String"},
+    "AWS_S3_bucket": {"type": "String"},
+    "mailchimp_api_key": {"type": "String"},
+    "cookie_secret": {"type": "String"},
+    "sendgrid_api_key": {"type": "String"},
+    "url": {"type": "String"},
+    "ical": {"type": "String"}
+  },
+  "mailchimp": {
+    "_comment": "Mailchimp list ids",
+    "l_interested": {"type": "String"},
+    "l_applicants": {"type": "String"},
+    "l_cornell_accepted": {"type": "String"},
+    "l_cornell_waitlisted": {"type": "String"},
+    "l_external_rsvpd": {"type": "String"},
+    "l_cornell_applicants": {"type": "String"}
+  },
+  "admin": {
+    "email": {"type": "String"},
+    "reg_open": {"type": "Boolean"},
+    "cornell_reg_open": {"type": "Boolean"},
+    "cornell_auto_accept": {"type": "Number"},
+    "dayof": {"type": "Boolean"},
+    "days_to_rsvp": {"type": "Number"},
+    "default_reimbursement": {"type": "Number"}
+  },
+  "sendgrid": {
+    "_comment": "Sendgrid template ids",
+    "sg_general": {"type": "String"}
+  },
+  "twitter": {
+    "tw_consumer_key": {"type": "String"},
+    "tw_consumer_secret": {"type": "String"},
+    "tw_access_token": {"type": "String"},
+    "tw_token_secret": {"type": "String"}
+  },
+  "fb": {
+    "access_token": {"type": "String"}
+  }
+}
