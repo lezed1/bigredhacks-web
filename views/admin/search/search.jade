@@ -78,10 +78,10 @@ block admin_content
         p#result-count.text-right #{applicants.length} results found.
 
         h6 Emails&nbsp;
-            a#showbutton (show)
-        div#emailcontent(style="display:none") #{csv}
+            a#email-show-button (show)
+        div#email-content(style="display:none") #{emailCsv}
         br
-        
+
         if render == 'box'
             include _boxview
         else if render == 'table'

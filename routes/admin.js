@@ -387,16 +387,16 @@ router.get('/search', function (req, res, next) {
 
     function endOfCall(err, applicants) {
         if (err) console.error(err);
-        let csv = '';
+        let emailCsv = '';
         for (let app of applicants){
-            csv += app.email + ', ';
+            emailCsv += app.email + ', ';
         }
         res.render('admin/search/search', {
             title: 'Admin Dashboard - Search',
             applicants: applicants,
             params: req.query,
             render: req.query.render, //table, box
-            csv: csv
+            emailCsv: emailCsv
         })
     }
 });

@@ -201,26 +201,22 @@ $('document').ready(function () {
             $(buttons).prop("disabled", false);
             $(_this).addClass("active");
         });
-
-
     });
 
-    //show and hide email list
-    var state = false; //default hidden
-    $("#showbutton").click(function (e) {
+    //show and hide email list in search window
+    var state = false; //email list is collapsed by default
+    $("#email-show-button").click(function (e) {
         e.preventDefault();
         if (state) {
-            $("#emailcontent").hide();
-            $("#showbutton").text("(show)");
+            $("#email-content").hide();
+            $("#email-show-button").text("(show)");
             state = false;
         } else {
-            $("#emailcontent").show();
-            $("#showbutton").text("(hide)");
-            state = true;
+            $("#email-content").show();
+            $("#email-show-button").text("(hide)");
+            state = true; //changes state to true to indicate that the emails are being shown
         }
-
     });
-
 
     //handle decision radio buttons for search view
     $('.decision-radio input[type=radio][name=status]').on('change', function () {
