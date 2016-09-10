@@ -204,17 +204,17 @@ $('document').ready(function () {
     });
 
     //show and hide email list in search window
-    var state = false; //email list is collapsed by default
+    var areEmailsShowing = false; //email list is collapsed by default
     $("#email-show-button").click(function (e) {
         e.preventDefault();
-        if (state) {
+        if (areEmailsShowing) {
             $("#email-content").hide();
             $("#email-show-button").text("(show)");
-            state = false;
+            areEmailsShowing = false;
         } else {
             $("#email-content").show();
             $("#email-show-button").text("(hide)");
-            state = true; //changes state to true to indicate that the emails are being shown
+            areEmailsShowing = true; //changes state to true to indicate that the emails are being shown
         }
     });
 
