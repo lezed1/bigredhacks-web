@@ -121,7 +121,7 @@ $('document').ready(function () {
      * Detail Views****
      *****************/
 
-        //handle decision radio buttons for individual(detail) view
+    //handle decision radio buttons for individual(detail) view
     $('input[type=radio][name=individualstatus]').on('change', function () {
         var newStatus = $(this).val();
         var pubid = $(this).closest('form').data('pubid');
@@ -186,7 +186,7 @@ $('document').ready(function () {
      * SEARCH PAGE ****
      ******************/
 
-        //handle decision buttons
+    //handle decision buttons
     $(".decisionbuttons button").click(function () {
         var _this = this;
         var buttongroup = $(this).parent();
@@ -201,8 +201,21 @@ $('document').ready(function () {
             $(buttons).prop("disabled", false);
             $(_this).addClass("active");
         });
+    });
 
-
+    //show and hide email list in search window
+    var areEmailsShowing = false; //email list is collapsed by default
+    $("#email-show-button").click(function (e) {
+        e.preventDefault();
+        if (areEmailsShowing) {
+            $("#email-content").hide();
+            $("#email-show-button").text("(show)");
+            areEmailsShowing = false;
+        } else {
+            $("#email-content").show();
+            $("#email-show-button").text("(hide)");
+            areEmailsShowing = true; //changes state to true to indicate that the emails are being shown
+        }
     });
 
     //handle decision radio buttons for search view
@@ -265,7 +278,7 @@ $('document').ready(function () {
      *** Role settings****
      *********************/
 
-        //edit button
+    //edit button
     $(".btn-edit.role").on('click', function () {
         $(this).siblings(".btn-save").eq(0).prop("disabled", function (idx, oldProp) {
             return !oldProp;
@@ -448,21 +461,21 @@ $('document').ready(function () {
     // Unset bus captain
     $('#unsetCaptain').on('click', function () {
         var em = $('#removeEmail').val();
-            $.ajax({
-                type: "DELETE",
-                url: "/api/admin/busCaptain",
-                data: {
-                    email: em
-                },
-                success: function (data) {
-                    location.reload();
-                },
-                error: alertErrorHandler
-            });
+        $.ajax({
+            type: "DELETE",
+            url: "/api/admin/busCaptain",
+            data: {
+                email: em
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: alertErrorHandler
+        });
     });
 
     function busRouteConfirmationAjax(type, message) {
-        return function() {
+        return function () {
             var id = $(this).parents(".businfobox").data("busid");
             var c = confirm(message);
             if (c) {
@@ -486,7 +499,7 @@ $('document').ready(function () {
 
 
     // Bus route override
-    $("#submit-student-route").on('click', function() {
+    $("#submit-student-route").on('click', function () {
         $.ajax({
             method: "PUT",
             url: "/api/admin/busOverride",
@@ -502,7 +515,7 @@ $('document').ready(function () {
     });
 
     // Delete Student Bus Route Override
-    $(".delete-student-route").on('click', function() {
+    $(".delete-student-route").on('click', function () {
         var dat = $(this).parents("tr");
         var that = this;
         $.ajax({
@@ -523,7 +536,7 @@ $('document').ready(function () {
      *** Reimbursement Management****
      ********************************/
     // Add Student Override
-    $("#submit-student").on('click', function() {
+    $("#submit-student").on('click', function () {
         var that = this;
         $.ajax({
             method: "POST",
@@ -540,7 +553,7 @@ $('document').ready(function () {
     });
 
     // Delete Student Override
-    $(".delete-student").on('click', function() {
+    $(".delete-student").on('click', function () {
         var dat = $(this).parents("tr");
         var that = this;
         $.ajax({
@@ -556,7 +569,7 @@ $('document').ready(function () {
         });
     });
 
-        //disable amount for charter bus
+    //disable amount for charter bus
     $("#new-travel, .modeDropdown").on('change', function () {
         var newAmount;
         if ($(this).is("#new-travel")) {
@@ -681,7 +694,7 @@ $('document').ready(function () {
 
 try {
     _tt_college_enable();
-} catch (e){
+} catch (e) {
     // Some pages should not need this, so this error is expected.
 }
 
@@ -693,7 +706,7 @@ function overrideFormDefault(form, target) {
 }
 
 // Generic error handler, alerting the error thrown to the user.
-function alertErrorHandler(jqXHR, textStatus, errorThrown ) {
+function alertErrorHandler(jqXHR, textStatus, errorThrown) {
     var resp = textStatus + ' (' + errorThrown + ')';
     if (jqXHR.responseText)
         resp += ': ' + jqXHR.responseText;

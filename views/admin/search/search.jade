@@ -77,6 +77,11 @@ block admin_content
     #searchresults.col-md-12
         p#result-count.text-right #{applicants.length} results found.
 
+        h6 Emails&nbsp;
+            a#email-show-button (show)
+        div#email-content(style="display:none") #{emailCsv}
+        br
+
         if render == 'box'
             include _boxview
         else if render == 'table'
