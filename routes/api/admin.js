@@ -13,6 +13,9 @@ var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
 var TimeAnnotation = require('../../models/time_annotation.js');
 var Announcement = require('../../models/announcement.js');
+var Inventory = require('../../models/hardware_item.js');
+var InventoryTransaction = require('../../models/hardware_item_checkout.js');
+var HardwareItemTransaction = require('../../models/hardware_item_transaction.js');
 
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
@@ -68,8 +71,10 @@ router.post('/rollingDecision', makeRollingAnnouncement);
 
 router.post('/deadlineOverride', rsvpDeadlineOverride);
 
-router.post('/cornellLottery', cornellLottery);
+router.post('/hardware/transaction', transactHardware);
+router.post('/hardware/inventory', setInventory);
 
+router.post('/cornellLottery', cornellLottery);
 router.post('/cornellWaitlist', cornellWaitlist);
 
 /**
@@ -947,6 +952,207 @@ function rsvpDeadlineOverride(req, res, next) {
 }
 
 /**
+ * @api {POST} /api/admin/hardware/inventory Set our internal hardware inventory.
+ * @apiname TransactHardware
+ * @apigroup Admin
+ *
+ * @apiParam {Number} quantity The quantity of hardware we own
+ * @apiParam {String} name The unique name of the hardware
+ **/
+function setInventory(req, res, next) {
+    let body = req.body;
+    if (!body || !body.quantity || !body.name) {
+        return res.status(500).send('Missing quantity or name');
+    }
+
+    if (body.quantity <= 0) {
+        Inventory.find({name: body.name}).remove(function (err, result) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            return res.redirect('/admin/hardware');
+        });
+    } else {
+        Inventory.findOne({name: body.name}, function (err, item) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (!item) {
+                item = new Inventory({
+                    name: body.name,
+                    quantityAvailable: body.quantity,
+                    quantityOwned: body.quantity
+                });
+            }
+
+            item.modifyOwnedQuantity(body.quantity, function (err) {
+                if (err) {
+                    return res.status(500).send(err);
+                }
+
+                return res.redirect('/admin/hardware');
+            });
+        });
+    }
+}
+
+/**
+ * @api {POST} /api/admin/hardware/transaction Check in or out hardware
+ * @apiname TransactHardware
+ * @apigroup Admin
+ *
+ * @apiParam {Boolean} checkingOut true if checking out, false if checking in
+ * @apiParam {String} email Email of the student for the transaction
+ * @apiParam {Number} quantity The quantity of hardware to transact
+ * @apiParam {String} name The unique name of the hardware being transacted
+ **/
+function transactHardware({body}, res, next) {
+    if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
+        return res.status(500).send('Missing a parameter, check the API!');
+    }
+
+    body.quantity = Number(body.quantity); // This formats as a string by default
+
+    if (body.quantity < 1) {
+        return res.status(500).send('Please send a positive quantity');
+    }
+
+    async.parallel({
+        student: function (cb) {
+            User.findOne({email: body.email}, cb);
+        },
+        item: function (cb) {
+            Inventory.findOne({name: body.name}, cb);
+        }
+    }, function (err, result) {
+        if (err) {
+            return res.status(500).send(err);
+        } else if (!result.student) {
+            return res.status(500).send('No such user');
+        } else if (!result.item) {
+            return res.status(500).send('No such item');
+        }
+
+        InventoryTransaction.findOne({
+            student_id: result.student.id,
+            inventory_id: result.item.id
+        }, function (err, transaction) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (body.checkingOut) {
+                if (result.item.quantityAvailable - body.quantity >= 0) {
+                    if (!transaction) {
+                        transaction = new InventoryTransaction({
+                            student_id: result.student.id,
+                            inventory_id: result.item.id,
+                            quantity: 0
+                        });
+                    }
+
+                    transaction.quantity += body.quantity;
+
+                    result.item.changeQuantity(-body.quantity, function (err) {
+                        if (err) {
+                            return res.status(500).send(err);
+                        }
+
+                        transaction.save(function (err) {
+                            if (err) {
+                                return res.status(500).send('Error: could not save transaction');
+                            }
+
+                            email.sendHardwareEmail(
+                                true,
+                                body.quantity,
+                                result.item.name,
+                                result.student.name.first,
+                                result.student.name.last,
+                                result.student.email,
+                                function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not send hardware transaction email');
+                                    }
+
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, true, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
+                        });
+                    });
+                } else {
+                    return res.status(500).send('Quantity exceeds availability');
+                }
+            } else {
+                if (!transaction) {
+                    return res.status(500).send('User has no transactions for that item.');
+                } else if (body.quantity > transaction.quantity) {
+                    return res.status(500).send('User has not checked out that many items of that type!');
+                }
+
+                transaction.quantity -= body.quantity;
+
+                result.item.changeQuantity(body.quantity, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send('Could not save item');
+                    }
+                    email.sendHardwareEmail(
+                        false,
+                        body.quantity,
+                        result.item.name,
+                        result.student.name.first,
+                        result.student.name.last,
+                        result.student.email,
+                        function (err) {
+                            if (err) {
+                                return res.status(500).send('Error: could not send hardware transaction email');
+                            }
+
+                            if (transaction.quantity == 0) {
+                                transaction.remove(function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not remove transaction');
+                                    }
+
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, false, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
+                            } else {
+                                transaction.save(function (err) {
+                                    if (err) {
+                                        return res.status(500).send('Error: could not save transaction');
+                                    }
+
+                                    HardwareItemTransaction.make(result.item.name, result.student._id, body.quantity, false, function (err) {
+                                        if (err) {
+                                            return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
+                                        }
+
+                                        return res.redirect('/admin/hardware');
+                                    });
+                                });
+                            }
+                    });
+                });
+            }
+        });
+    });
+}
+
+/**
  * @api {POST} /api/admin/cornellLottery Executes a gender-balanced (50-50) lottery for Cornell students, but does not send decision emails.
  *              If, by some chance, the lottery runs out of a gender to accept, it falls back to accepting other genders.
  *              Non-male-or-female genders are grouped under male for the purpose of preventing system-gaming and stats-ruining.
@@ -1073,6 +1279,7 @@ function cornellWaitlist(req, res, next) {
  * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
+    
     async.parallel({
         students: function students(cb) {
             User.find({ $and : [

@@ -1,0 +1,16 @@
+extends _layout-unsecured
+
+block header
+    link(href="/css/index.css", rel="stylesheet")
+    link(rel="stylesheet", href="/css/hardware.css")
+
+block main_content
+    h1#title Hardware
+    .hardware-list
+        h2 List of hardware available
+        ul
+            li one
+            li two
+            
+block footer
+    script(src="/js/hardware.js")
