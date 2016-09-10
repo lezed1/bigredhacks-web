@@ -5,8 +5,8 @@ var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var middle = require('./middleware.js');
 var async = require('async');
-
 var Announcement = require ('../models/announcement.js');
+var Inventory = require ('../models/hardware_item.js');
 
 var config = require('../config.js');
 var util = require('../util/util');
@@ -70,6 +70,9 @@ router.get('/live', middle.requireDayof,function (req, res, next) {
             },
             calendar: function calendar(callback) {
                 util.grabCalendar(callback);
+            },
+            inventory: function inventory(cb) {
+                Inventory.find({}, null, {sort: {name: 'asc'}}, cb);
             }
         }, function (err, result) {
         if (err) {

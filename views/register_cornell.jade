@@ -7,14 +7,17 @@ block vars
     - var actionUrl = "/register/" + urlparam; //- url the form should submit to
     - var multipart = true; //- whether the form has multipart data
     - var cornell_reg = (college.name == "Cornell University");
+    - var cornell_tech_reg = (college.name == "Cornell Tech");
 
 block append description
     if (cornell_reg)
-        h1 General Registration
-        p Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the first #{limit} spots are guaranteed.
-        p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon.
-        p Don't miss this amazing event, sign up now!
-        p <strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong>
+        h1 Cornell Registration
+        p This year, we're admitting Cornell students using a lottery system. Apply by <strong> September 6 </strong> to be entered!
+        p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon. Don't miss this amazing event, sign up now!
+        p If you are a Cornell Tech student, please register <a href="/register/cornelltech">here</a>.
+    else if (cornell_tech_reg)
+        h1 Cornell Tech Registration
+        p This is a registration form for Cornell Tech students. After registering, please give us some time to process your registration.
     else
         h1 #{college.name} Registration
         p This is a special case late reigistration form. Registration is by permission only. After registering, you will be automatically waitlisted. If we have given you permission to attend, please leave us some time to unwaitlist you.
@@ -48,23 +51,32 @@ block append basic-information
 
 block append school
     .form-group
-        labelfull school name *
-        br
-        input.form-control(type='text',value=college.display, readonly=true)
+        input#collegeid.form-control(type='hidden', name='collegeid', value=college._id, required=true)
     .form-group
         label(for='yearDropdown') academic year *
         select#yearDropdown.form-control(name='yearDropdown', required='')
             option(value='') select
-            +generateOptions(en.year, {selected: (input.yearDropdown || "")})
+            +generateOptions(en.yearNoHighSchool, {selected: (input.yearDropdown || "")})
+    .form-group
+        label(for='college') full school name *
+        br
+        input#college.form-control(type='text',value=college.display, readonly=true)
     .form-group
         label(for='major') major *
-        input#major.form-control(type='text', name='major', placeholder='major', value=input.major || '', required=true)
+        input#major.form-control.typeahead(type='text', name='major', placeholder='major', value=input.major || '', required=true)
 
 block append background
     .form-group
-        label(for='resume') resume (.pdf) *
+        //- TODO: link size of resume to backend constant
+        label(for='resume') resume (.pdf, max 10 mb) *
         .wrapper
             input#resume.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resume', accept='.pdf', required='')
+    .form-group
+        label tell us something interesting about yourself. *
+        textarea#q1.form-control(name='q1', rows='4', required='') #{input.q1 || "" }
+    .form-group
+        label what's a cool project that you've worked on? *
+        textarea#q2.form-control(name='q2', rows='4', required='') #{input.q2 || "" }
     .form-group
         label(for='github') github profile
         .input-group
@@ -93,14 +105,18 @@ block append logistics
             option(value='') select
             +generateOptions(en.tshirt, {selected: (input.tshirt || "")})
     .form-group
+        label is there any kind of hardware that you want to hack on?
+        input#hardware.form-control.typeahead(type='text', name='hardware', placeholder='VR, Smart Home, etc...'  value=input.hardware || '', data-role="tagsinput")
+    .form-group
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
-
+        
 block append terms
-    p Please carefully read the two documents below:
+    br
+    label Please carefully read the two documents below:
     .form-group
-        a.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2015.pdf', target='_blank') liability waiver & release
-        a.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
-        br
-        br
-        p: label By registering and taking part in BigRed//Hacks, you affirm that you have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.
+        a#liability-cornell.btn.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+        a#code-of-conduct-cornell.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+
+block no_terms
+

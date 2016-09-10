@@ -79,10 +79,6 @@ block append content
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
                                     | &nbsp;&nbsp;&nbsp;
                                     a.btn.btn-blue(href="/login") login
-                                else
-                                    a.btn.btn-blue(href="/register/cornelluniversity") cornell register
-                                    | &nbsp;&nbsp;&nbsp;
-                                    a.btn.btn-blue(href="/login") login
 
                 //- section about
                 //+sectionHeading("Be a part of something big")
@@ -92,7 +88,7 @@ block append content
                     br
                     br
                     .big-heading
-                        h2 Be a part of something big 
+                        h2 Be a part of something big
 
                     p
                         | BigRed//Hacks is the oldest student-run, large-scale hackathon at Cornell University.
@@ -114,13 +110,55 @@ block append content
                 p.counter 161
                 p days until
                 p BigRed//Hacks!
-        section#sustainable.sustainable
+
+        section#schedule.schedule
+            .section-heading.container
+                h2(style='float:left;') Schedule
             .driftCloud1(data-100-bottom="left:40%;" data-top="left:100%;")
             .driftCloud2(data-100-bottom="left:37%;" data-top="left:100%;")
             .twocloud
                 .cloud4
                 .cloud5
                 .cloud6
+            .container
+                .schedule-table
+                    .heading
+                        h3 friday, 9/16
+                    .time
+                        p 4:30 - 6:30 pm
+                    .data
+                        p participant registration
+                        h5 call auditorium
+                    .time
+                        p 6:00 pm
+                    .data
+                        p opening ceremony
+                        h5 call auditorium
+                    .time
+                        p 8:00 pm
+                    .data
+                        p hacking begins
+                        h5 physical sciences building
+                    .heading
+                    h3 sunday, 9/18
+                    .time
+                        p 8:00 am
+                    .data
+                        p hacking ends
+                        h5 physical sciences building
+                    .time
+                        p 9:00 am - 11:00 am
+                    .data
+                        p project expo
+                        h5 physical sciences building
+                    .time
+                        p 12:00 pm - 2:00 pm
+                    .data
+                        p closing ceremony
+                        h5 call auditorium
+
+        section#sustainable.sustainable
+
             .content
                 +sectionHeading("Sustainable hacks")
                 .container
@@ -131,95 +169,89 @@ block append content
                     p We will provide mentors and resources necessary for your hack to succeed!
                     br
 
-
-
+        section.hillholder
+            .hill
         section#whaleDiv
             .whale
             .whale-happy
             .preload-01
+    section.waterholder
+        .water
 
-
-
-    //- Section: faq
-    section.hillholder
-        .hill
-    section#faq.faq
-
-        //.wave1
-        //.wave2
-        //.wave3
-        +sectionHeading("Frequently Asked Questions")
-        .container
-            dl
-                dt Who is eligible to participate?
-                dd
-                    | We are inviting all undergraduate and graduate students to participate in our hackathon.
-                    | You don't need any past experience.
-                    | You don't even need to be a computer science major!
-                    | Our only requirement is that you are at least 18 years old and enrolled in an accredited college or university.
-                dt What will I need to bring?
-                dd
-                    | Bring your school ID for registration.
-                    | You are also responsible for bringing any equipment for building and demoing your hack: laptop, chargers, phones, etc.
-                    | You may also want to bring a sleeping bag, change of clothes, and toothbrush.
-                dt Do I have to sign up with a team?
-                dd
-                    | You don't have to sign up with a team, but it's certainly more fun!
-                    | We allow teams of up to four people (they don't have to be from the same school), and while they can be specified on the application, you won't officially create your team until the event.
-                    | If you don't have a team yet, we'll host a social before the hacking begins for you to meet other amazing people.
-                dt Are you providing food?
-                dd
-                    | Don't worry, there will be lots of delicious food and beverages at our event, complementary to all participants.
-                    | We'll have vegetarian options as well.
-                dt What's the deal with transportation?
-                dd
-                    | Our goal is to reimburse student travel as needed (up to $150 evaluated on a case by case basis).
-                    | There will be a reimbursement table: please bring your travel ticket, receipt, and government-issued photo ID.
-                    | We ask that you pick a reasonably priced method of travel.
-                    | There will be limited on-campus parking.
-                    | We'll also be chartering buses for popular locations.
-                    | <br><br>Are you the director of a hackathon club at your school? Get in touch with us to organize a trip!
-                dt Do I have to do a sustainable hack?
-                dd
-                    | Nope! While the theme of this year's BigRed//Hacks will be sustainability, we'll have plenty of other
-                    | prize categories to compete for.
-                dt Are hardware hacks allowed?
-                dd
-                    | This is the first year that we will be providing a dedicated hardware lab with sensors, microcontrollers, and basic components.
-                    | Some of our sponsors are bringing hardware to loan, but we still suggest that you bring your own equipment if you know that you'll absolutely need it.
-                dt What are the rules?
-                dd
-                    | We want BigRed//Hacks to be fun and fair for everyone.
-                    | Your project should be started from scratch and worked on only during the 36 hours, and you may only incorporate outside resources (code, graphics, sound, etc) that are freely licensed and accessible to all participants equally.
-                    | Of course, maintain a positive, respectful attitude toward your fellow hackers throughout the event.
-                dt Why is there an application?
-                dd
-                    | We want to guarantee that students from a wide range of schools and experiences are given an equal and fair chance to participate.
-                    | Furthermore, we hope that the process will encourage registrants to be committed to building something awesome.
-                    | Even if you've never been to a hackathon before, please apply!
-                dt Why can't Cornell students apply yet?
-                dd
-                    | We're doing applications a little differently this year.
-                    | General applications are immediately available for all students not at Cornell.
-                    | In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis.
-                    | Add yourself to the mailing list so that you'll know when applications open.
-                dt Have more questions?
-                dd Send them to #[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us #[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
-                //- School 1 20-30%
-                .redfish(style="top:20%;" data-800-top="left:70%;" data--200-top="left:35%;")
-                .bluefish(style="top:22%;" data-800-top="left:90%;" data--200-top="left:25%;")
-                .greenfish(style="top:26%;" data-800-top="left:85%;" data--200-top="left:15%;")
-                //- School 2 45-55%
-                .redfish(style="top:45%;" data-900-top="left:60%;" data--200-top="left:22%;")
-                .bluefish(style="top:48%;" data-900-top="left:75%;" data--200-top="left:25%;")
-                .redfish(style="top:52%;" data-900-top="left:62%;" data--200-top="left:12%;")
-                .orangefish(style="top:54%;" data-900-top="left:64%;" data--200-top="left:12%;")
-                .yellowfish(style="top:57%;" data-900-top="left:55%;" data--200-top="left:11%;")
-                //- School 3 75-85%
-                .redfish(style="top:75%;" data-900-top="left:70%;" data--200-top="left:-10%;")
-                .bluefish(style="top:78%;" data-900-top="left:90%;" data--200-top="left:5%;")
-                .orangefish(style="top:82%;" data-900-top="left:85%;" data--200-top="left:7%;")
-                .redfish(style="top:85%;" data-900-top="left:85%;" data--200-top="left:2%;")
+            //- Section: faq
+            section#faq.faq
+                +sectionHeading("Frequently Asked Questions")
+                .container
+                    dl
+                        dt Who is eligible to participate?
+                        dd
+                            | We are inviting all undergraduate and graduate students to participate in our hackathon.
+                            | You don't need any past experience.
+                            | You don't even need to be a computer science major!
+                            | Our only requirement is that you are at least 18 years old and enrolled in an accredited college or university.
+                        dt What will I need to bring?
+                        dd
+                            | Bring your school ID for registration.
+                            | You are also responsible for bringing any equipment for building and demoing your hack: laptop, chargers, phones, etc.
+                            | You may also want to bring a sleeping bag, change of clothes, and toothbrush.
+                        dt Do I have to sign up with a team?
+                        dd
+                            | You don't have to sign up with a team, but it's certainly more fun!
+                            | We allow teams of up to four people (they don't have to be from the same school), and while they can be specified on the application, you won't officially create your team until the event.
+                            | If you don't have a team yet, we'll host a social before the hacking begins for you to meet other amazing people.
+                        dt Are you providing food?
+                        dd
+                            | Don't worry, there will be lots of delicious food and beverages at our event, complementary to all participants.
+                            | We'll have vegetarian options as well.
+                        dt What's the deal with transportation?
+                        dd
+                            | Our goal is to reimburse student travel as needed (up to $150 evaluated on a case by case basis).
+                            | There will be a reimbursement table: please bring your travel ticket, receipt, and government-issued photo ID.
+                            | We ask that you pick a reasonably priced method of travel.
+                            | There will be limited on-campus parking.
+                            | We'll also be chartering buses for popular locations.
+                            | <br><br>Are you the director of a hackathon club at your school? Get in touch with us to organize a trip!
+                        dt Do I have to do a sustainable hack?
+                        dd
+                            | Nope! While the theme of this year's BigRed//Hacks will be sustainability, we'll have plenty of other
+                            | prize categories to compete for.
+                        dt Are hardware hacks allowed?
+                        dd
+                            | This is the first year that we will be providing a dedicated hardware lab with sensors, microcontrollers, and basic components.
+                            | Some of our sponsors are bringing hardware to loan, but we still suggest that you bring your own equipment if you know that you'll absolutely need it.
+                        dt What are the rules?
+                        dd
+                            | We want BigRed//Hacks to be fun and fair for everyone.
+                            | Your project should be started from scratch and worked on only during the 36 hours, and you may only incorporate outside resources (code, graphics, sound, etc) that are freely licensed and accessible to all participants equally.
+                            | Of course, maintain a positive, respectful attitude toward your fellow hackers throughout the event.
+                        dt Why is there an application?
+                        dd
+                            | We want to guarantee that students from a wide range of schools and experiences are given an equal and fair chance to participate.
+                            | Furthermore, we hope that the process will encourage registrants to be committed to building something awesome.
+                            | Even if you've never been to a hackathon before, please apply!
+                        dt Why can't Cornell students apply yet?
+                        dd
+                            | We're doing applications a little differently this year.
+                            | General applications are immediately available for all students not at Cornell.
+                            | In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis.
+                            | Add yourself to the mailing list so that you'll know when applications open.
+                        dt Have more questions?
+                        dd Send them to #[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us #[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
+                        //- School 1 20-30%
+                        .redfish(style="top:20%;" data-800-top="left:70%;" data--200-top="left:35%;")
+                        .bluefish(style="top:22%;" data-800-top="left:90%;" data--200-top="left:25%;")
+                        .greenfish(style="top:26%;" data-800-top="left:85%;" data--200-top="left:15%;")
+                        //- School 2 45-55%
+                        .redfish(style="top:45%;" data-900-top="left:60%;" data--200-top="left:22%;")
+                        .bluefish(style="top:48%;" data-900-top="left:75%;" data--200-top="left:25%;")
+                        .redfish(style="top:52%;" data-900-top="left:62%;" data--200-top="left:12%;")
+                        .orangefish(style="top:54%;" data-900-top="left:64%;" data--200-top="left:12%;")
+                        .yellowfish(style="top:57%;" data-900-top="left:55%;" data--200-top="left:11%;")
+                        //- School 3 75-85%
+                        .redfish(style="top:75%;" data-900-top="left:70%;" data--200-top="left:-10%;")
+                        .bluefish(style="top:78%;" data-900-top="left:90%;" data--200-top="left:5%;")
+                        .orangefish(style="top:82%;" data-900-top="left:85%;" data--200-top="left:7%;")
+                        .redfish(style="top:85%;" data-900-top="left:85%;" data--200-top="left:2%;")
 
     //- Section: sponsors
     section#sponsors.sponsors
@@ -227,54 +259,68 @@ block append content
 
         .container
             ul.logos
-                li#capitalone.logo-3
+                li#capitalone.logo-4
                     a(href='http://capitalone.com')
                         img(src='img/logos/capitalone.png', alt='Capital One')
+                li#Priceline.logo-4
+                    a(href='http://priceline.com')
+                        img(src='img/logos/priceline.png', alt='Priceline')
+                li#microsoft.logo-4
+                    a(href='http://microsoft.com')
+                        img(src='img/logos/microsoft.png', alt='Microsoft')
+            ul.logos
                 li#bloomberg.logo-3
                     a(href='http://www.bloomberg.com')
                         img(src='img/logos/bloomberg.png', alt='Bloomberg')
-            ul.logos
-                li#Priceline.logo-3
-                    a(href='http://priceline.com')
-                        img(src='img/logos/priceline.png', alt='Priceline')
                 li#grammatech.logo-3
                     a(href='https://www.grammatech.com/')
                         img(src='https://www.grammatech.com/sites/all/themes/grammatech/logo.png', alt='GrammaTech')
+                li#a16z.logo-3
+                    a(href='https://www.a16z.com/')
+                        img(src='img/logos/a16z.png', alt='a16z')
 
             ul.logos
                 li#wayfair.logo-2
                     a(href='http://www.wayfair.com/')
                         img(src='img/logos/wayfair.png', alt='Wayfair')
-                li#eship.logo-2
-                    a(href='http://eship.cornell.edu')
-                        img(src='img/logos/eship.png', alt='Entrepreneurship at Cornell')
+                li#oracle.logo-2
+                    a(href='http://oracle.com/')
+                        img(src='img/logos/oracle.png', alt='Oracle')
+                li#mathworks.logo-2
+                    a(href='https://www.mathworks.com/')
+                        img(src='img/logos/mathworks.png', alt='MathWorks')
 
             ul.logos
                 li#deshaw.logo-1
                     a(href='https://www.deshaw.com/')
                         img(src='img/logos/DEShaw.png', alt='D.E. Shaw and Co.')
-                li#thiel.logo-1
-                    a(href='http://www.thielfoundation.org/')
-                        img(src='http://www.seasteading.org/wp-content/uploads/2011/01/thielfoundationlogo.png', alt='Thiel Foundation')
-                li#jetbrains.logo-1
-                    a(href='https://www.jetbrains.com/')
-                        img(src='img/logos/jetBrains.png', alt='JetBrains')
-
+                li#eship.logo-1
+                    a(href='http://eship.cornell.edu')
+                        img(src='img/logos/eship.png', alt='Entrepreneurship at Cornell')
             ul.logos
+                li#codepen.logo-1
+                    a(href='http://codepen.com')
+                        img(src='img/logos/codepen.png', alt='CodePen')
                 li#tech.logo-1
                     a(href='http://get.tech/')
                         img(src='https://www.101domain.com/images/flags/large/TECH.png', alt='.Tech')
+                li#venturestorm.logo-1
+                    a(href='http://www.venturestorm.com/')
+                        img(src='img/logos/venturestorm.png', alt='Venture Storm')
+
+            ul.logos
+
                 li#lifx.logo-1
                     a(href='http://www.lifx.com/')
                         img(src='img/logos/lifx.jpg', alt='LIFX')
                 li#sketch.logo-1
                     a(href='https://www.sketchapp.com/')
                         img(src='img/logos/sketch.png', alt='Sketch')
-
-            ul.logos
                 li#soylent.logo-1
                     a(href='https://www.soylent.com/')
                         img(src='http://farm8.staticflickr.com/7323/11212265035_59f7466a7e_o.png', alt='Soylent')
+
+            ul.logos
                 li#hackerearth.logo-1
                     a(href='https://www.hackerearth.com/')
                         img(src='http://blog.hackerearth.com/wp-content/uploads/2015/09/logo_new.png', alt='HackerEarth')
@@ -289,6 +335,17 @@ block append content
                 li#cornellcs.logo-1
                     a(href='http://www.cs.cornell.edu')
                         img(src='img/logos/cornell-cs.png', alt='Cornell Computer Science')
+
+            ul.logos
+                li#equitas.logo-1
+                  
+                        img(src='img/logos/equitas.png', alt='Equitas')
+                li#clerky.logo-1
+                    a(href='http://www.clerky.com')
+                        img(src='img/logos/clerky.png', alt='Clerky')
+                li#jetbrains.logo-1
+                    a(href='http://www.jetbrains.com')
+                        img(src='img/logos/jetBrains.png', alt='Jet Brains')
             p.logos
                 | Interested in sponsoring? Contact us at
                 a(href='mailto:sponsors@bigredhacks.com')  sponsors@bigredhacks.com
@@ -296,7 +353,6 @@ block append content
             br
             br
             br
-            .c
 
     footer
         .container
@@ -332,12 +388,15 @@ block append content
                             span(aria-hidden='true') ×
                         h4.modal-title Where do you go to school?
                     .modal-body.hidden
-                        p Cornell University students won't be able to register until September, but in the meantime, add yourself to the mailing list. You'll receive an email when we open registration.
+                        p Cornell University students won't be able to register until August 25th, but in the meantime, add yourself to the mailing list. You'll receive an email when we open registration.
                         .form-group
                             label(for='cornellEmail') email address *
                             input#cornellEmail.form-control(type='email', name='cornellEmail', placeholder='bigredhacks@cornell.edu', value='', required='')
                     #regFooter.modal-footer
-                        button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
+                        if middlehelp.isCornellRegistrationOpen()
+                            a.btn.btn-blue.reg-select(href='/register/cornelluniversity') Cornell/Ithaca
+                        else
+                            button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
                         a.btn.btn-blue.reg-select(href='/register') Somewhere else
                         button#cornell-submit.btn.btn-blue.hidden(type='submit') Submit
 

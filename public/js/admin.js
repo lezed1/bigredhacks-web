@@ -360,6 +360,10 @@ $('document').ready(function () {
         //Edit max capacity of bus
         var currentBusCapacity = businfobox.find(".maxcapacitynumber").text().trim();
         businfobox.find(".edit-maxcapacity").val(currentBusCapacity);
+
+        //Edit custom message
+        var customMessage = businfobox.find('.custom-message-par').text().trim();
+        businfobox.find(".edit-custom-message").val(customMessage);
     });
 
     $('.cancel').on('click', function () {
@@ -426,7 +430,8 @@ $('document').ready(function () {
                 busid: businfobox.data("busid"),
                 busname: businfobox.find(".newbusname").val(),
                 stops: stops,
-                buscapacity: businfobox.find(".edit-maxcapacity").val()
+                buscapacity: businfobox.find(".edit-maxcapacity").val(),
+                customMessage: businfobox.find('.edit-custom-message').val()
             }),
             success: function (data) {
                 //toggle display and edit components

@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -19,9 +20,6 @@ var MAX_FILE_SIZE = 1024 * 1024 * 15;
 var config = require('../config.js');
 var email = require('../util/email');
 var uid = require("uid2");
-
-
-
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -80,7 +78,6 @@ module.exports = function (io) {
                 res.render("register_cornell", {
                     urlparam: req.params.name,
                     title: college.name + " Registration",
-                    enums: enums,
                     error: req.flash('error'),
                     limit: config.admin.cornell_auto_accept,
                     college: college
@@ -89,39 +86,12 @@ module.exports = function (io) {
         });
     });
 
-
-    /**
-     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
-     * @param name
-     * @param callback
-     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
-     * @private
-     */
-    function _findCollegeFromFilteredParam(name, callback) {
-        var collegeName = "";
-
-        //todo refactor
-        var schools = {
-            cornelltech: "Cornell Tech",
-            cornelluniversity: "Cornell University",
-            temple: "Temple University"
-        };
-
-        if (schools.hasOwnProperty(name)) {
-            collegeName = schools[name];
-        } else {
-            return callback(null, null);
-        }
-
-        College.findOne({name: collegeName}, callback);
-    }
-
     /**
      *
      * @param req User submitted object from registration
      * @returns {*} A validation object
      */
-    function validateAll (req) {
+    function validateAll(req) {
         //todo reorder validations to be consistent with form
         return validator.validate(req, [
             'email',
@@ -142,7 +112,29 @@ module.exports = function (io) {
             'yearDropdown',
             'hardware'
         ]);
+    }
 
+    // Cornell has its own set of fields to validate
+    function _validateCornell(req) {
+        //todo reorder validations to be consistent with form
+        return validator.validate(req, [
+            'email',
+            'password',
+            'firstname',
+            'lastname',
+            'phonenumber',
+            'major',
+            'genderDropdown',
+            'dietary',
+            'tshirt',
+            'linkedin',
+            'q1',
+            'q2',
+            'anythingelse',
+            'hackathonsAttended',
+            'yearDropdown',
+            'hardware'
+        ]);
     }
 
 
@@ -195,8 +187,6 @@ module.exports = function (io) {
                         req.flash('error', file);
                         return res.redirect('/register');
                     }
-
-                    //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
 
                     var newUser = new User({
                         name: {
@@ -266,8 +256,8 @@ module.exports = function (io) {
                                     var email_body =
                                         "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                         "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                        "that we have received your application." + "</p><p>" +
-                                        "You can log in to our website any time until the application deadline " +
+                                        "that we have received your registration." + "</p><p>" +
+                                        "You can log in to our website any time until the registration deadline " +
                                         "to update your information or add team members." + "</p><p>" +
                                         "If you haven't already, make sure to like us on <a href='https://www.facebook.com/bigredhacks/' target='_blank'>Facebook</a> and " +
                                         "follow us on <a href='https://twitter.com/bigredhacks'>Twitter</a>!" + "</p><p>" +
@@ -292,6 +282,31 @@ module.exports = function (io) {
             }
         });
     });
+
+    /**
+     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
+     * @param name
+     * @param callback
+     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
+     * @private
+     */
+    function _findCollegeFromFilteredParam(name, callback) {
+        var collegeName = "";
+
+        //todo refactor
+        var schools = {
+            cornelltech: "Cornell Tech",
+            cornelluniversity: "Cornell University"
+        };
+
+        if (schools.hasOwnProperty(name)) {
+            collegeName = schools[name];
+        } else {
+            return callback(null, null);
+        }
+
+        College.findOne({name: collegeName}, callback);
+    }
 
     /**
      * @api {GET} /register/:name GET registration page for Cornell (University and Tech) Students.
@@ -321,28 +336,15 @@ module.exports = function (io) {
         });
     });
 
-
     /**
-     * Find a college entry from a (url) param. This ensures consistent results as only certain params are allowed
-     * @param name
-     * @param callback
-     * @returns {*} College object if it exists, otherwise null. Also null if the param does not meet the filter
+     * Return if a student is from cornell
+     * @param {Object} college
+     * @returns boolean True if college name is Cornell, else false. This is used to differentiate extra external
+     *          routes from cornell university
      * @private
      */
-    function _findCollegeFromFilteredParam(name, callback) {
-        var collegeName = "";
-
-        //todo cleanup with underscore
-        if (name == "cornelltech") {
-            collegeName = "Cornell Tech";
-        }
-        else if (name == "cornelluniversity") {
-            collegeName = "Cornell University";
-        }
-        else {
-            return callback(null, null);
-        }
-        College.findOne({name: collegeName}, callback);
+    function _isCornellian(college) {
+        return college.name == "Cornell University";
     }
 
 
@@ -378,10 +380,7 @@ module.exports = function (io) {
                 req.files = files;
                 var resume = files.resume[0];
 
-                //todo reorder validations to be consistent with form
-                //application questions are removed
-                req = validateAll(req);
-
+                req = _validateCornell(req);
 
                 var errors = req.validationErrors();
                 if (errors) {
@@ -412,8 +411,6 @@ module.exports = function (io) {
                             return res.redirect('/register/' + req.params.name);
                         }
 
-                        //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
-
                         var newUser = new User({
                             name: {
                                 first: req.body.firstname,
@@ -435,112 +432,92 @@ module.exports = function (io) {
                                 major: req.body.major
                             },
                             internal: {
-                                cornell_applicant: true
+                                cornell_applicant: _isCornellian(college)
                             },
                             app: {
                                 github: req.body.github,
                                 linkedin: req.body.linkedin,
                                 resume: file.filename,
-                                hackathonsAttended: req.body.hackathonsAttended
+                                hackathonsAttended: req.body.hackathonsAttended,
+                                questions: {
+                                    q1: req.body.q1,
+                                    q2: req.body.q2,
+                                    hardware: req.body.hardware.split(",")
+                                }
                             },
                             role: "user"
                         });
 
-
-                        //determine auto-acceptance or waitlist
-                        User.count({'internal.cornell_applicant': true}, function (err, count) {
+                        newUser.save(function (err, doc) {
                             if (err) {
-                                console.error(err);
-                                req.flash('Unexpected error.', file);
+                                // If it failed, return error
+                                console.log(err);
+                                req.flash("error", "An error occurred.");
                                 return res.redirect('/register/' + req.params.name);
-                            }
-
-                            //auto accept applicants below a certain threshold
-                            if (count < config.admin.cornell_auto_accept) {
-                                newUser.internal.status = "Accepted";
                             } else {
-                                newUser.internal.status = "Waitlisted";
-                            }
-
-
-                            newUser.save(function (err, doc) {
-                                if (err) {
-                                    // If it failed, return error
-                                    console.log(err);
-                                    req.flash("error", "An error occurred.");
-                                    res.render('register_cornell', {
-                                        urlparam: req.params.name,
-                                        title: 'Register',
-                                        error: req.flash('error'),
-                                        input: req.body,
-                                        enums: enums,
-                                        limit: config.admin.cornell_auto_accept,
-                                        college: college
-                                    });
-                                }
-                                else {
-
-                                    if (newUser.internal.status == "Accepted") {
-                                        var mailing_list = config.mailchimp.l_cornell_accepted;
-                                    } else {
-                                        var mailing_list = config.mailchimp.l_cornell_waitlisted;
+                                async.parallel([
+                                    function onWaitList(cb2) {
+                                        // All Cornell students are on the waitlist when registering. The pending status
+                                        // means that nobody has been accepted yet, since once we run a lottery,
+                                        // all non-winners are moved onto waitlist.
+                                        helper.addSubscriber(config.mailchimp.l_cornell_waitlisted, newUser.email, newUser.name.first, newUser.name.last, cb2);
+                                    },
+                                    function onAppList(cb2) {
+                                        helper.addSubscriber(config.mailchimp.l_cornell_applicants, newUser.email, newUser.name.first, newUser.name.last, cb2);
+                                    }
+                                ], function (err) {
+                                    if (err) {
+                                        console.error(err);
                                     }
 
-                                    helper.addSubscriber(mailing_list, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+                                    //send email and redirect to home page
+                                    req.login(newUser, function (err) {
                                         if (err) {
                                             console.log(err);
                                         }
-                                        else {
-                                            console.log(result);
+
+                                        const email_subject = "BigRed//Hacks Registration Confirmation";
+                                        var template_content;
+                                        if (_isCornellian(college)) {
+                                            template_content =
+                                                "<p>Hi " + newUser.name.full + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that we have received your registration." + "</p><p>" +
+                                                "You can log in to our website any time to view your status or update " +
+                                                "your resume.  We will initially have a lottery to admit Cornell students. " +
+                                                "After that, Cornellians will be admitted off the waitlist in order of registration." + "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
+                                        } else {
+                                            template_content =
+                                                "<p>Hi " + newUser.name.full + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that we have received your registration." + "</p><p>" +
+                                                "You can log in to our website any time to view your status or update " +
+                                                "your resume.  We will notify you if you are removed from the waitlist." +
+                                                "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
                                         }
-
-                                        //send email and redirect to home page
-                                        req.login(newUser, function (err) {
-                                            if (err) {
-                                                console.log(err);
+                                        var config = {
+                                            "subject": email_subject,
+                                            "from_email": "info@bigredhacks.com",
+                                            "from_name": "BigRed//Hacks",
+                                            "to": {
+                                                "email": newUser.email,
+                                                "name": newUser.name.full
                                             }
-                                            if (newUser.internal.status == "Accepted") {
-                                                var email_subject = "BigRed//Hacks Registration Confirmation";
-                                                var template_content =
-                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                    "that you're registered for BigRed//Hacks 2016! " +
-                                                    "We'll be sending a lot more logistical information soon." + "</p><p>" +
-                                                    "You can log in to our website any time to update your resume " +
-                                                    "and view logistic information as we post it." + "</p><p>" +
-                                                    "If you haven't already, make sure to like us on Facebook and " +
-                                                    "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
-                                            } else {
-                                                email_subject = "BigRed//Hacks Wait List Confirmation";
-                                                template_content =
-                                                    "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                    "that we have received your application and that you have been added to our wait list." + "</p><p>" +
-                                                    "You can log in to our website any time to view your status or update " +
-                                                    "your resume.  We'll be sending out wait list status updates soon." + "</p><p>" +
-                                                    "If you haven't already, make sure to like us on Facebook and " +
-                                                    "follow us on Twitter!" + "</p><p>" +
-                                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
-                                            }
+                                        };
 
-                                            var config = {
-                                                "subject": email_subject,
-                                                "from_email": "info@bigredhacks.com",
-                                                "from_name": "BigRed//Hacks",
-                                                "to": {
-                                                    "email": newUser.email,
-                                                    "name": newUser.name.first + " " + newUser.name.last,
-                                                }
-                                            };
-                                            email.sendCustomEmail(template_content, config);
-                                            res.redirect('/user/dashboard');
-                                        })
-                                    })
-                                }
-                            });
-                        })
-                    });
+                                        email.sendCustomEmail(template_content, config);
+                                        return res.redirect('/user/dashboard');
+                                    });
+                                })
+                            }
+                        });
+                    })
                 }
             });
         });
@@ -568,7 +545,7 @@ module.exports = function (io) {
      */
     router.post('/login',
         /** TODO: Uncomment this before 2017 registration. In 2016 we have a mix of cases so this cannot be used yet.
-        function (req, res, next) {
+         function (req, res, next) {
             if (req.body.email) {
                 req.body.email = req.body.email.toLowerCase();
             }

@@ -5,7 +5,4 @@ $("#checkout-hardware-btn").on('click', function (){
     if (name == '' || email == '') {
         return false;
     }
-    else {
-        //to-do: email stuff here
-    }
 });
