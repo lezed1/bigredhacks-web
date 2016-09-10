@@ -17,7 +17,7 @@ var configVars = require('./library/config_vars.js');
 var configSchema = require('./config.schema.json');
 if (fs.existsSync('./config.json')) {
     var configData = require('./config.json');
-    configVars.validate_against_schema(configSchema,configData);
+    configVars.validate_against_schema(configSchema, configData);
     module.exports = configData;
 } else {
     module.exports = configVars.from_environment(configSchema);

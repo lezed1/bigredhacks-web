@@ -28,7 +28,6 @@ describe('config.json variables', function() {
                 "key_num": 2
             }
         };
-
     });
 
     it('should throw missing var error', function () {
