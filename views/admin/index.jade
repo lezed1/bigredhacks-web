@@ -21,6 +21,8 @@ block append admin_content
             a(href='#announcements', aria-controls='announcements', role='tab', data-toggle='tab') Announcements
         li(role='presentation')
             a(href='#decisions', aria-controls='decisions', role='tab', data-toggle='tab') Decisions
+        li(role='presentation')
+            a(href='#rsvp-override', aria-controls='rsvp-override', role='tab', data-toggle='tab') RSVP Override
 
     //- Tab panes
     .tab-content
@@ -122,3 +124,13 @@ block append admin_content
                         button#waitlist-make.btn.btn-success(type='submit' onclick="return confirm('Are you sure?')") Move Off Waitlist
         #messages.tab-pane(role='tabpanel') ...
         #settings.tab-pane(role='tabpanel') ...
+        #rsvp-override.tab-pane(role='tabpanel')
+            h2 Per-User RSVP Override
+            .form-group
+                label User's email
+                input.form-control(type='text', name='email', placeholder='ex. dinasauronion@yahoo.com',value='')
+                br
+                label New RSVP Time
+                input.form-control(type='text', name='days-to-rsvp', placeholder='ex. 12 Days', value='')
+            .form-group
+                button#rsvpOverride.btn.btn-success(type='submit') Override
