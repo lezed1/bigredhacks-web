@@ -49,6 +49,11 @@ block mentor_content
                       td #{mentorRequest.description}
                       td #{mentorRequest.location}
 
+block footer
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/mentor.js")
+
+
     //if mentorRequests.length == 0
         h3#norequests There are currently no requests that match your skill set. You can add to your
             | skill set in dashboard home to increase the number of requests that come your way.

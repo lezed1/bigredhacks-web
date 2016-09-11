@@ -12,6 +12,7 @@ var MentorRequest = require('../../models/mentor_request');
 var middle = require('../middleware');
 var util = require('../../util/util');
 var email = require('../../util/email');
+var socketutil = require('../../util/socketutil');
 
 /**
  * @api {get} /api/colleges Request a full list of known colleges
@@ -185,7 +186,10 @@ router.post('/RequestMentor', function (req, res, next) {
                    console.error(err);
                }
 
-                return res.redirect('/live');
+                MentorRequest.find({}, function(err, requests) {
+                    socketutil.updateRequests(requests);
+                    return res.status(200).send('Request made!');
+                });
             });
         });
     });
