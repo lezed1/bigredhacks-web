@@ -33,7 +33,22 @@ block mentor_content
     |  A request that has been fully completed after a mentor claimed it and then resolved the student's request.
     br
     .header-wrapper
-        h2.page-title requests
+        .mentorRequests
+          h2.page-title requests
+          table#mentorRequests-table.table.table-striped
+              tr
+                  th Name
+                  th Email
+                  th Description
+                  th Location
+
+              for mentorRequest in mentorRequests
+                  tr
+                      td #{mentorRequest.name}
+                      td #{mentorRequest.email}
+                      td #{mentorRequest.description}
+                      td #{mentorRequest.location}
+
     //if mentorRequests.length == 0
         h3#norequests There are currently no requests that match your skill set. You can add to your
             | skill set in dashboard home to increase the number of requests that come your way.
@@ -45,7 +60,7 @@ block mentor_content
             h5
                 input#onlymatching(type='checkbox', name='onlymatching')
                 |  show only matching requests
-    //- for request in mentorRequests
+    //-  for request in mentorRequests
         .mentorrequestbox(data-mentorrequestpubid=request.pubid,data-match=request.match)
             .mentorrequestboxtitle Request from request.user.name
             .requeststatus
@@ -72,4 +87,4 @@ block mentor_content
                     input.claim.btn.btn-primary(type='button', value='claim', name='claim')
             else if request.requeststatus == "Claimed" && request.mentor.id == user.id
                 .changerequeststatus
-                    input.unclaim.btn.btn-primary(type='button', value='unclaim', name='unclaim')
+                     input.unclaim.btn.btn-primary(type='button', value='unclaim', name='unclaim')

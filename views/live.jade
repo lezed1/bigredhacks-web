@@ -18,8 +18,8 @@ block append main_content
                     tr
                         td #{announcement.message}
                         td #{moment(announcement.time).from()}
-        .mentorrequest
-            h2 Request a Mentor
+        .mentorRequest
+            h1 Request a Mentor
             form(action='' method='post')
                 .form-group
                     input.form-control(type='text', name='name', placeholder='name')
