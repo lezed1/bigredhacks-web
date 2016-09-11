@@ -578,7 +578,6 @@ function schoolReimbursementsPost(req, res) {
             console.error(err);
             return res.sendStatus(500);
         }
-
         if (rem) {
             console.log("Entry already exists.");
             return res.sendStatus(500);
@@ -1275,17 +1274,26 @@ function cornellWaitlist(req, res, next) {
  * @apiname CornellWaitlist
  * @apigroup Admin
  *
- * @apiParam {Boolean} optInOnly Only grab emails of those opted in TODO: Implement
- * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
+ * @apiParam {Boolean} optInOnly Only grab emails of those opted in
+ * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd
  **/
 function csvBus(req, res, next) {
-    
+    let query = [
+        {'internal.status' : 'Accepted'},
+        {'internal.cornell_applicant' : false}
+    ];
+
+    if (req.body.optInOnly) {
+        query.push({'internal.busid': {$ne : null}});
+    }
+
+    if (req.body.rsvpOnly) {
+        query.push({'internal.going' : true});
+    }
+
     async.parallel({
         students: function students(cb) {
-            User.find({ $and : [
-                {'internal.status' : 'Accepted'},
-                {'internal.cornell_applicant' : false}
-                    ]}, cb);
+            User.find({ $and : query}, cb);
         },
         buses: function bus(cb) {
             Bus.find({}, cb);
