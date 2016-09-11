@@ -1,7 +1,8 @@
 @import "_global";
 
 body{
-  padding-top:80px
+  padding-top:80px;
+  //background-color: @light-blue;
 }
 .container, th{
   text-align: center;
@@ -9,5 +10,97 @@ body{
 .announcements{
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 400px;
+  height: 300px;
+}
+
+#live-title{
+  text-align: center;
+}
+
+#request-mentor-btn{
+  margin-bottom: 20px;
+}
+.twitter-feed{
+  height: 250px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.countdown{
+  h1 {
+    margin-bottom: 0;
+  }
+}
+#clockdiv{
+  font-family: 'Montserrat';
+  color: white;
+  display: inline-block;
+  font-weight: 100;
+  text-align: center;
+  font-size: 30px;
+}
+
+#clockdiv > div{
+  padding: 10px;
+  border-radius: 3px;
+  background: white;
+  display: inline-block;
+}
+
+#clockdiv div > span{
+  padding: 15px;
+  border-radius: 3px;
+  background: @jasonblue;
+  display: inline-block;
+}
+
+.smalltext{
+  padding-top: 5px;
+  font-size: 16px;
+  color: black;
+}
+
+
+@media (min-width: 767px){
+  .schedule-tab {
+    column-count: 3;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    .heading {
+      break-before: column;
+    }
+  }
+}
+
+.calendar{
+
+  .heading h3{
+    margin-top: 40px;
+  }
+  h2, h3, h4, p {
+    color: @jasonblue;
+    margin: 0px;
+    //font-size: 10px;
+  }
+  h3,h5,p{
+    text-align: left;
+
+  }
+  h2{
+    margin-bottom: 10px;
+  }
+  h3, h5 {
+    margin-bottom: 5px;
+  }
+  h3{
+    margin-top: 5px;
+  }
+  .data {
+    h5 {
+      color: @light-gray;
+    }
+  }
+
+}
+.schedule-tab{
+  margin-left: 5%;
 }
