@@ -13,13 +13,25 @@ module.exports = function(grunt) {
                     expand: true
                 }]
             }
+        },
+        mochaTest: {
+            all: {
+                src: ['tests/**/*.js']
+            },
+            options: {
+                reporter: 'spec',
+                quiet: false,
+                clearRequireCache: false
+            }
         }
     });
 
-    // Load the plugin that provides the "uglify" task.
+    // Load plugins
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     // Default task(s).
     grunt.registerTask('heroku', ['uglify']);
+    grunt.registerTask('test', ['mochaTest']);
 
 };
