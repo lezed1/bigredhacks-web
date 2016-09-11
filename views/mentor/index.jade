@@ -34,10 +34,9 @@ block mentor_content
     br
     .header-wrapper
         .mentorRequests
-          h2.page-title requests
+          h2.page-title unclaimed requests
           table#mentorRequests-table.table.table-striped
               tr
-                  th Name
                   th Email
                   th Description
                   th Location
@@ -45,7 +44,6 @@ block mentor_content
 
               for mentorRequest in mentorRequests
                   tr
-                      td #{mentorRequest.name}
                       td #{mentorRequest.email}
                       td #{mentorRequest.description}
                       td #{mentorRequest.location}
