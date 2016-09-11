@@ -30,10 +30,6 @@ var en = {
             long: "test/admin/mentor".split("/")//remove "user item"
         }
     },
-    mentor: {
-        companyname: "Capital One-Uber-Priceline.com-Bloomberg-Andreessen Horowitz-Goldman Sachs-MathWorks-Epic-Oracle-BigRed//Hacks".split("-"),
-        companyimage: "capitalone.png/uber.png/priceline.png/bloomberg.png/a16z.png/goldmansachs.png/mathworks.png/epic.png/oracle.png/bigredhacks.png".split("/")
-    },
     mentorrequest: {
         status: "Unclaimed Claimed Completed".split(" ")
     },

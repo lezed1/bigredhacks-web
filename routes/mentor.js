@@ -32,6 +32,15 @@ router.get('/dashboard', function (req, res, next) {
 });
 
 /**
+ * @api {GET} /mentor/register Registration page for a mentor
+ */
+router.get('/register', function(req, res) {
+    res.render('register_mentor', {
+        title: "Mentor Registration"
+    });
+});
+
+/**
  * @api {GET} /mentor/login Login page for a mentor
  */
 router.get('/login', function(req, res) {
