@@ -468,21 +468,6 @@ module.exports = function (io) {
     });
 
     /**
-     * @api {GET} /user/dashboard/requestmentor Page to request for mentorship
-     * @apiName RequestMentor
-     * @apiGroup User
-     */
-    router.get('/dashboard/requestmentor', function (req, res) {
-        MentorRequest.find({'user.id': req.user.id}).exec(function (err, mentorRequests) {
-            res.render('dashboard/request_mentor', {
-                title: "Ask For Help",
-                mentorRequests: mentorRequests,
-                user: req.user
-            });
-        });
-    });
-
-    /**
      * @api {GET} /user/travel A static travel page.
      * @apiName Travel
      * @apiGroup User
