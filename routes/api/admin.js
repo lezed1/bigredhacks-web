@@ -902,7 +902,7 @@ function studentReimbursementsDelete(req, res, next) {
     if (!req.body.email) {
         return res.status(500).send("Email required");
     }
-    
+
     User.findOne( { email: req.body.email }, function (err, user) {
         if (err) {
             console.log('ERROR on delete: ' + err);
@@ -1008,7 +1008,8 @@ function setInventory(req, res, next) {
  * @apiParam {Number} quantity The quantity of hardware to transact
  * @apiParam {String} name The unique name of the hardware being transacted
  **/
-function transactHardware({body}, res, next) {
+function transactHardware(req, res, next) {
+    var body = req.body;
     if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
@@ -1279,7 +1280,7 @@ function cornellWaitlist(req, res, next) {
  * @apiParam {Boolean} rsvpOnly Only grab emails of those RSVP'd TODO: Implement
  **/
 function csvBus(req, res, next) {
-    
+
     async.parallel({
         students: function students(cb) {
             User.find({ $and : [
