@@ -15,6 +15,9 @@ block append main_content
                 .alert.alert-danger(role="alert")= messages.error[0].toLowerCase()
             form(action="/mentor/login", method="post")
                 .form-group
+                    label(for="email") email
+                    input#email.form-control(type="email", name="email", placeholder="email", required=true)
+                .form-group
                     label(for="secret-id") secret id
                     input#secret-id.form-control(type="password", name="secretId", placeholder="secret Id", required=true)
                 button.btn.btn-primary.center-block(type="submit") login

@@ -48,12 +48,12 @@ middle.requireAdmin = function (req, res, next) {
 };
 
 middle.requireMentor = function (req, res, next) {
-    if (true) { // TODO
+    if (req.mentor) { 
         return next();
     }
     else {
         req.flash('error', 'Please login first.');
-        return res.redirect('/login');
+        return res.redirect('/mentor/login');
     }
 };
 
