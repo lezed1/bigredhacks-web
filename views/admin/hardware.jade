@@ -4,6 +4,9 @@
 extends _layout-admin
 
 block append admin_content
+
+    +showMessages(messages)
+    
     h1#title Hardware
     .tabs
         ul.nav.nav-tabs.center(role='tablist')
@@ -18,6 +21,7 @@ block append admin_content
 
     .tab-content
         #hardware-available.tab-pane.active(role='tabpanel')
+            h2 Hardware Available
             table.table.table-striped
                 tr
                     th Name of hardware
@@ -28,11 +32,11 @@ block append admin_content
                         th #{item.name}
                         th #{item.quantityAvailable}
                         th #{item.quantityOwned}
-            h2#test Checkout or Return hardware
+            h2#checkout-or-return Checkout or Return hardware
             form(action='/api/admin/hardware/transaction' method='post')
                 .form-group
                     select#name.form-control(name='name')
-                        +generateOptions(hardwareNameList,{selected: name})
+                        +generateOptions(['select'].concat(hardwareNameList),{selected: name})
                 .form-group
                     input#email.form-control(type='text', name='email', placeholder='email')
                 .form-group
@@ -42,6 +46,7 @@ block append admin_content
                         input#checkingOut(type='checkbox', value='', name='checkingOut')
                 button#checkout-hardware-btn.btn.btn-primary(type='submit') Submit
         #checkouts.tab-pane(role='tabpanel')
+            h2 Hardware Currently Checked out
             table.table.table-striped
                 tr
                     th Name of hardware
@@ -56,6 +61,7 @@ block append admin_content
                         th #{checkout.student_id.name.first} #{checkout.student_id.name.first}
                         th #{checkout.student_id.email}
         #transactions.tab-pane(role='tabpanel')
+            h2 All Hardware Transactions
             table.table.table-striped
                 tr
                     th Checking Out?

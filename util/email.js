@@ -149,7 +149,7 @@ module.exports.sendHardwareEmail = function (checkingOut, quantity, itemName, fi
     let body = '<p>Hi ' + firstName + ',</p>' +
         '<p>This is to confirm that you have ' +
         (checkingOut ? 'checked out ' : 'returned ') +
-        quantity + ' of ' + itemName + '. </p>' +
+        quantity + ' ' + itemName + '. </p>' +
         '<p>Cheers</p>' +
         '<p>BigRed//Hacks Team</p>';
 

@@ -1087,6 +1087,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Checked out ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1132,6 +1133,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1146,6 +1148,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
