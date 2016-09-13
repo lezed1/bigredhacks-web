@@ -14,8 +14,8 @@ block append description
         input#authorization.form-control(type='text', name='authorization', minlength='1', placeholder='authorization', value=input.authorization || '',  required=true)
 block append account-information
     .form-group
-        label(for='secretId') secret id *
-        input#secretId.form-control(type='password', name='secretId', placeholder='secret id', required=true)
+        label(for='password') secret id *
+        input#secretId.form-control(type='password', name='password', placeholder='secret id', required=true)
     .form-group
         label(for='confirmSecretId') confirm secret id *
         input#confirmSecretId.form-control(type='password', name='confirmSecretId', placeholder='secret id', required=true)

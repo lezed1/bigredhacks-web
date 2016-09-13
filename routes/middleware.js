@@ -48,7 +48,8 @@ middle.requireAdmin = function (req, res, next) {
 };
 
 middle.requireMentor = function (req, res, next) {
-    if (req.mentor) { 
+    // Mentors have a company, so I use this to identify a mentor.
+    if (req.user && req.user.company !== undefined) {
         return next();
     }
     else {

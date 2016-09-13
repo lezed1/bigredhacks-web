@@ -7,27 +7,27 @@ var email = require('../util/email');
 var middle = require('../routes/middleware.js');
 var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var MentorAuthKey = require('../models/mentor_authorization_key');
 var MentorRequest = require('../models/mentor_request');
 var Mentor = require('../models/mentor');
-var User = require('../models/user.js');
 
 var router = express.Router();
 
-passport.use(new LocalStrategy({
+passport.use('mentor_strat', new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'secredId',
+        passwordField: 'password',
         passReqToCallback: true
     },
     function (req, email, password, done) {
-        Mentor.findOne({email: email}, function (err, mentor) {
+        Mentor.findOne({email: email}, function (err, user) {
             if (err) {
                 return done(err);
             }
-            if (user == null || !user.validPassword(secredId)) {
+            if (user == null || !user.validPassword(password)) {
                 return done(null, false, function () {
                     req.flash('email', email);
                     req.flash('error', 'Incorrect username or email.');
@@ -67,7 +67,7 @@ module.exports = function(io) {
         MentorRequest.find({}, function (err, mentorRequests) {
             if (err) console.error(err);
             res.render('mentor/index', {
-                mentor: req.mentor,
+                mentor: req.user,
                 title: "Dashboard Home",
                 mentorRequests
             });
@@ -95,15 +95,14 @@ module.exports = function(io) {
     /**
      * @api {POST} /mentor/login Do login for mentor
      */
-    router.post('/login', function (req, res) {
-        passport.authenticate('local', {
-            failureRedirect: '/login',
+    router.post('/login',
+        passport.authenticate('mentor_strat', {
+            failureRedirect: '/mentor/login',
             failureFlash: true
         }), function (req, res) {
-            // successful auth, user is set at req.user.  redirect as necessary.
             return res.redirect('/mentor/dashboard');
         }
-    });
+    );
 
     /**
      * @api {GET} /mentor/logout Logout the current mentor
@@ -189,7 +188,7 @@ module.exports = function(io) {
                     },
                     company: req.body.company,
                     email: req.body.em,
-                    secretId: req.body.secretId
+                    password: req.body.password
                 });
 
                 // TODO: Remove auth key
@@ -200,7 +199,7 @@ module.exports = function(io) {
                         return res.redirect('/register');
                     }
 
-                    return res.redirect('/dashboard');
+                    return res.redirect('/mentor/dashboard');
                 });
             });
         });
