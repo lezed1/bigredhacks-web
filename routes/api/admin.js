@@ -955,12 +955,15 @@ function rsvpDeadlineOverride(req, res, next) {
  * @apiname TransactHardware
  * @apigroup Admin
  *
+ * TODO: This method is a bit messy. Should be refactored in the future. (#178)
+ *
  * @apiParam {Number} quantity The quantity of hardware we own
  * @apiParam {String} name The unique name of the hardware
  **/
 function setInventory(req, res, next) {
     let body = req.body;
-    if (!body || !body.quantity || !body.name) {
+    body.quantity = Number(body.quantity);
+    if (!body || body.quantity === undefined || !body.name || isNaN(body.quantity)) {
         return res.status(500).send('Missing quantity or name');
     }
 
@@ -1014,7 +1017,7 @@ function transactHardware({body}, res, next) {
 
     body.quantity = Number(body.quantity); // This formats as a string by default
 
-    if (body.quantity < 1) {
+    if (body.quantity < 1 || isNaN(body.quantity)) {
         return res.status(500).send('Please send a positive quantity');
     }
 
@@ -1054,7 +1057,7 @@ function transactHardware({body}, res, next) {
 
                     transaction.quantity += body.quantity;
 
-                    result.item.changeQuantity(-body.quantity, function (err) {
+                    result.item.addQuantity(-body.quantity, function (err) {
                         if (err) {
                             return res.status(500).send(err);
                         }
@@ -1098,7 +1101,7 @@ function transactHardware({body}, res, next) {
 
                 transaction.quantity -= body.quantity;
 
-                result.item.changeQuantity(body.quantity, function (err) {
+                result.item.addQuantity(body.quantity, function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');

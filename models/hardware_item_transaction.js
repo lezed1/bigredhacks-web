@@ -1,6 +1,7 @@
 "use strict";
 /**
- * Holds inventory information for a hardware item
+ * A log entry of a hardware transaction. Objects should not be deleted as it is meant to recover from
+ * any errors in the HardwareItemCheckout schema
  */
 
 var mongoose = require('mongoose');
