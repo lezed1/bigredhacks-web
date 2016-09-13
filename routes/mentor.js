@@ -5,6 +5,7 @@ var enums = require('../models/enum.js');
 var app = require('../app');
 
 var MentorRequest = require('../models/mentor_request');
+var Mentor = require('../models/mentor');
 var User = require('../models/user.js');
 
 var router = express.Router();
@@ -64,12 +65,34 @@ module.exports = function(io) {
     });
 
     /**
+     * @api {POST} /mentor/claim Route for mentors to claim a user
+     *
+     * @apiParam {String} requestId The mongo id of the request being claimed
+     * @apiParam {String} mentorId The mongo id of the mentor making the claim
+     */
+    router.post('/claim', function (req, res) {
+        async.parallel({
+            request: function request(callback) {
+                MentorRequest.find({'_id' : req.body.requestId}).populate('user').exec(callback);
+            },
+            mentor: function mentor(callback) {
+                Mentor.find({'_id' : req.body.mentorId}, callback);
+            }
+        }, function(err, result) {
+            if (!result.request || !mentor) {
+                return res.status(500).send('missing request or mentor');
+            } else if (!result.)
+        });
+        res.redirect('/');
+    });
+
+    /**
      * @api {POST} /mentor/register Registration submission for a mentor
      */
     router.post('/register', function (req, res) {
         // TODO: Registration
         res.redirect('/')
     });
-    
+
     return router;
 };
