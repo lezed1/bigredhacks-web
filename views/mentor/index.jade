@@ -19,7 +19,7 @@ block mentor_content
 
     p
         | welcome to your mentor requests queue
-        | . a request has three possible statuses:
+        | . a request has two possible statuses:
     span.unclaimed
         | Unclaimed:
     |  A request that you may claim below and then visit the student's location to help them.
@@ -28,10 +28,7 @@ block mentor_content
         | Claimed:
     |  A request that has been claimed, and the mentor who claimed it will be shown.
     br
-    span.completed
-        | Completed:
-    |  A request that has been fully completed after a mentor claimed it and then resolved the student's request.
-    br
+
     .header-wrapper
         .mentorRequests
           h2.page-title unclaimed requests
@@ -47,7 +44,8 @@ block mentor_content
                       td #{mentorRequest.email}
                       td #{mentorRequest.description}
                       td #{mentorRequest.location}
-                      td button.btn.btn-primary.btn-claim.role claim
+                      td
+                        button.btn.btn-primary.btn-claim.role claim
 
 block footer
     script(src="/socket.io/socket.io.js")
