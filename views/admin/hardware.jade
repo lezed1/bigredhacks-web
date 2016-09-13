@@ -53,7 +53,6 @@ block append admin_content
                     th Quantity
                     th Name of student
                     th Email of student
-                    th Date
                 for checkout in checkouts
                     tr
                         th #{checkout.inventory_id.name}
@@ -64,15 +63,17 @@ block append admin_content
             h2 All Hardware Transactions
             table.table.table-striped
                 tr
-                    th Checking Out?
+                    th Action
                     th Name of hardware
                     th Quantity
                     th Name of student
                     th Email of student
                     th Date
                 for txn in transactions
+                    -
+                        var checkoutReadable = txn.checkOut ? 'Check Out' : 'Return';
                     tr
-                        th #{txn.checkOut}
+                        th #{checkoutReadable}
                         th #{txn.itemName}
                         th #{txn.quantity}
                         th #{txn.studentId.name.full}
