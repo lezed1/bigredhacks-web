@@ -156,6 +156,27 @@ module.exports.sendHardwareEmail = function (checkingOut, quantity, itemName, fi
     sendCustomEmail(body, config, callback);
 };
 
+module.exports.sendRequestMadeEmail = function (email, name, callback) {
+    var config = {
+        "subject": 'Mentorship Request Created',
+        "from_email": "info@bigredhacks.com",
+        "from_name": "BigRed//Hacks",
+        "to": {
+            "email": email,
+            "name": name.first + ' ' + name.last
+        }
+    };
+
+    let body = '<p>Hi ' + name.first + ',</p>' +
+        '<p>This is to confirm that you have created a request for a mentor. The mentors will ' +
+        'view your request, and someone will respond shortly. Please make sure you are at the location that ' +
+        'you provided in your request!</p>' +
+        '<p>Cheers</p>' +
+        '<p>BigRed//Hacks Team</p>';
+
+    sendCustomEmail(body, config, callback);
+};
+
 module.exports.sendCustomEmail = sendCustomEmail;
 
 var defaultCallback = function (err, json) {
