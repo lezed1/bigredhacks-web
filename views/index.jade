@@ -79,6 +79,8 @@ block append content
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
                                     | &nbsp;&nbsp;&nbsp;
                                     a.btn.btn-blue(href="/login") login
+                                else if middlehelp.isResultsReleased()
+                                    a.btn.btn-light-blue(href="/login") login
 
                 //- section about
                 //+sectionHeading("Be a part of something big")
@@ -334,7 +336,7 @@ block append content
                         img(src='img/logos/mlh.png', alt='Major League Hacking')
                 li#cornellcs.logo-1
                     a(href='http://www.cs.cornell.edu')
-                        img(src='img/logos/cornell-cs.png', alt='Cornell Computer Science')
+                        img(src='img/logos/cis.jpg', alt='Cornell Computer Science')
 
             ul.logos
                 li#equitas.logo-1
