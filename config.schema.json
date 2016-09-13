@@ -41,5 +41,9 @@
   },
   "fb": {
     "access_token": {"type": "String"}
+  },
+  "firebase": {
+    "key": {"type": "String"}
   }
 }
+
