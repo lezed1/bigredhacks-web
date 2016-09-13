@@ -1010,7 +1010,8 @@ function setInventory(req, res, next) {
  * @apiParam {Number} quantity The quantity of hardware to transact
  * @apiParam {String} name The unique name of the hardware being transacted
  **/
-function transactHardware({body}, res, next) {
+function transactHardware(req, res, next) {
+    var body = req.body;
     if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
