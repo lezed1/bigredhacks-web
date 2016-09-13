@@ -48,12 +48,13 @@ middle.requireAdmin = function (req, res, next) {
 };
 
 middle.requireMentor = function (req, res, next) {
-    if (req.user && req.user.role === "mentor") {
+    // Mentors have a company, so I use this to identify a mentor.
+    if (req.user && req.user.company !== undefined) {
         return next();
     }
     else {
         req.flash('error', 'Please login first.');
-        return res.redirect('/login');
+        return res.redirect('/mentor/login');
     }
 };
 

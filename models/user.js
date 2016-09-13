@@ -117,7 +117,7 @@ userSchema.pre('save', function (next) {
 });
 
 /**
- * compares the user's password and derermines whether it's valid
+ * compares the user's password and determines whether it's valid
  * @param candidatePassword
  * @returns {boolean}
  */
@@ -323,6 +323,17 @@ userSchema.statics.removeFromTeam = function (user_id, callback) {
             })
         }
     })
+};
+
+/**
+ * Checks whether someone's email is part of the user database
+ * @param email
+ * @param callback
+ */
+userSchema.statics.validEmail = function (email, callback) {
+    User.findOne({email: email}, function (err, user) {
+        return callback(err, user != null);
+    });
 };
 
 module.exports = mongoose.model("User", userSchema);

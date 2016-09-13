@@ -18,6 +18,20 @@ block append main_content
                     tr
                         td #{announcement.message}
                         td #{moment(announcement.time).from()}
+        .mentorRequest
+            h1 Request a Mentor
+            form(action='/api/RequestMentor' method='post')
+                .form-group
+                    input.form-control(type='text', name='email', placeholder='email')
+                .form-group
+                    input.form-control(type='text', name='request', placeholder='description of the issue')
+                .form-group
+                    input.form-control(type='text', name='tableNumber', placeholder='table number')
+                button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
+            br
+            br
+            br
+
         .schedule
             h1 Schedule
                 .agenda
