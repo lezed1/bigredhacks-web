@@ -15,10 +15,10 @@ var hardwareItemTransactionSchema = new mongoose.Schema({
 });
 
 // Methods
-hardwareItemTransactionSchema.statics.make = function transaction(itemName, student_id, quantity, checkOut, callback) {
+hardwareItemTransactionSchema.statics.make = function transaction(itemName, studentId, quantity, checkOut, callback) {
     let txn = new this({
         itemName,
-        student_id,
+        studentId,
         quantity,
         checkOut
     });

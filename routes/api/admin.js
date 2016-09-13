@@ -1012,9 +1012,11 @@ function setInventory(req, res, next) {
  **/
 function transactHardware(req, res, next) {
     var body = req.body;
-    if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
+    if (!body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
+
+    body.checkingOut = body.checkingOut !== undefined;
 
     body.quantity = Number(body.quantity); // This formats as a string by default
 
@@ -1085,6 +1087,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Checked out ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1130,6 +1133,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1144,6 +1148,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
