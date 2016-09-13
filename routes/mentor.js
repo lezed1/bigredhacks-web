@@ -64,7 +64,7 @@ module.exports = function(io) {
      * @apiGroup Mentor
      */
     router.get('/dashboard', middle.requireMentor,function (req, res, next) {
-        MentorRequest.find({}, function (err, mentorRequests) {
+        MentorRequest.find({}).populate('user').exec(function (err, mentorRequests) {
             if (err) console.error(err);
             res.render('mentor/index', {
                 mentor: req.user,
