@@ -18,15 +18,15 @@ block append main_content
                     tr
                         td #{announcement.message}
                         td #{moment(announcement.time).from()}
-        .mentorrequest
-            h2 Request a Mentor
-            form(action='' method='post')
+        .mentorRequest
+            h1 Request a Mentor
+            form(action='/api/RequestMentor' method='post')
                 .form-group
-                    input.form-control(type='text', name='name', placeholder='name')
+                    input.form-control(type='text', name='email', placeholder='email')
                 .form-group
-                    input.form-control(type='text', name='reason', placeholder='wat is the prob')
+                    input.form-control(type='text', name='request', placeholder='description of the issue')
                 .form-group
-                    input.form-control(type='text', name='table', placeholder='table number')
+                    input.form-control(type='text', name='tableNumber', placeholder='table number')
                 button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
             br
             br
