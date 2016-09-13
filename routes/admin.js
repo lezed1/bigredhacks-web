@@ -16,6 +16,9 @@ var Team = require('../models/team.js');
 var Bus = require('../models/bus.js');
 var Reimbursements = require('../models/reimbursements.js');
 var TimeAnnotation = require('../models/time_annotation.js');
+var HardwareItem = require('../models/hardware_item.js');
+var HardwareItemCheckout = require('../models/hardware_item_checkout.js');
+var HardwareItemTransaction = require('../models/hardware_item_transaction.js');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = {role: "user"};
@@ -640,6 +643,30 @@ router.get('/stats', function (req, res, next) {
         }
     );
 });
+/**
+ * @api {GET} /admin/hardware Manage hardware checkout
+ * @apiName Hardware
+ * @apiGroup AdminAuth
+ */
+    router.get('/hardware', function (req, res, next) {
+        async.parallel({
+            inventory: function inventory(cb) {
+                HardwareItem.find({}, null, {sort: {name: 'asc'}}, cb);
+            },
+            checkouts: function checkouts(cb) {
+                HardwareItemCheckout.find().populate('student_id inventory_id').exec(cb);
+            },
+            transactions: function transactions(cb) {
+                HardwareItemTransaction.find().populate('student_id').exec(cb);
+            }
+        }, function(err, result) {
+            if (err) {
+                console.error(err);
+            }
+
+            res.render('admin/hardware', result);
+        });
+    });
 
 /**
  * Helper function to fill team members in teammember prop

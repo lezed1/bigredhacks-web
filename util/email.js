@@ -1,3 +1,5 @@
+"use strict";
+
 var global_config = require("../config");
 var sendgrid = require("sendgrid")(global_config.setup.sendgrid_api_key);
 var moment = require("moment");
@@ -64,6 +66,9 @@ const DEADLINE_WARNING_BODY = "<p>We wanted to remind you that you have <b>less 
         "we may have to offer your spot to someone else.</p>" +
     "<p>We hope to see you there!</p>" +
     "<p>BigRed//Hacks Team</p>";
+
+const HARDWARE_TRANSACTION_SUBJECT = 'BigRed//Hacks Hardware Transaction';
+
 /**
  * Asynchronously sends a transactional email
  * @param body Contains the html body of the email
@@ -128,6 +133,27 @@ module.exports.sendDecisionEmail = function (name, notifyStatus, newStatus, conf
 module.exports.sendDeadlineEmail = function (name, config, callback) {
     config.subject = DEADLINE_WARNING_SUBJECT;
     sendCustomEmail("<p>Hi " + name + ",</p>" + DEADLINE_WARNING_BODY, config, callback);
+};
+
+module.exports.sendHardwareEmail = function (checkingOut, quantity, itemName, firstName, lastName, studentEmail, callback) {
+    var config = {
+        "subject": HARDWARE_TRANSACTION_SUBJECT,
+        "from_email": "info@bigredhacks.com",
+        "from_name": "BigRed//Hacks",
+        "to": {
+            "email": studentEmail,
+            "name": firstName + ' ' + lastName
+        }
+    };
+
+    let body = '<p>Hi ' + firstName + ',</p>' +
+        '<p>This is to confirm that you have ' +
+        (checkingOut ? 'checked out ' : 'returned ') +
+        quantity + ' of ' + itemName + '. </p>' +
+        '<p>Cheers</p>' +
+        '<p>BigRed//Hacks Team</p>';
+
+    sendCustomEmail(body, config, callback);
 };
 
 module.exports.sendCustomEmail = sendCustomEmail;
