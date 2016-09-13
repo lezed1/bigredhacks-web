@@ -156,6 +156,7 @@ router.get('/calendar', function (req, res, next) {
  * @apiSuccess {String} tableNumber Where the requester is located, usually a table number
  */
 router.post('/RequestMentor', function (req, res, next) {
+    console.log(req.body);
     if (!req.body.email || !req.body.request) {
         return res.status(500).send('Missing email or request.');
     }

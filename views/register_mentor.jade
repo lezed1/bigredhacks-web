@@ -15,10 +15,10 @@ block append description
 block append account-information
     .form-group
         label(for='password') secret id *
-        input#password.form-control(type='password', name='password', placeholder='secret id', required=true)
+        input#secretId.form-control(type='password', name='password', placeholder='secret id', required=true)
     .form-group
-        label(for='confirmpassword') confirm secret id *
-        input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='secret id', required=true)
+        label(for='confirmSecretId') confirm secret id *
+        input#confirmSecretId.form-control(type='password', name='confirmSecretId', placeholder='secret id', required=true)
 
 block append basic-information
     .form-group
@@ -27,6 +27,9 @@ block append basic-information
     .form-group
         label(for='lastname') last name *
         input#lastname.form-control(type='text', name='lastname', minlength='2', placeholder='last name', value=input.lastname || '', required=true)
+    .form-group
+        label(for='em') email *
+        input#em.form-control(type='text', name='em', minlength='2', placeholder='email', value=input.em || '', required=true)
     .form-group
         label(for='company-dropdown') company/organization *
         input#company-dropdown.form-control(type='text', name='company', minlength='2', placeholder='company', value=input.company || '', required=true)

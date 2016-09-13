@@ -4,12 +4,49 @@ var async = require('async');
 var enums = require('../models/enum.js');
 var app = require('../app');
 var email = require('../util/email');
+var middle = require('../routes/middleware.js');
+var multiparty = require('multiparty');
+var helper = require('../util/routes_helper.js');
 
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+var MentorAuthKey = require('../models/mentor_authorization_key');
 var MentorRequest = require('../models/mentor_request');
 var Mentor = require('../models/mentor');
-var User = require('../models/user.js');
 
 var router = express.Router();
+
+passport.use('mentor_strat', new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true
+    },
+    function (req, email, password, done) {
+        Mentor.findOne({email: email}, function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (user == null || !user.validPassword(password)) {
+                return done(null, false, function () {
+                    req.flash('email', email);
+                    req.flash('error', 'Incorrect username or email.');
+                }());
+            }
+            return done(null, user);
+        });
+    }
+));
+
+passport.serializeUser(function (user, done) {
+    done(null, user._id);
+});
+
+passport.deserializeUser(function (id, done) {
+    Mentor.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
 
 module.exports = function(io) {
     /**
@@ -26,11 +63,11 @@ module.exports = function(io) {
      * @apiName Mentor
      * @apiGroup Mentor
      */
-    router.get('/dashboard', function (req, res, next) {
-        MentorRequest.find({}, function (err, mentorRequests) {
+    router.get('/dashboard', middle.requireMentor,function (req, res, next) {
+        MentorRequest.find({}).populate('user').exec(function (err, mentorRequests) {
             if (err) console.error(err);
             res.render('mentor/index', {
-                mentor: req.mentor,
+                mentor: req.user,
                 title: "Dashboard Home",
                 mentorRequests
             });
@@ -54,6 +91,18 @@ module.exports = function(io) {
             title: "Mentor Login"
         });
     });
+
+    /**
+     * @api {POST} /mentor/login Do login for mentor
+     */
+    router.post('/login',
+        passport.authenticate('mentor_strat', {
+            failureRedirect: '/mentor/login',
+            failureFlash: true
+        }), function (req, res) {
+            return res.redirect('/mentor/dashboard');
+        }
+    );
 
     /**
      * @api {GET} /mentor/logout Logout the current mentor
@@ -117,8 +166,43 @@ module.exports = function(io) {
      * @api {POST} /mentor/register Registration submission for a mentor
      */
     router.post('/register', function (req, res) {
-        // TODO: Registration
-        res.redirect('/')
+        var form = new multiparty.Form();
+        form.parse(req, function (err, fields, files) {
+            if (err) {
+                console.log(err);
+                req.flash('error', "Error parsing form.");
+                return res.redirect('/register');
+            }
+
+            req.body = helper.reformatFields(fields);
+
+            // TODO: Actually validate
+            var authKey = req.body.authorization;
+            MentorAuthKey.findOne({key: authKey}, function(err, key) {
+
+                // TODO: check key existence
+                var newMentor = new Mentor({
+                    name: {
+                        first: req.body.firstname,
+                        last: req.body.lastname
+                    },
+                    company: req.body.company,
+                    email: req.body.em,
+                    password: req.body.password
+                });
+
+                // TODO: Remove auth key
+                newMentor.save(function(err) {
+                    if (err) {
+                        console.error(err);
+                        req.flash("error", "An error occurred.");
+                        return res.redirect('/register');
+                    }
+
+                    return res.redirect('/mentor/dashboard');
+                });
+            });
+        });
     });
 
     return router;
