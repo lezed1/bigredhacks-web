@@ -156,6 +156,8 @@ module.exports.sendHardwareEmail = function (checkingOut, quantity, itemName, fi
     sendCustomEmail(body, config, callback);
 };
 
+
+
 module.exports.sendRequestMadeEmail = function (email, name, callback) {
     var config = {
         "subject": 'Mentorship Request Created',
@@ -171,6 +173,46 @@ module.exports.sendRequestMadeEmail = function (email, name, callback) {
         '<p>This is to confirm that you have created a request for a mentor. The mentors will ' +
         'view your request, and someone will respond shortly. Please make sure you are at the location that ' +
         'you provided in your request!</p>' +
+        '<p>Cheers</p>' +
+        '<p>BigRed//Hacks Team</p>';
+
+    sendCustomEmail(body, config, callback);
+};
+
+module.exports.sendRequestClaimedStudentEmail = function (email, studentName, mentorName, callback) {
+    var config = {
+        "subject": 'Mentorship Request Claimed',
+        "from_email": "info@bigredhacks.com",
+        "from_name": "BigRed//Hacks",
+        "to": {
+            "email": email,
+            "name": name.first + ' ' + name.last
+        }
+    };
+
+    let body = '<p>Hi ' + studentName.first + ',</p>' +
+        '<p>A mentor (' + mentorName.first + ' ' + mentorName.last + ') has claimed your request! ' +
+        '<p>Please be on the lookout for your mentor, and make sure you are at the location you specified ' +
+        'in your request!</p>' +
+        '<p>Cheers</p>' +
+        '<p>BigRed//Hacks Team</p>';
+
+    sendCustomEmail(body, config, callback);
+};
+
+module.exports.sendRequestClaimedMentorEmail = function (email, studentName, mentorName, callback) {
+    var config = {
+        "subject": 'Mentorship Request Claimed',
+        "from_email": "info@bigredhacks.com",
+        "from_name": "BigRed//Hacks",
+        "to": {
+            "email": email,
+            "name": name.first + ' ' + name.last
+        }
+    };
+
+    let body = '<p>Hi ' + mentorName.first + ',</p>' +
+        '<p>This is to confirm you have claimed a mentor request from ' + studentName.first + ' ' + studentName.last + '</p>' +
         '<p>Cheers</p>' +
         '<p>BigRed//Hacks Team</p>';
 

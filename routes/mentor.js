@@ -3,6 +3,7 @@ var express = require('express');
 var async = require('async');
 var enums = require('../models/enum.js');
 var app = require('../app');
+var email = require('../util/email');
 
 var MentorRequest = require('../models/mentor_request');
 var Mentor = require('../models/mentor');
@@ -79,11 +80,37 @@ module.exports = function(io) {
                 Mentor.find({'_id' : req.body.mentorId}, callback);
             }
         }, function(err, result) {
-            if (!result.request || !mentor) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('an error occurred');
+            } else if (!result.request || !result.mentor) {
                 return res.status(500).send('missing request or mentor');
-            } else if (!result.)
+            } else if (!result.request.mentor !== null) {
+                return res.status(500).send('another mentor has already claimed this');
+            }
+
+            result.request.mentor = result.mentor;
+            result.request.status = 'Claimed';
+
+            async.series({
+                notifyStudent: function notifyStudent(callback) {
+                    email.sendRequestClaimedStudentEmail(result.request.user.email, result.request.user.name, result.mentor.name, callback);
+                },
+                notifyMentor: function notifyMentor(callback) {
+                    email.sendRequestClaimedMentorEmail(result.mentor.email, result.request.user.name, result.mentor.name, callback);
+                },
+                saveRequest: function saveRequest(callback) {
+                    request.save(callback);
+                }
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                }
+
+                req.flash('success', 'You have claimed the request for help! Please go see ' + request.user.name.full + ' at ' + request.location);
+                res.redirect('/');
+            });
         });
-        res.redirect('/');
     });
 
     /**
