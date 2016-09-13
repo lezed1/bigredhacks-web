@@ -21,6 +21,8 @@ var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user')(app.io);
 var mentor = require('./routes/mentor')(app.io);
+var socketutil = require('./util/socketutil');
+socketutil.activateIo(app.io);
 var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');

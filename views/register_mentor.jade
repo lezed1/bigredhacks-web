@@ -4,23 +4,21 @@
 extends _layout-registration
 
 block vars
-    - companyNames = enums.mentor.companyname;
-    - var actionUrl = "/mentorregistration"; //- url the form should submit to
+    - var actionUrl = "/mentor/register"; //- url the form should submit to
     - var multipart = true; //- whether the form has multipart data
 
 block append description
     h1 Mentor Registration
-
+    .form-group
+        label(for='authorization') authorization code *
+        input#authorization.form-control(type='text', name='authorization', minlength='1', placeholder='authorization', value=input.authorization || '',  required=true)
 block append account-information
     .form-group
-        label(for='email') email address *
-        input#email.form-control.not-cornell(type='email', name='email', placeholder='bigredhacks@example.com', value=input.email || '', required=true)
+        label(for='password') secret id *
+        input#password.form-control(type='password', name='password', placeholder='secret id', required=true)
     .form-group
-        label(for='password') password *
-        input#password.form-control(type='password', name='password', placeholder='password', required=true)
-    .form-group
-        label(for='confirmpassword') confirm password *
-        input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='password', required=true)
+        label(for='confirmpassword') confirm secret id *
+        input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='secret id', required=true)
 
 block append basic-information
     .form-group
@@ -30,17 +28,8 @@ block append basic-information
         label(for='lastname') last name *
         input#lastname.form-control(type='text', name='lastname', minlength='2', placeholder='last name', value=input.lastname || '', required=true)
     .form-group
-        label(for='companyDropdown') company/organization *
-        select#companyDropdown.form-control(type='text', name='companyDropdown', required=true)
-            option(value='') select
-            +generateOptions(companyNames, {selected: (input.companyDropdown || "")})
-    .form-group
-        label(for='skills') comma-separated skills (ex: python, java, web applications, etc. *
-        input#skills.form-control(name='skills', placeholder="skills", value=input.skills || "", required=true)
-    .form-group
-        label(for='bio') brief bio
-        textarea#bio.form-control(name='bio', rows=4, value=input.bio || "", required=true)
-
+        label(for='company-dropdown') company/organization *
+        input#company-dropdown.form-control(type='text', name='company', minlength='2', placeholder='company', value=input.company || '', required=true)
 
 //- noop blocks
 block no_school
