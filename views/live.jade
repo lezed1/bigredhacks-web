@@ -2,10 +2,10 @@ extends _layout-unsecured
 
 mixin calendarEvents(event)
     .time
-        p #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
+        h4 #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
     .data
         p #{event.event}
-        h5 #{event.location}
+        //h5 #{event.location}
         h5 #{event.description}
 
 block header
@@ -17,113 +17,94 @@ block header
 block append main_content
     h1#live-title Live Page
     .container
-            .row
-                .col-md-5
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Announcements
-                        .table-responsive.announcements
-                                table#announcements-table.table.table-hover
-                                    thead
-                                        tr.active
-                                            th Message
-                                            th Time
-                                    tbody
-                                    for announcement in announcements.reverse()
-                                        tr
-                                            td #{announcement.message}
-                                            td #{moment(announcement.time).from()}
-                .col-md-4
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Request a Mentor
-                        .mentorrequest
-                            form(action='' method='post')
-                                .form-group
-                                    input.form-control(type='text', name='name', placeholder='name')
-                                .form-group
-                                    input.form-control(type='text', name='reason', placeholder='wat is the prob')
-                                .form-group
-                                    input.form-control(type='text', name='table', placeholder='table number')
-                                button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
-                .col-md-4
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title HackerEarth
-                        .box
-                            h3 Submissions
-                            button#hacker-earth-btn.btn.btn-primary(type="button", onclick="google.com") Submit Here!
-                .col-md-4
-                    .panel.panel-default
-                        .list-group
-                            h3 wifi: Cornell-Visitor
-                            h3 hacking ends: 9/18, 10 am
-                .col-md-4
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Hacking ends in
-                        .countdown
-                            #clockdiv
-                                div
-                                    span.days
-                                    .smalltext Days
-                                div
-                                    span.hours
-                                    .smalltext Hours
-                                div
-                                    span.minutes
-                                    .smalltext Minutes
-                                div
-                                    span.seconds
-                                    .smalltext Seconds
+        .row
+            .col-md-4
 
-                        .list-group
-                            h2 wifi: Cornell-Visitor
-                            h3 hacking ends: 9/18, 8 am
-                .col-md-8
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Schedule
-                        .container
-                            .schedule
-                                .schedule-table
-                                for event in calendar
-                                    //.heading
-                                        h3 #{moment(event.start).format("ddd")}
-                                    .time
-                                        p #{moment(event.start).format("hA")}
-                                    .data
-                                        p #{event.event}
-                                        h5 #{event.location}
-                                        h5 #{event.description}
-                .col-md-4
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Twitter
-                        .twitter-feed
-                            a.twitter-timeline(href='https://twitter.com/BigRedHacks') Tweets by BigRedHacks
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Announcements
+                    .table-responsive.announcements
+                        table#announcements-table.table.table-hover
+                            thead
+                                tr.active
+                                    th Message
+                                    th Time
+                            tbody
+                            for announcement in announcements.reverse()
+                                tr
+                                    td #{announcement.message}
+                                    td #{moment(announcement.time).from()}
+            .col-md-4
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Request a Mentor
+                    .mentorrequest
+                        form(action='' method='post')
+                            .form-group
+                                input.form-control(type='text', name='name', placeholder='name')
+                            .form-group
+                                input.form-control(type='text', name='reason', placeholder='wat is the prob')
+                            .form-group
+                                input.form-control(type='text', name='table', placeholder='table number')
+                            button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
+            .col-md-4
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title HackerEarth
+                    .box
+                        h3 Submissions
+                        button#hacker-earth-btn.btn.btn-primary(type="button", onclick="google.com") Submit Here!
+            .col-md-4
+                .panel.panel-default
+                    .list-group
+                        h3 wifi: Cornell-Visitor
+                        h3 hacking ends: 9/18, 10 am
+            .col-md-4
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Hacking ends in
+                    .countdown
+                        #clockdiv
+                            div
+                                span.days
+                                .smalltext Days
+                            div
+                                span.hours
+                                .smalltext Hours
+                            div
+                                span.minutes
+                                .smalltext Minutes
+                            div
+                                span.seconds
+                                .smalltext Seconds
 
-                .col-md-8.col-md-offset-2
-                    .panel.panel-default
-                        .panel-heading
-                            h3.panel-title Schedule
-                        .calendar
-                            .schedule-tab
-                                .heading
-                                    h3 fri, 9/16
-                                for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "fri"
-                                        +calendarEvents(event)
-                                .heading
-                                    h3 sat, 9/17
-                                for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "sat"
-                                        +calendarEvents(event)
-                                .heading
-                                    h3 sun, 9/18
-                                for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "sun"
-                                        +calendarEvents(event)
+            .col-md-4
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Twitter
+                    .twitter-feed
+                        a.twitter-timeline(href='https://twitter.com/BigRedHacks') Tweets by BigRedHacks
+            .col-md-8
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Schedule
+                    .calendar
+                        .schedule-tab
+                            .heading
+                                h3 fri, 9/16
+                            for event in calendar
+                                if moment(event.start).format("ddd").toLowerCase() == "fri"
+                                    +calendarEvents(event)
+                            .heading
+                                h3 sat, 9/17
+                            for event in calendar
+                                if moment(event.start).format("ddd").toLowerCase() == "sat"
+                                    +calendarEvents(event)
+                            .heading
+                                h3 sun, 9/18
+                            for event in calendar
+                                if moment(event.start).format("ddd").toLowerCase() == "sun"
+                                    +calendarEvents(event)
 
 
 
