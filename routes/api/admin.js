@@ -22,7 +22,7 @@ var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
-var io = require('../../app').io;
+var socketutil = require('../../util/socketutil');
 var OAuth = require('oauth');
 var util = require('../../util/util.js');
 
@@ -770,7 +770,7 @@ function postAnnouncement(req, res, next) {
         else {
             // Broadcast announcement
             if (req.body.web) {
-                io.emit('announcement', req.body.message);
+                socketutil.announceWeb(req.body.message);
             }
 
             if (req.body.mobile) {
