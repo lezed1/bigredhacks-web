@@ -5,6 +5,8 @@ var async = require('async');
 var mongoose = require('mongoose');
 var app = require('../../app');
 
+var FCM = require('fcm-push');
+
 // Mongoose Models
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
@@ -774,7 +776,18 @@ function postAnnouncement(req, res, next) {
             }
 
             if (req.body.mobile) {
-                // TODO: Waiting on mobile API to implement this
+                var serverkey = config.firebase.key;
+                var fcm = new FCM(serverkey);
+
+                var message = {
+                    to : '/topics/cats',
+                    notification : {
+                        title : req.body.message
+                    }
+                };
+
+                fcm.send(message, function(err,response){
+                });
             }
 
             if (req.body.facebook) {
@@ -1019,7 +1032,7 @@ function setInventory(req, res, next) {
  **/
 function transactHardware(req, res, next) {
     var body = req.body;
-    if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
+    if (!body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
 
