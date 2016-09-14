@@ -38,16 +38,6 @@ passport.use('mentor_strat', new LocalStrategy({
     }
 ));
 
-passport.serializeUser(function (user, done) {
-    done(null, user._id);
-});
-
-passport.deserializeUser(function (id, done) {
-    Mentor.findById(id, function (err, user) {
-        done(err, user);
-    });
-});
-
 module.exports = function(io) {
     /**
      * @api {GET} /mentor Mentor dashboard.
