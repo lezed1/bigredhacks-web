@@ -16,8 +16,12 @@ module.exports.activateIo = function(newIo) {
     });
 
 };
-// Mentorship
+// Live
+module.exports.announceWeb = function(message) {
+    io.emit('announcement', message);
+};
 
+// Mentorship
 // Server Broadcasts
 module.exports.updateRequests = function(newRequestList) {
     io.emit('request update', newRequestList);

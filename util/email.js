@@ -186,7 +186,7 @@ module.exports.sendRequestClaimedStudentEmail = function (email, studentName, me
         "from_name": "BigRed//Hacks",
         "to": {
             "email": email,
-            "name": name.first + ' ' + name.last
+            "name": studentName.first + ' ' + studentName.last
         }
     };
 
@@ -207,7 +207,7 @@ module.exports.sendRequestClaimedMentorEmail = function (email, studentName, men
         "from_name": "BigRed//Hacks",
         "to": {
             "email": email,
-            "name": name.first + ' ' + name.last
+            "name": mentorName.first + ' ' + mentorName.last
         }
     };
 

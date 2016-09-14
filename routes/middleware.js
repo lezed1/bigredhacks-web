@@ -28,7 +28,8 @@ middle.requireNoAuthentication = function (req, res, next) {
 };
 
 middle.requireAuthentication = function (req, res, next) {
-    if (req.user) {
+    // req.user could be a mentor or user, this differentiates them
+    if (req.user && req.user.pubid) {
         return next();
     }
     else {

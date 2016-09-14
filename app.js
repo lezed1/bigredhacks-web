@@ -17,6 +17,13 @@ var config = require('./config.js');
 var app = express();
 var io = socket_io();
 app.io = io;
+if (config.setup.use_redis) {
+    var redis = require('socket.io-redis'); // Needed to successfully scale out
+        io.adapter(redis({
+            host: process.env.REDISTOGO_URL || 'localhost',
+            port: process.env.REDISTOGO_URL ? 11989 : 6379
+        })); // Assuming constant REDIS port
+}
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user')(app.io);

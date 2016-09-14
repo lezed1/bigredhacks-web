@@ -5,9 +5,7 @@ extends _layout-mentor
 block mentor_content
     +contentHeading("dashboard home")
 
-    p welcome back, #{mentor.name.first}
-
-    +contentHeading("mentor information")
+    p Welcome back, #{mentor.name.first}
 
     br
     +showMessages(messages)
@@ -17,8 +15,8 @@ block mentor_content
     +sectionHeading("Overview")
 
     p
-        | welcome to your mentor requests queue
-        | . a request has two possible statuses:
+        | Welcome to your mentor requests queue.
+        | A request has two possible statuses:
     span.unclaimed
         | Unclaimed:
     |  A request that you may claim below and then visit the student's location to help them.
@@ -29,30 +27,31 @@ block mentor_content
     br
 
     .header-wrapper
-        .mentorRequests
+        .mentorRequests(data-mentor=mentor.id)
           h2.page-title unclaimed requests
           table#mentorRequests-table.table.table-striped
               tr
+                  th Name
                   th Email
                   th Description
-                  th Location
+                  th Location (Table #)
                   th Claim
 
-            for mentorRequest in mentorRequests
-                tr(data-request=mentorRequest.id)
-                    td #{mentorRequest.user.name.first}
-                    td #{mentorRequest.user.email}
-                    td #{mentorRequest.description}
-                    td #{mentorRequest.location}
-                    if (mentorRequest.status == 'Unclaimed')
-                        td
+              for mentorRequest in mentorRequests
+                  tr(data-request=mentorRequest.id)
+                      td #{mentorRequest.user.name.first}
+                      td #{mentorRequest.user.email}
+                      td #{mentorRequest.description}
+                      td #{mentorRequest.location}
+                      if (mentorRequest.status == 'Unclaimed')
+                          td
                             button.btn.btn-primary.btn-claim.btn-danger.role claim
-                    else
-                        td.claimed
-                            if (mentorRequest.mentor.id == mentor.id)
-                                | Claimed by you!
-                            else
-                                | Claimed by #{mentorRequest.mentor.name.first} from #{mentorRequest.mentor.company}!
+                      else
+                          td.claimed
+                              if (mentorRequest.mentor.id == mentor.id)
+                                    | Claimed by you!
+                              else
+                                    | Claimed by #{mentorRequest.mentor.name.first} from #{mentorRequest.mentor.company}!
 
 block footer
     script(src="/socket.io/socket.io.js")
