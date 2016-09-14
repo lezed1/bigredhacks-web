@@ -29,6 +29,7 @@
     "express-flash": "0.0.2",
     "express-validator": "^2.13.0",
     "fbgraph": "^1.2.0",
+    "fcm-push": "^1.0.7",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-uglify": "^0.11.1",
