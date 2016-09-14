@@ -101,7 +101,10 @@ util.grabCalendar = function grabCalendar(callback) {
                         location: element.properties.LOCATION[0].value,
                         description: element.properties.DESCRIPTION[0].value
                     }
-                }).sort( (x,y) => (x.start > y.start));
+                });
+
+                calendarEvents.sort( (x,y) => x < y ? -1 : x < y ? 1 : 0);
+                calendarEvents.reverse();
 
                 // Update cache
                 cachedCalendar = calendarEvents;
