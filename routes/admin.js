@@ -663,12 +663,15 @@ router.get('/stats', function (req, res, next) {
                 HardwareItemCheckout.find().populate('student_id inventory_id').exec(cb);
             },
             transactions: function transactions(cb) {
-                HardwareItemTransaction.find().populate('student_id').exec(cb);
+                HardwareItemTransaction.find().populate('studentId').exec(cb);
             }
         }, function(err, result) {
             if (err) {
                 console.error(err);
             }
+
+            result.hardwareNameList = [];
+            result.inventory.forEach(function(x) {result.hardwareNameList.push(x.name)});
 
             res.render('admin/hardware', result);
         });
