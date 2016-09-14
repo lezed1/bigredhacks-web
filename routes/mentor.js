@@ -163,16 +163,20 @@ module.exports = function(io) {
             if (err) {
                 console.log(err);
                 req.flash('error', "Error parsing form.");
-                return res.redirect('/register');
+                return res.redirect('/mentor/register');
             }
 
             req.body = helper.reformatFields(fields);
 
-            // TODO: Actually validate
-            var authKey = req.body.authorization;
+            // TODO: Actually validate fields
+            var authKey = req.body.auth;
+            console.log(authKey);
             MentorAuthKey.findOne({key: authKey}, function(err, key) {
+                if (!key) {
+                    req.flash('error', 'Invalid authorization code!');
+                    return res.redirect('/mentor/register');
+                }
 
-                // TODO: check key existence
                 var newMentor = new Mentor({
                     name: {
                         first: req.body.firstname,
@@ -183,8 +187,14 @@ module.exports = function(io) {
                     password: req.body.password
                 });
 
-                // TODO: Remove auth key
-                newMentor.save(function(err) {
+                async.series([
+                    function saveMentor(cb) {
+                        newMentor.save(cb);
+                    },
+                    function deleteKey(cb) {
+                        key.remove(cb);
+                    }
+                ], function(err) {
                     if (err) {
                         console.error(err);
                         req.flash("error", "An error occurred.");
