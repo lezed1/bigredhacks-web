@@ -19,7 +19,14 @@ var io = socket_io();
 app.io = io;
 if (config.setup.use_redis) {
     var redis = require('socket.io-redis'); // Needed to successfully scale out
-    io.adapter(redis({ host: process.env.REDIS_URL || 'localhost', port: process.env.REDIS_URL ? '' : 6379 })); // Assuming constant REDIS port
+    var host;
+    if (process.env.REDIS_URL) {
+        host = process.env.REDIS_URL;
+        host = host.substring(0,host.length - 6); // Heroku Redis adds the port to the URL, so this manually removes it
+    } else {
+        host = 'localhost';
+    }
+    io.adapter(redis({ host: host, port: process.env.REDIS_URL ? 10459 : 6379 })); // Assuming constant REDIS port
 }
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
