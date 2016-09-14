@@ -79,18 +79,21 @@ block append main_content
                                 .heading
                                     h3 fri, 9/16
                                 for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "fri"
-                                        +calendarEvents(event)
+                                    if moment().isBefore(event)
+                                        if moment(event.start).format("ddd").toLowerCase() == "fri"
+                                            +calendarEvents(event)
                                 .heading
                                     h3 sat, 9/17
                                 for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "sat"
-                                        +calendarEvents(event)
+                                    if moment().isBefore(event)
+                                        if moment(event.start).format("ddd").toLowerCase() == "sat"
+                                            +calendarEvents(event)
                                 .heading
                                     h3 sun, 9/18
                                 for event in calendar
-                                    if moment(event.start).format("ddd").toLowerCase() == "sun"
-                                        +calendarEvents(event)
+                                    if moment().isBefore(event)
+                                        if moment(event.start).format("ddd").toLowerCase() == "sun"
+                                            +calendarEvents(event)
             .col-md-4
                 .row
                     .panel.panel-default
