@@ -22,7 +22,7 @@ var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
-var io = require('../../app').io;
+var socketutil = require('../../util/socketutil');
 var OAuth = require('oauth');
 var util = require('../../util/util.js');
 
@@ -770,7 +770,7 @@ function postAnnouncement(req, res, next) {
         else {
             // Broadcast announcement
             if (req.body.web) {
-                io.emit('announcement', req.body.message);
+                socketutil.announceWeb(req.body.message);
             }
 
             if (req.body.mobile) {
@@ -1411,15 +1411,17 @@ function makeKey(req, res, next) {
         {'key': key}, //queries to see if it exists
         {'key': key}, //rewrites it if it does (does not make a new one)
         {upsert: true}, //if it doesn't exist, it makes a creates a new one
-        function(err, cb){
+        function(err){
             if(err){
-                return cb(err);
+                req.flash('error', 'An error occurred');
+                return res.redirect('/admin/dashboard');
             }
+
             req.flash('success', 'Successfully made a new key');
+            return res.redirect('/admin/dashboard');
         }
     );
-    res.redirect('/admin/dashboard');
-};
+}
 
 /**
  * Converts a bool/string to a bool. Otherwise returns the original var.

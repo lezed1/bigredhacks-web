@@ -7,6 +7,7 @@ var email = require('../util/email');
 var middle = require('../routes/middleware.js');
 var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
+var socketutil = require('../util/socketutil');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -38,16 +39,6 @@ passport.use('mentor_strat', new LocalStrategy({
     }
 ));
 
-passport.serializeUser(function (user, done) {
-    done(null, user._id);
-});
-
-passport.deserializeUser(function (id, done) {
-    Mentor.findById(id, function (err, user) {
-        done(err, user);
-    });
-});
-
 module.exports = function(io) {
     /**
      * @api {GET} /mentor Mentor dashboard.
@@ -64,7 +55,7 @@ module.exports = function(io) {
      * @apiGroup Mentor
      */
     router.get('/dashboard', middle.requireMentor,function (req, res, next) {
-        MentorRequest.find({}).populate('user').exec(function (err, mentorRequests) {
+        MentorRequest.find({}).populate('user mentor').sort({'createdAt' : 'desc'}).exec(function (err, mentorRequests) {
             if (err) console.error(err);
             res.render('mentor/index', {
                 mentor: req.user,
@@ -123,10 +114,10 @@ module.exports = function(io) {
     router.post('/claim', function (req, res) {
         async.parallel({
             request: function request(callback) {
-                MentorRequest.find({'_id' : req.body.requestId}).populate('user').exec(callback);
+                MentorRequest.findOne({'_id' : req.body.requestId}).populate('user').exec(callback);
             },
             mentor: function mentor(callback) {
-                Mentor.find({'_id' : req.body.mentorId}, callback);
+                Mentor.findOne({'_id' : req.body.mentorId}).exec(callback);
             }
         }, function(err, result) {
             if (err) {
@@ -134,7 +125,7 @@ module.exports = function(io) {
                 return res.status(500).send('an error occurred');
             } else if (!result.request || !result.mentor) {
                 return res.status(500).send('missing request or mentor');
-            } else if (!result.request.mentor !== null) {
+            } else if (result.request.mentor !== null) {
                 return res.status(500).send('another mentor has already claimed this');
             }
 
@@ -149,15 +140,16 @@ module.exports = function(io) {
                     email.sendRequestClaimedMentorEmail(result.mentor.email, result.request.user.name, result.mentor.name, callback);
                 },
                 saveRequest: function saveRequest(callback) {
-                    request.save(callback);
+                    result.request.save(callback);
                 }
             }, function(err) {
                 if (err) {
                     console.error(err);
                 }
 
-                req.flash('success', 'You have claimed the request for help! Please go see ' + request.user.name.full + ' at ' + request.location);
-                res.redirect('/');
+                socketutil.updateRequests(null);
+                req.flash('success', 'You have claimed the request for help! Please go see ' + result.request.user.name.full + ' at ' + result.request.location);
+                res.status(200).redirect('/');
             });
         });
     });
@@ -171,16 +163,20 @@ module.exports = function(io) {
             if (err) {
                 console.log(err);
                 req.flash('error', "Error parsing form.");
-                return res.redirect('/register');
+                return res.redirect('/mentor/register');
             }
 
             req.body = helper.reformatFields(fields);
 
-            // TODO: Actually validate
-            var authKey = req.body.authorization;
+            // TODO: Actually validate fields
+            var authKey = req.body.auth;
+            console.log(authKey);
             MentorAuthKey.findOne({key: authKey}, function(err, key) {
+                if (!key) {
+                    req.flash('error', 'Invalid authorization code!');
+                    return res.redirect('/mentor/register');
+                }
 
-                // TODO: check key existence
                 var newMentor = new Mentor({
                     name: {
                         first: req.body.firstname,
@@ -191,8 +187,14 @@ module.exports = function(io) {
                     password: req.body.password
                 });
 
-                // TODO: Remove auth key
-                newMentor.save(function(err) {
+                async.series([
+                    function saveMentor(cb) {
+                        newMentor.save(cb);
+                    },
+                    function deleteKey(cb) {
+                        key.remove(cb);
+                    }
+                ], function(err) {
                     if (err) {
                         console.error(err);
                         req.flash("error", "An error occurred.");
