@@ -914,7 +914,7 @@ function studentReimbursementsDelete(req, res, next) {
     if (!req.body.email) {
         return res.status(500).send("Email required");
     }
-    
+
     User.findOne( { email: req.body.email }, function (err, user) {
         if (err) {
             console.log('ERROR on delete: ' + err);
