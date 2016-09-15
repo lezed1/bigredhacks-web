@@ -5,9 +5,8 @@ mixin calendarEvents(event)
         h4 #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
     .data
         p #{event.event}
-        //h5 #{event.location}
         h5 #{event.description}
-
+        
 block header
     link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
     link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css")
@@ -116,9 +115,9 @@ block append main_content
                     .panel.panel-default
                         .panel-heading
                             h3.panel-title HackerEarth
-                                //-TO DO: ISSUE 184- change link
                         .submit
-                            a.box(href="http://www.google.com") submit projects here
+                            a.box(href="https://bigredhacks2016.hackerearth.com/") submit projects here
+
 block footer
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
     script(src="/socket.io/socket.io.js")
