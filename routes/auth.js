@@ -7,9 +7,12 @@ var _ = require('underscore');
 var multiparty = require('multiparty');
 
 var helper = require('../util/routes_helper.js');
+
 var User = require('../models/user.js');
 var MentorRequest = require('../models/mentor_request.js');
 var College = require('../models/college.js');
+var Mentor = require('../models/mentor.js');
+
 var async = require('async');
 var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
@@ -21,7 +24,7 @@ var config = require('../config.js');
 var email = require('../util/email');
 var uid = require("uid2");
 
-passport.use(new LocalStrategy({
+passport.use('user_strat', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true
@@ -47,8 +50,17 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
+    // Passport shares all deserialization. Since mongo IDs are supposed to be unique even across collections,
+    // we can just traverse both databases to differentiate users from mentors. See the following for more detail:
+    // http://stackoverflow.com/questions/4677237/possibility-of-duplicate-mongo-objectids-being-generated-in-two-different-colle
     User.findById(id, function (err, user) {
-        done(err, user);
+        if (user) {
+            done(err, user);
+        } else {
+            Mentor.findById(id, function (err, user) {
+                done(err, user);
+            });
+        }
     });
 });
 
@@ -553,7 +565,7 @@ module.exports = function (io) {
             next();
         },
          */
-        passport.authenticate('local', {
+        passport.authenticate('user_strat', {
             failureRedirect: '/login',
             failureFlash: true
         }), function (req, res) {

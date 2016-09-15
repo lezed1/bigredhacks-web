@@ -7,9 +7,12 @@ var Colleges = require('../../models/college.js');
 var Hardware = require('../../models/hardware.js');
 var User = require('../../models/user.js');
 var Announcement = require ('../../models/announcement.js');
+var MentorRequest = require('../../models/mentor_request');
 
 var middle = require('../middleware');
 var util = require('../../util/util');
+var email = require('../../util/email');
+var socketutil = require('../../util/socketutil');
 
 /**
  * @api {get} /api/colleges Request a full list of known colleges
@@ -139,6 +142,57 @@ router.get('/calendar', function (req, res, next) {
         }
 
         return res.status(200).send(cal);
+    });
+});
+
+
+/**
+ * @api {POST} /api/RequestMentor Request a mentor
+ * @apiName GETCalendar
+ * @apiGroup Calendar
+ *
+ * @apiSuccess {String} email User's email matching an existing user in the database
+ * @apiSuccess {String request A description of the help needed for the request
+ * @apiSuccess {String} tableNumber Where the requester is located, usually a table number
+ */
+router.post('/RequestMentor', function (req, res, next) {
+    console.log(req.body);
+    if (!req.body.email || !req.body.request) {
+        return res.status(500).send('Missing email or request.');
+    }
+
+    if (!req.body.tableNumber) {
+        // This API was given without location originally, so this supports requests without location
+        req.body.tableNumber = 'Unknown';
+    }
+
+    User.findOne({'email':req.body.email}, function(err,user) {
+        if (err) {
+            console.error(err);
+            return res.status(500);
+        }
+
+        if (!user) {
+            return res.status(500).send('Email not found.');
+        }
+
+        MentorRequest.generateRequest(user._id, req.body.request, req.body.tableNumber, function(err) {
+            if (err) {
+                console.error(err);
+                return res.status(500);
+            }
+
+            email.sendRequestMadeEmail(user.email, user.name, function(err) {
+               if (err) {
+                   console.error(err);
+               }
+
+                MentorRequest.find({}, function(err, requests) {
+                    socketutil.updateRequests(requests);
+                    return res.status(200).send('Request made!');
+                });
+            });
+        });
     });
 });
 

@@ -8,7 +8,8 @@
     "cookie_secret": {"type": "String"},
     "sendgrid_api_key": {"type": "String"},
     "url": {"type": "String"},
-    "ical": {"type": "String"}
+    "ical": {"type": "String"},
+    "use_redis": {"type": "Boolean"}
   },
   "mailchimp": {
     "_comment": "Mailchimp list ids",
