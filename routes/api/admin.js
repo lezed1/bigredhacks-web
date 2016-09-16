@@ -728,7 +728,7 @@ function checkInUser(req, res, next) {
  */
 function getUsersPlanningToAttend(req, res, next) {
     var project = "name pubid email school internal.checkedin";
-    User.find({"internal.status": {$not: "Rejected"}}).select(project).exec(function (err, users) {
+    User.find({$or: [{"internal.status": {$ne: "Rejected"}}, {"internal.going": {$ne: false}},{"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
             res.status(500).send(null);
         }
