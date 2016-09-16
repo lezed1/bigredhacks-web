@@ -104,10 +104,15 @@ util.grabCalendar = function grabCalendar(callback) {
                 });
 
                 calendarEvents.sort( function(x,y){
+<<<<<<< HEAD
+                    x = moment.tz(Date.parse(x.start),"America/New_York").format();
+                    y = moment.tz(Date.parse(y.start),"America/New_York").format();
+=======
                     x = moment(Date.parse(x.start)).tz("America/New_York").format('YYYY-MM-DD HH:mm');
                     y = moment(Date.parse(y.start)).tz("America/New_York").format('YYYY-MM-DD HH:mm');
                     console.log(Date.parse(x.start) + 'a');
                     console.log(x + 'b');
+>>>>>>> f329f8cb861b91f37daf1b2c3bae1556e4ba6c4c
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
 
