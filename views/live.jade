@@ -2,7 +2,7 @@ extends _layout-unsecured
 
 mixin calendarEvents(event)
     .time
-        h4 #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
+        h4 #{moment(event.start).format("h")-4} #{moment(event.start).format("A")} - #{moment(event.end).format("h")-4} #{moment(event.end).format("A")}
     .data
         p #{event.event}
         h5 #{event.description}
