@@ -27,6 +27,34 @@ function getTimeRemaining(endtime) {
     };
 }
 
+$("#request-mentor-btn").on('click', function(e) {
+    e.preventDefault();
+    //$("#request-mentor-btn").addClass("disabled");
+    $.ajax({
+        method: "POST",
+        url: "/API/RequestMentor",
+        data: {
+            email: $("#mentor-req-email").val(),
+            request: $("#mentor-req-text").val(),
+            tableName: $("#mentor-req-table").val()
+        },
+        success: function(data) {
+            $("#request-mentor-btn").addClass("disabled");
+            $("#mentor-req-alert").css("visibility","visible").addClass("fadeOut").removeClass("alert-danger").addClass("alert-success").text(data);
+            console.log(data);
+        },
+        error: function(data) {
+            $("#request-mentor-btn").addClass("disabled");
+            $("#mentor-req-alert").css("visibility","visible").removeClass("alert-success").addClass("alert-danger").text(data.responseText);
+            console.log(data);
+
+        }
+    })
+})
+
+//fade out things that have fadeOut class
+$(".fadeOut").delay(2000).fadeOut(2000, "easeInCubic");
+
 function initializeClock(id, endtime) {
     var clock = document.getElementById(id);
     var daysSpan = clock.querySelector('.days');

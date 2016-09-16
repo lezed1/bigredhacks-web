@@ -10,7 +10,7 @@ mixin calendarEvents(event)
 block header
     link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
     link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css")
-    link(rel="stylesheet", href="path/to/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css")
     link(href="/css/index.css", rel="stylesheet")
     link(rel="stylesheet", href="/css/live.css")
 
@@ -58,17 +58,18 @@ block append main_content
                         .panel-heading
                             h3.panel-title Request a Mentor
                         .mentor-request
-                            form(action='/API/RequestMentor' method='post')
+                            #mentor-req-alert.alert.alert-danger(style="visibility:hidden",role="alert")
+                            form
                                 .form-group
                                     label email
-                                    input.form-control(type='text', name='email', placeholder='ex. abc@cornell.edu')
+                                    input#mentor-req-email.form-control(type='text', name='email', placeholder='ex. abc@cornell.edu')
                                 .form-group
                                     label problem
-                                    input.form-control(type='text', name='request', placeholder='ex. need help with Javascript')
+                                    input#mentor-req-text.form-control(type='text', name='request', placeholder='ex. need help with Javascript')
                                 .form-group
                                     label table number
-                                    input.form-control(type='text', name='tableNumber', placeholder='ex. 4')
-                                button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
+                                    input#mentor-req-table.form-control(type='text', name='tableNumber', placeholder='ex. 4')
+                                button#request-mentor-btn.btn.btn-primary request mentor
                 .row
                     .panel.panel-default
                         .panel-heading
