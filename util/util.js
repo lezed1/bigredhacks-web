@@ -105,10 +105,10 @@ util.grabCalendar = function grabCalendar(callback) {
 
                 calendarEvents.sort( function(x,y){
                     x = Date.parse(x.start);
-                    var formatted = moment(x).format("'MMMM Do YYYY, h:mm:ss a")
+                    var formatted = moment(x).format("'MMMM Do YYYY, h:mm:ss a");
                     console.log(formatted);
                     y = Date.parse(y.start);
-                    var formattedy = moment(y).format("'MMMM Do YYYY, h:mm:ss a")
+                    var formattedy = moment(y).format("'MMMM Do YYYY, h:mm:ss a");
                     console.log(formattedy);
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
