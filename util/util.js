@@ -7,7 +7,7 @@ var async = require('async');
 var icalendar = require('icalendar');
 var request = require('request');
 var config = require('../config');
-
+var moment = require('moment');
 var util = {};
 
 // Callback for most saves
@@ -104,8 +104,8 @@ util.grabCalendar = function grabCalendar(callback) {
                 });
 
                 calendarEvents.sort( function(x,y){
-                    x = Date.parse(x.start);
-                    y = Date.parse(y.start);
+                    x = moment.tz(Date.parse(x.start), "America/New_York");
+                    y = moment.tz(Date.parse(y.start), "America/New_York");
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
 
