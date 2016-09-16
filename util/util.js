@@ -104,8 +104,12 @@ util.grabCalendar = function grabCalendar(callback) {
                 });
 
                 calendarEvents.sort( function(x,y){
-                    x = moment(Date.parse(x.start)).tz("America/New_York");
-                    y = moment(Date.parse(y.start)).tz("America/New_York");
+                    x = Date.parse(x.start);
+                    x += x.getTimezoneOffset()/60;
+                    y = Date.parse(y.start);
+                    y += y.getTimezoneOffset()/60;
+                    console.log(x + 'a');
+                    console.log(y + 'b');
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
 
