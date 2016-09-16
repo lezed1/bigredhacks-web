@@ -96,20 +96,23 @@ util.grabCalendar = function grabCalendar(callback) {
                 let calendarEvents = calendar.events().map(element => {
                     return {
                         event: element.properties.SUMMARY[0].value,
-                        start: element.properties.DTSTART[0].value,
-                        end: element.properties.DTEND[0].value,
+                        start: element.properties.DTSTART[0].value - 60*60*1000*4,
+                        end: element.properties.DTEND[0].value - (60*60*1000*4),
                         location: element.properties.LOCATION[0].value,
                         description: element.properties.DESCRIPTION[0].value
                     }
                 });
 
                 calendarEvents.sort( function(x,y){
-                    x = Date.parse(x.start) - 400*60*1000*60;
-                    var formatted = moment(x).format("llll")
+                    x = Date.parse(x.start);
+                    var formatted = moment(x).format("'MMMM Do YYYY, h:mm:ss a")
                     console.log(formatted);
-                    y = Date.parse(y.start) - 400*60*60*1000;
+                    y = Date.parse(y.start);
+                    var formattedy = moment(y).format("'MMMM Do YYYY, h:mm:ss a")
+                    console.log(formattedy);
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
+
 
                 // Update cache
                 cachedCalendar = calendarEvents;
