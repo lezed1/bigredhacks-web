@@ -5,16 +5,17 @@ mixin calendarEvents(event)
         h4 #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
     .data
         p #{event.event}
-        //h5 #{event.location}
         h5 #{event.description}
 
 block header
     link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
     link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css")
+    link(rel="stylesheet", href="path/to/font-awesome/css/font-awesome.min.css")
     link(href="/css/index.css", rel="stylesheet")
     link(rel="stylesheet", href="/css/live.css")
 
 block append main_content
+    +sortEvents
     h1#live-title Live Page
     .container
         .row
@@ -115,9 +116,20 @@ block append main_content
                     .panel.panel-default
                         .panel-heading
                             h3.panel-title HackerEarth
-                                //-TO DO: ISSUE 184- change link
                         .submit
-                            a.box(href="http://www.google.com") submit projects here
+                            a.box(href="https://bigredhacks2016.hackerearth.com/") submit projects here
+                .row
+                    .panel.panel-default
+                        .panel-heading
+                            h3.panel-title Social Media
+                        .social-media
+                            a(href="http://facebook.com/BigRedHacks")
+                                i.fa.fa-facebook-square.fa-3x(aria-hidden='true')
+                            a(href="http://twitter.com/BigRedHacks")
+                                i.fa.fa-twitter-square.fa-3x(aria-hidden='true')
+                            a(href="http://instagram.com/BigRedHacks")
+                                i.fa.fa-instagram.fa-3x(aria-hidden='true')
+
 block footer
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
     script(src="/socket.io/socket.io.js")
