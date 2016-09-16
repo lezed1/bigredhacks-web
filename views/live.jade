@@ -15,6 +15,7 @@ block header
     link(rel="stylesheet", href="/css/live.css")
 
 block append main_content
+    +sortEvents
     h1#live-title Live Page
     .container
         .row
@@ -124,11 +125,11 @@ block append main_content
                             h3.panel-title Social Media
                         .social-media
                             a(href="http://facebook.com/BigRedHacks")
-                                i.fa.fa-facebook-square.fa-5x(aria-hidden='true')
+                                i.fa.fa-facebook-square.fa-3x(aria-hidden='true')
                             a(href="http://twitter.com/BigRedHacks")
-                                i.fa.fa-twitter-square.fa-5x(aria-hidden='true')
+                                i.fa.fa-twitter-square.fa-3x(aria-hidden='true')
                             a(href="http://instagram.com/BigRedHacks")
-                                i.fa.fa-instagram.fa-5x(aria-hidden='true')
+                                i.fa.fa-instagram.fa-3x(aria-hidden='true')
 
 block footer
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
