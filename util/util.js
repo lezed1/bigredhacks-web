@@ -104,9 +104,10 @@ util.grabCalendar = function grabCalendar(callback) {
                 });
 
                 calendarEvents.sort( function(x,y){
-                    x = Date.parse(x.start);
-                    y = Date.parse(y.start);
-
+                    x = Date.parse(x.start) - 400*60*1000*60;
+                    var formatted = moment(x).format("llll")
+                    console.log(formatted);
+                    y = Date.parse(y.start) - 400*60*60*1000;
                     return x < y ? -1 : x > y ? 1 : 0;
                 });
 
