@@ -5,7 +5,7 @@ socket.on('announcement', function(data) {
     if(window.Notification && Notification.permission !== "denied") {
         Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
             var n = new Notification('BigRed//Hacks Announcement!', {
-                body: 'Test!',
+                body: data,
                 icon: '/img/logo/full-red.png' // optional
             });
         });
