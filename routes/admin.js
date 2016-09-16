@@ -19,6 +19,7 @@ var TimeAnnotation = require('../models/time_annotation.js');
 var HardwareItem = require('../models/hardware_item.js');
 var HardwareItemCheckout = require('../models/hardware_item_checkout.js');
 var HardwareItemTransaction = require('../models/hardware_item_transaction.js');
+var MentorAuthorizationKey = require('../models/mentor_authorization_key');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = {role: "user"};
@@ -236,7 +237,11 @@ router.get('/dashboard', function (req, res, next) {
             User.find({"internal.status": "Accepted"})
                 .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
                 .exec(done)
+        },
+        mentorkeys: function(done) {
+            MentorAuthorizationKey.find({}, done);
         }
+
     }, function (err, result) {
         if (err) {
             console.log(err);
@@ -280,7 +285,8 @@ router.get('/dashboard', function (req, res, next) {
             schools: result.schools,
             rsvps: result.rsvps,
             decisionAnnounces: result.decisionAnnounces,
-            reimburse
+            reimburse,
+            mentorkeys: result.mentorkeys
 
         })
     });

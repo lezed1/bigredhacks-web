@@ -17,10 +17,19 @@ var config = require('./config.js');
 var app = express();
 var io = socket_io();
 app.io = io;
+if (config.setup.use_redis) {
+    var redis = require('socket.io-redis'); // Needed to successfully scale out
+        io.adapter(redis({
+            host: process.env.REDISTOGO_URL || 'localhost',
+            port: process.env.REDISTOGO_URL ? 11989 : 6379
+        })); // Assuming constant REDIS port
+}
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user')(app.io);
 var mentor = require('./routes/mentor')(app.io);
+var socketutil = require('./util/socketutil');
+socketutil.activateIo(app.io);
 var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');
@@ -102,7 +111,7 @@ app.use('/api', apiRoute);
 
 app.use('/admin', middle.requireAdmin, admin);
 app.use('/user', middle.requireAuthentication, user);
-app.use('/mentor', middle.requireMentor, mentor);
+app.use('/mentor', mentor);
 app.use('/', authRoute); //todo mount on separate route to allow use of noAuth without disabling 404 pages
 
 

@@ -1,13 +1,165 @@
 @import "_global";
 
 body{
-  padding-top:80px
+  padding-top:80px;
 }
 .container, th{
   text-align: center;
+}
+
+.panel .panel-default{
+  margin:0;
+}
+.panel .panel-heading{
+  background-color: @sky-blue;
 }
 .announcements{
   overflow-x: hidden;
   overflow-y: scroll;
   height: 400px;
+  td, th{
+    text-align: left;
+    text-transform: lowercase;
+  }
+  td{
+    width: 65%;
+  }
+}
+
+#live-title{
+  text-align: center;
+}
+
+.mentor-request {
+  .form-group{
+    margin: 20px;
+    text-align: left;
+  }
+
+  #request-mentor-btn{
+    margin-bottom: 20px;
+  }
+}
+.twitter-feed{
+  height: 390px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.countdown{
+  h1 {
+    margin-bottom: 0;
+  }
+}
+#clockdiv{
+  font-family: 'Montserrat';
+  color: white;
+  display: inline-block;
+  font-weight: 100;
+  text-align: center;
+  font-size: 30px;
+  text-transform: lowercase;
+}
+
+#clockdiv > div{
+  padding: 10px;
+  border-radius: 3px;
+  background: white;
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#clockdiv div > span{
+  padding: 10px;
+  border-radius: 3px;
+  background: @jasonblue;
+  display: inline-block;
+  width: 60px;
+}
+
+.smalltext{
+  padding-top: 5px;
+  font-size: 16px;
+  color: black;
+}
+
+.wifi{
+  padding: 10px;
+  h4 {
+    margin: 10px;
+    text-align: left;
+    color: black;
+  }
+}
+.row{
+  margin: 5px;
+}
+
+.submit{
+  a {
+    color: white;
+    font-size: 18px;
+  }
+}
+.box {
+  background-color: @light-blue;
+  padding: 20px;
+  display: block;
+}
+
+.box:hover{
+  background: @jasonblue;
+}
+
+.calendar{
+  height: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  .heading h3{
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  h2, h3, h4, h5{
+    color: @jasonblue;
+    margin: 0px;
+  }
+
+  h3,h4, h5,p{
+    text-align: left;
+    text-transform: lowercase;
+  }
+  .data {
+    margin-bottom: 10px;
+    p {
+      color: @light-gray;
+      margin: 0px;
+      font-size: 16px;
+    }
+    h5{
+      font-size: 14px;
+      color: @light-gray;
+    }
+  }
+  .time{
+    h4{
+      margin-bottom: 0px;
+      font-size: 16px;
+    }
+  }
+}
+.schedule-tab{
+  margin-left: 5%;
+}
+
+.social-media{
+  margin: 10px;
+  a {
+    color: black;
+    margin: 10px;
+  }
+  a:hover{
+  color: @jasonblue;
+  }
 }

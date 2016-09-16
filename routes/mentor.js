@@ -1,13 +1,45 @@
 "use strict";
 var express = require('express');
 var async = require('async');
-var User = require('../models/user.js');
 var enums = require('../models/enum.js');
+var app = require('../app');
+var email = require('../util/email');
+var middle = require('../routes/middleware.js');
+var multiparty = require('multiparty');
+var helper = require('../util/routes_helper.js');
+var socketutil = require('../util/socketutil');
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+var MentorAuthKey = require('../models/mentor_authorization_key');
 var MentorRequest = require('../models/mentor_request');
+var Mentor = require('../models/mentor');
 
-module.exports = function (io) {
-    var router = express.Router();
+var router = express.Router();
 
+passport.use('mentor_strat', new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true
+    },
+    function (req, email, password, done) {
+        Mentor.findOne({email: email}, function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (user == null || !user.validPassword(password)) {
+                return done(null, false, function () {
+                    req.flash('email', email);
+                    req.flash('error', 'Incorrect username or email.');
+                }());
+            }
+            return done(null, user);
+        });
+    }
+));
+
+module.exports = function(io) {
     /**
      * @api {GET} /mentor Mentor dashboard.
      * @apiName Mentor
@@ -22,204 +54,46 @@ module.exports = function (io) {
      * @apiName Mentor
      * @apiGroup Mentor
      */
-    router.get('/dashboard', function (req, res, next) {
-        res.render('mentor/index', {
-            user: req.user,
-            enums: enums,
-            error: req.flash('error'),
-            title: "Dashboard Home"
-        });
-    });
-
-    /**
-     * @api {POST} /mentor/updateinformation Update mentor's info
-     * @apiName UpdateInformation
-     * @apiGroup Mentor
-     */
-    router.post('/updateinformation', function (req, res) {
-        var user = req.user;
-
-        var splitSkills = req.body.skills.split(",");
-        var skillList = [];
-        for (var i = 0; i < splitSkills.length; i++) {
-            if (splitSkills[i].trim() != "") {
-                skillList.push(splitSkills[i].trim());
-            }
-        }
-        user.mentorinfo.skills = skillList;
-        user.mentorinfo.bio = req.body.bio;
-        user.save(function(err) {
-            if (err) {
-                console.error(err);
-                req.flash("error", "An error occurred. Try updating again in a bit.");
-            }
-            else {
-                //redirect to dashboard home
-                req.flash("success", "Information updated successfully.");
-            }
-            MentorRequest.find({}).exec(function (err, mentorRequests) {
-                User.find({role: "mentor"}).exec(function (err, mentors) {
-                    async.each(mentorRequests, function (mentorRequest, callback) {
-                        var numMatchingMentors = 0;
-                        async.each(mentors, function (mentor, callback2) {
-                            if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
-                                numMatchingMentors = numMatchingMentors + 1;
-                            }
-                            callback2();
-                        }, function (err) {
-                            if (err) console.error(err);
-                            else {
-                                mentorRequest.nummatchingmentors = numMatchingMentors;
-                                mentorRequest.save(function (err) {
-                                    if (err) console.error(err);
-                                    else {
-                                        User.findOne({_id: mentorRequest.user.id}, function (err, user) {
-                                            if (err) console.error(err);
-                                            else {
-                                                var currentMentorRequest = {
-                                                    mentorRequestPubid: mentorRequest.pubid,
-                                                    nummatchingmentors: numMatchingMentors
-                                                };
-                                                io.sockets.emit("new number of mentors " + user.pubid, currentMentorRequest);
-                                                callback();
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }, function (err) {
-                        if (err) console.error(err);
-                        res.redirect('/mentor/dashboard');
-                    });
-                });
+    router.get('/dashboard', middle.requireMentor,function (req, res, next) {
+        MentorRequest.find({}).populate('user mentor').sort({'createdAt' : 'desc'}).exec(function (err, mentorRequests) {
+            if (err) console.error(err);
+            res.render('mentor/index', {
+                mentor: req.user,
+                title: "Dashboard Home",
+                mentorRequests
             });
         });
     });
 
     /**
-     * @api {GET} /mentor/requestsqueue See requests queue of mentor.
-     * @apiName RequestQueue
-     * @apiGroup Mentor
+     * @api {GET} /mentor/register Registration page for a mentor
      */
-    router.get('/dashboard/requestsqueue', function (req, res) {
-        var user = req.user;
-        MentorRequest.find({}).exec(function(err, mentorRequests) {
-            var allRequests = [];
-            async.each(mentorRequests, function(mentorRequest, callback) {
-                mentorRequest.match = "no";
-                if(_matchingSkills(user.mentorinfo.skills, mentorRequest.skills)) {
-                    mentorRequest.match = "yes";
-                }
-                allRequests.push(mentorRequest);
-                callback();
-            }, function(err) {
-                if (err) console.error(err);
-                else {
-                    res.render('mentor/requests_queue', {
-                        user: user,
-                        mentorRequests: allRequests,
-                        title: "Requests Queue"
-                    });
-                }
-            });
-        });
-    });
-
-    /* Handles a mentor-triggered event */
-    io.on('connection', function (socket) {
-        //receive event of a mentor claiming or unclaiming a user request
-        socket.on('set request status', function (setRequestStatus) {
-            MentorRequest.findOne({pubid: setRequestStatus.mentorRequestPubid}, function (err, mentorRequest) {
-                if (err) console.error(err);
-                else {
-                    User.findOne({pubid: setRequestStatus.mentorPubid}, function (err, mentorOfRequest) {
-                        if (setRequestStatus.newStatus == "Claimed") {
-                            mentorRequest.mentor.name = mentorOfRequest.name.first + " " + mentorOfRequest.name.last;
-                            mentorRequest.mentor.company = mentorOfRequest.mentorinfo.company;
-                            mentorRequest.mentor.id = mentorOfRequest.id;
-                            mentorRequest.requeststatus = "Claimed";
-                        } else if (setRequestStatus.newStatus == "Unclaimed") {
-                            mentorRequest.mentor.name = null;
-                            mentorRequest.mentor.company = null;
-                            mentorRequest.mentor.id = null;
-                            mentorRequest.requeststatus = "Unclaimed";
-                        }
-                        mentorRequest.save(function (err) {
-                            if (err) console.error(err);
-                            else {
-                                var requestStatus = {
-                                    mentorRequestPubid: setRequestStatus.mentorRequestPubid,
-                                    mentorPubid: setRequestStatus.mentorPubid,
-                                    newStatus: setRequestStatus.newStatus,
-                                    nummatchingmentors: mentorRequest.nummatchingmentors,
-                                    mentorInfo: {
-                                        name: mentorOfRequest.name.first + " " + mentorOfRequest.name.last,
-                                        company: mentorOfRequest.mentorinfo.company,
-                                        companyImage: _getCompanyImage(mentorOfRequest.mentorinfo.company)
-                                    }
-                                };
-                                User.findOne({_id: mentorRequest.user.id}, function (err, user) {
-                                    if (err) console.error(err);
-                                    else {
-                                        User.find({role: 'mentor'}).exec(function (err, mentors) {
-                                            if (err) console.error(err);
-                                            else {
-                                                async.each(mentors, function (mentor, callback) {
-                                                    io.emit('new request status ' + mentor.pubid, requestStatus);
-                                                    callback();
-                                                }, function (err) {
-                                                    if (err) console.error(err);
-                                                    else {
-                                                        io.emit('new request status ' + user.pubid, requestStatus);
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    });
-                }
-            });
+    router.get('/register', function (req, res) {
+        res.render('register_mentor', {
+            title: "Mentor Registration"
         });
     });
 
     /**
-     * Returns true if there is any intersection between a mentor's skills (mentorSkills) and the user's
-     * skills (userSkills), false otherwise
-     * @param mentorSkills string array representing mentor's skills
-     * @param userSkills string array representing user's skills
-     * @returns boolean whether or not there is an intersection between a mentor's skills and the user's skills
+     * @api {GET} /mentor/login Login page for a mentor
      */
-    function _matchingSkills(mentorSkills, userSkills) {
-        for (var i = 0; i < mentorSkills.length; i++) {
-            for (var j = 0; j < userSkills.length; j++) {
-                //Check equality of first five characters so there is a match between skills like "mobile app dev"
-                //and "mobile applications"
-                if (mentorSkills[i].toLowerCase().substring(0, 5) == userSkills[j].toLowerCase().substring(0,5)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    router.get('/login', function (req, res) {
+        res.render('mentor/login', {
+            title: "Mentor Login"
+        });
+    });
 
     /**
-     * Returns the string representing the image url of a company (ex: img/logos/uber.png for Uber) given a company name
-     * @param mentorCompany string representing company of a mentor
-     * @returns string representing image url of company
+     * @api {POST} /mentor/login Do login for mentor
      */
-    function _getCompanyImage(mentorCompany) {
-        var companyNameList = enums.mentor.companyname;
-        var companyImageList = enums.mentor.companyimage;
-        for (var i = 0; i < companyNameList.length; i++) {
-            if (companyNameList[i] == mentorCompany) {
-                return "/img/logos/" + companyImageList[i];
-            }
+    router.post('/login',
+        passport.authenticate('mentor_strat', {
+            failureRedirect: '/mentor/login',
+            failureFlash: true
+        }), function (req, res) {
+            return res.redirect('/mentor/dashboard');
         }
-    }
+    );
 
     /**
      * @api {GET} /mentor/logout Logout the current mentor
@@ -229,6 +103,108 @@ module.exports = function (io) {
     router.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+    /**
+     * @api {POST} /mentor/claim Route for mentors to claim a user
+     *
+     * @apiParam {String} requestId The mongo id of the request being claimed
+     * @apiParam {String} mentorId The mongo id of the mentor making the claim
+     */
+    router.post('/claim', function (req, res) {
+        async.parallel({
+            request: function request(callback) {
+                MentorRequest.findOne({'_id' : req.body.requestId}).populate('user').exec(callback);
+            },
+            mentor: function mentor(callback) {
+                Mentor.findOne({'_id' : req.body.mentorId}).exec(callback);
+            }
+        }, function(err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('an error occurred');
+            } else if (!result.request || !result.mentor) {
+                return res.status(500).send('missing request or mentor');
+            } else if (result.request.mentor !== null) {
+                return res.status(500).send('another mentor has already claimed this');
+            }
+
+            result.request.mentor = result.mentor;
+            result.request.status = 'Claimed';
+
+            async.series({
+                notifyStudent: function notifyStudent(callback) {
+                    email.sendRequestClaimedStudentEmail(result.request.user.email, result.request.user.name, result.mentor.name, callback);
+                },
+                notifyMentor: function notifyMentor(callback) {
+                    email.sendRequestClaimedMentorEmail(result.mentor.email, result.request.user.name, result.mentor.name, callback);
+                },
+                saveRequest: function saveRequest(callback) {
+                    result.request.save(callback);
+                }
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                }
+
+                socketutil.updateRequests(null);
+                req.flash('success', 'You have claimed the request for help! Please go see ' + result.request.user.name.full + ' at ' + result.request.location);
+                res.status(200).redirect('/');
+            });
+        });
+    });
+
+    /**
+     * @api {POST} /mentor/register Registration submission for a mentor
+     */
+    router.post('/register', function (req, res) {
+        var form = new multiparty.Form();
+        form.parse(req, function (err, fields, files) {
+            if (err) {
+                console.log(err);
+                req.flash('error', "Error parsing form.");
+                return res.redirect('/mentor/register');
+            }
+
+            req.body = helper.reformatFields(fields);
+
+            // TODO: Actually validate fields
+            var authKey = req.body.auth;
+            console.log(authKey);
+            MentorAuthKey.findOne({key: authKey}, function(err, key) {
+                if (!key) {
+                    req.flash('error', 'Invalid authorization code!');
+                    return res.redirect('/mentor/register');
+                }
+
+                var newMentor = new Mentor({
+                    name: {
+                        first: req.body.firstname,
+                        last: req.body.lastname
+                    },
+                    company: req.body.company,
+                    email: req.body.em,
+                    password: req.body.password
+                });
+
+                async.series([
+                    function saveMentor(cb) {
+                        newMentor.save(cb);
+                    },
+                    function deleteKey(cb) {
+                        key.remove(cb);
+                    }
+                ], function(err) {
+                    if (err) {
+                        console.error(err);
+                        req.flash("error", "An error occurred.");
+                        return res.redirect('/register');
+                    }
+
+                    return res.redirect('/mentor/dashboard');
+                });
+            });
+        });
     });
 
     return router;
