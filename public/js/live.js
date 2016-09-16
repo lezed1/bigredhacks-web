@@ -40,12 +40,12 @@ $("#request-mentor-btn").on('click', function(e) {
         },
         success: function(data) {
             $("#request-mentor-btn").addClass("disabled");
-            $("#mentor-req-alert").css("visibility","visible").addClass("fadeOut").removeClass("alert-danger").addClass("alert-success").text(data);
+            $("#mentor-req-alert").css("visibility","visible").addClass("fadeOut").removeClass("alert-danger").removeClass("not-display").addClass("alert-success").text(data);
             console.log(data);
         },
         error: function(data) {
             $("#request-mentor-btn").addClass("disabled");
-            $("#mentor-req-alert").css("visibility","visible").removeClass("alert-success").addClass("alert-danger").text(data.responseText);
+            $("#mentor-req-alert").css("visibility","visible").removeClass("alert-success").addClass("alert-danger").removeClass("not-display").text(data.responseText);
             console.log(data);
 
         }

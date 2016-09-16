@@ -58,7 +58,8 @@ block append main_content
                         .panel-heading
                             h3.panel-title Request a Mentor
                         .mentor-request
-                            #mentor-req-alert.alert.alert-danger(style="visibility:hidden",role="alert")
+                            #mentor-req-alert.alert.alert-danger.not-display(style="visibility:hidden",role="alert")
+                            label#mentor-label You must use the email you registered with
                             form
                                 .form-group
                                     label email
@@ -135,7 +136,12 @@ block append main_content
                             h3.panel-title Program
                         .program
                             a(href="docs/BRH_Program_final.pdf") program schedule
-
+                .row
+                    .panel.panel-default
+                        .panel-heading
+                            h3.panel-title Hardware
+                        .program
+                            a(href="https://hardware.mlh.io/events/bigred-hacks") hardware
 block footer
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
     script(src="/socket.io/socket.io.js")
