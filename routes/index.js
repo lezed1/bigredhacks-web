@@ -62,7 +62,7 @@ router.post('/cornell/subscribe', function (req, res, next) {
  * @apiName DayOf
  * @apiGroup Index
  */
-router.get('/live', middle.requireDayof,function (req, res, next) {
+router.get('/live',function (req, res, next) {
     async.parallel({
             announcements: function announcements(callback) {
                 const PROJECTION = 'message time';
