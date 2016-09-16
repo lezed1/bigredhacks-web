@@ -103,8 +103,11 @@ util.grabCalendar = function grabCalendar(callback) {
                     }
                 });
 
-                calendarEvents.sort( (x,y) => x < y ? -1 : x < y ? 1 : 0);
-                calendarEvents.reverse();
+                calendarEvents.sort( function(x,y){
+                    x = Date.parse(x.start);
+                    y = Date.parse(y.start);
+                    return x < y ? -1 : x > y ? 1 : 0;
+                });
 
                 // Update cache
                 cachedCalendar = calendarEvents;

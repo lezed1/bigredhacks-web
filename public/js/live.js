@@ -1,7 +1,15 @@
 var socket = io();
 
 socket.on('announcement', function(data) {
-    window.alert(data);
+    //window.alert(data);
+    if(window.Notification && Notification.permission !== "denied") {
+        Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+            var n = new Notification('BigRed//Hacks Announcement!', {
+                body: 'Test!',
+                icon: '/img/logo/full-red.png' // optional
+            });
+        });
+    }
 });
 
 function getTimeRemaining(endtime) {
