@@ -78,24 +78,19 @@ block append main_content
                         .calendar
                             .schedule-tab
                                 .heading
-                                    if moment().isBefore('2016-09-17')
                                         h3 fri, 9/16
                                 for event in calendar
                                     if moment().isBefore(event.end)
                                         if moment(event.start).format("ddd").toLowerCase() == "fri"
                                             +calendarEvents(event)
                                 .heading
-                                    if moment().isBefore('2016-09-18')
                                         h3 sat, 9/17
                                 for event in calendar
-                                    if moment().isBefore(event.end)
                                         if moment(event.start).format("ddd").toLowerCase() == "sat"
                                             +calendarEvents(event)
                                 .heading
-                                    if moment().isBefore('2016-09-19')
                                         h3 sun, 9/18
                                 for event in calendar
-                                    if moment().isBefore(event.end)
                                         if moment(event.start).format("ddd").toLowerCase() == "sun"
                                             +calendarEvents(event)
             .col-md-4
