@@ -74,6 +74,7 @@ block append content
                                     when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
                                     when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
                                     default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
+                                a.btn.btn-light-blue(href="/live") live
                             else
                                 if middlehelp.isRegistrationOpen()
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
