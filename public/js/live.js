@@ -36,7 +36,7 @@ $("#request-mentor-btn").on('click', function(e) {
         data: {
             email: $("#mentor-req-email").val(),
             request: $("#mentor-req-text").val(),
-            tableName: $("#mentor-req-table").val()
+            tableNumber: $("#mentor-req-table").val()
         },
         success: function(data) {
             $("#request-mentor-btn").addClass("disabled");
