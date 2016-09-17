@@ -198,7 +198,7 @@ module.exports = function(io) {
                     if (err) {
                         console.error(err);
                         req.flash("error", "An error occurred.");
-                        return res.redirect('/register');
+                        return res.redirect('/mentor/register');
                     }
 
                     return res.redirect('/mentor/dashboard');
