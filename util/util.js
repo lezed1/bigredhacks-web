@@ -74,6 +74,11 @@ util.removeUserFromBus = function (Bus, req, res,user) {
 const CACHE_EXPIRATION_IN_MILLIS = 1000 * 60 * 3;
 // Last grabbed calendar
 var cachedCalendar = null;
+
+function updateCached(up) {
+    cachedCalendar = up;
+}
+
 // Date of when calendar was last updated
 var lastCalendarUpdate = null;
 /**
@@ -93,7 +98,7 @@ util.grabCalendar = function grabCalendar(callback) {
             } else {
                 var calendar = icalendar.parse_calendar(ical);
 
-                let calendarEvents = calendar.events().map(element => {
+                var calendarEvents = calendar.events().map(element => {
                     return {
                         event: element.properties.SUMMARY[0].value,
                         start: element.properties.DTSTART[0].value - 60*60*1000*4,
@@ -103,19 +108,18 @@ util.grabCalendar = function grabCalendar(callback) {
                     }
                 });
 
-                calendarEvents.sort( function(x,y){
-                    x = Date.parse(x.start);
-                    var formatted = moment(x).format("'MMMM Do YYYY, h:mm:ss a");
-                    console.log(formatted);
-                    y = Date.parse(y.start);
-                    var formattedy = moment(y).format("'MMMM Do YYYY, h:mm:ss a");
-                    console.log(formattedy);
-                    return x < y ? -1 : x > y ? 1 : 0;
+                calendarEvents = calendarEvents.sort( function(x,y){
+                    //console.log(x);
+                    var formatted = moment(x.start).format("'MMMM Do YYYY, h:mm:ss a");
+                    //console.log('x' + formatted);
+                    var formattedy = moment(y.start).format("'MMMM Do YYYY, h:mm:ss a");
+                    //console.log('y' + formattedy);
+                    return x.start<y.start  ? -1 : x.start> y.start? 1 : 0;
                 });
 
 
                 // Update cache
-                cachedCalendar = calendarEvents;
+                updateCached(calendarEvents);
                 callback(null, calendarEvents);
             }
         });
