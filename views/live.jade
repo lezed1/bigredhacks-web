@@ -80,7 +80,6 @@ block append main_content
                                 .heading
                                         h3 fri, 9/16
                                 for event in calendar
-                                    if moment().isBefore(event.end)
                                         if moment(event.start).format("ddd").toLowerCase() == "fri"
                                             +calendarEvents(event)
                                 .heading
