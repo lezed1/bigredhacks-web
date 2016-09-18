@@ -8,6 +8,7 @@ var middle = require('../routes/middleware.js');
 var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var socketutil = require('../util/socketutil');
+var moment = require('moment');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
