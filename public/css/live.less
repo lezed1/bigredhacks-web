@@ -16,7 +16,7 @@ body{
 .announcements{
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 400px;
+  height: 250px;
   td, th{
     text-align: left;
     text-transform: lowercase;
@@ -38,6 +38,12 @@ body{
 
   #request-mentor-btn{
     margin-bottom: 20px;
+  }
+
+  #mentor-label {
+    margin-top: 20px;
+    color: @jasonblue;
+    font-style: italic;
   }
 }
 .twitter-feed{
@@ -131,7 +137,7 @@ body{
     text-transform: lowercase;
   }
   .data {
-    margin-bottom: 10px;
+    margin-bottom: 25px;
     p {
       color: @light-gray;
       margin: 0px;
@@ -148,9 +154,29 @@ body{
       font-size: 16px;
     }
   }
-
 }
 .schedule-tab{
   margin-left: 5%;
+}
 
+.social-media{
+  margin: 10px;
+  a {
+    color: black;
+    margin: 10px;
+  }
+  a:hover{
+  color: @jasonblue;
+  }
+}
+
+.program{
+  padding: 20px;
+  a {
+    font-size: 18px;
+  }
+}
+
+.not-display{
+  display: none;
 }

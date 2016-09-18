@@ -9,16 +9,17 @@ block vars
 
 block append description
     h1 Mentor Registration
-    .form-group
-        label(for='authorization') authorization code *
-        input#authorization.form-control(type='text', name='authorization', minlength='1', placeholder='authorization', value=input.authorization || '',  required=true)
+
 block append account-information
     .form-group
-        label(for='password') secret id *
-        input#password.form-control(type='password', name='password', placeholder='secret id', required=true)
+        label(for='em') email *
+        input#em.form-control(type='text', name='em', minlength='2', placeholder='email', value=input.em || '', required=true)
     .form-group
-        label(for='confirmpassword') confirm secret id *
-        input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='secret id', required=true)
+        label(for='password') password *
+        input#secretId.form-control(type='password', name='password', placeholder='****', required=true)
+    .form-group
+        label(for='confirmSecretId') confirm password *
+        input#confirmSecretId.form-control(type='password', name='confirmSecretId', placeholder='****', required=true)
 
 block append basic-information
     .form-group
@@ -30,6 +31,9 @@ block append basic-information
     .form-group
         label(for='company-dropdown') company/organization *
         input#company-dropdown.form-control(type='text', name='company', minlength='2', placeholder='company', value=input.company || '', required=true)
+    .form-group
+        label(for='auth') authorization code *
+        input#authorization.form-control(type='text', name='auth', minlength='1', placeholder='auth', value=input.authorization || '',  required=true)
 
 //- noop blocks
 block no_school

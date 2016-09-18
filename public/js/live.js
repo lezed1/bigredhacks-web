@@ -1,7 +1,15 @@
 var socket = io();
 
 socket.on('announcement', function(data) {
-    window.alert(data);
+    //window.alert(data);
+    if(window.Notification && Notification.permission !== "denied") {
+        Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+            var n = new Notification('BigRed//Hacks Announcement!', {
+                body: data,
+                icon: '/img/logo/full-red.png' // optional
+            });
+        });
+    }
 });
 
 function getTimeRemaining(endtime) {
@@ -18,6 +26,34 @@ function getTimeRemaining(endtime) {
         'seconds': seconds
     };
 }
+
+$("#request-mentor-btn").on('click', function(e) {
+    e.preventDefault();
+    //$("#request-mentor-btn").addClass("disabled");
+    $.ajax({
+        method: "POST",
+        url: "/API/RequestMentor",
+        data: {
+            email: $("#mentor-req-email").val(),
+            request: $("#mentor-req-text").val(),
+            tableNumber: $("#mentor-req-table").val()
+        },
+        success: function(data) {
+            $("#request-mentor-btn").addClass("disabled");
+            $("#mentor-req-alert").css("visibility","visible").addClass("fadeOut").removeClass("alert-danger").removeClass("not-display").addClass("alert-success").text(data);
+            console.log(data);
+        },
+        error: function(data) {
+            $("#request-mentor-btn").addClass("disabled");
+            $("#mentor-req-alert").css("visibility","visible").removeClass("alert-success").addClass("alert-danger").removeClass("not-display").text(data.responseText);
+            console.log(data);
+
+        }
+    })
+})
+
+//fade out things that have fadeOut class
+$(".fadeOut").delay(2000).fadeOut(2000, "easeInCubic");
 
 function initializeClock(id, endtime) {
     var clock = document.getElementById(id);
