@@ -102,7 +102,7 @@ util.grabCalendar = function grabCalendar(callback) {
                     return {
                         event: element.properties.SUMMARY[0].value,
                         start: element.properties.DTSTART[0].value - 60*60*1000*4,
-                        end: (element.properties.DTEND != null) ? element.properties.DTEND[0].value - (60*60*1000*4) : 0,
+                        end: element.properties.DTEND[0].value - (60*60*1000*4),
                         location: element.properties.LOCATION[0].value,
                         description: element.properties.DESCRIPTION[0].value
                     }
