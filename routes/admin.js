@@ -545,15 +545,32 @@ router.get('/reimbursements', function (req, res, next) {
                 .select("pubid name email school.name internal.reimbursement_override")
                 .sort("name.first")
                 .exec(done)
+        }, checkedIns: function (done) {
+            User.find({'internal.checkedin' : true}).sort('school.name').exec(done);
         }
     }, function (err, result) {
         if (err) {
             console.error(err);
         }
 
+        var easyReimbursements = [];
+
+        result.checkedIns.forEach(function(user) {
+            var reimbursement = util.calculateReimbursement(result.reimbursements, user, false);
+            if (reimbursement > 0) {
+                easyReimbursements.push({
+                    name: user.name.full,
+                    email: user.email,
+                    school: user.school.name,
+                    reimbursement:reimbursement
+                });
+            }
+        });
+
         return res.render('admin/reimbursements', {
             reimbursements: result.reimbursements,
-            overrides: result.overrides
+            overrides: result.overrides,
+            easyReimbursements: easyReimbursements
         });
     })
 });
