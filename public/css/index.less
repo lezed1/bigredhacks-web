@@ -484,16 +484,29 @@ section {
 }
 
 .sustainable {
-  z-index: 50;
   position: relative;
-  p, h2 {
-    z-index: 50;
-    color: @jasonblue;
-  }
-  .content {
-    padding-top: 100px;
-    padding-bottom: 200px;
+  z-index: 500;
+  padding-top: 180px;
+  padding-bottom: 180px;
+  opacity: 0.8;
 
+  h2, dd, dt {
+    color: white;
+  }
+  .container {
+    color: @off-white;
+  }
+  background: @ocean-blue;
+  dt {
+    font-size: 20px;
+    padding-top: 10px;
+  }
+  dd{
+    font-size: 16px;
+    font-weight: @weight-normal;
+  }
+  a{
+    color: @light-purple;
   }
 }
 
