@@ -2,15 +2,16 @@ extends _layout-unsecured
 
 mixin calendarEvents(event)
     .time
-        h4 #{moment(event.start).format("hA")} - #{moment(event.end).format("hA")}
+        h4 #{moment(event.start).format("h:mm a")} - #{moment(event.end).format("h:mm a")}
     .data
         p #{event.event}
+        h5 #{event.location}
         h5 #{event.description}
 
 block header
     link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
     link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css")
-    link(rel="stylesheet", href="path/to/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css")
     link(href="/css/index.css", rel="stylesheet")
     link(rel="stylesheet", href="/css/live.css")
 
@@ -58,17 +59,19 @@ block append main_content
                         .panel-heading
                             h3.panel-title Request a Mentor
                         .mentor-request
-                            form(action='/API/RequestMentor' method='post')
+                            #mentor-req-alert.alert.alert-danger.not-display(style="visibility:hidden",role="alert")
+                            label#mentor-label You must use the email you registered with
+                            form
                                 .form-group
                                     label email
-                                    input.form-control(type='text', name='email', placeholder='ex. abc@cornell.edu')
+                                    input#mentor-req-email.form-control(type='text', name='email', placeholder='ex. abc@cornell.edu')
                                 .form-group
                                     label problem
-                                    input.form-control(type='text', name='request', placeholder='ex. need help with Javascript')
+                                    input#mentor-req-text.form-control(type='text', name='request', placeholder='ex. need help with Javascript')
                                 .form-group
                                     label table number
-                                    input.form-control(type='text', name='tableNumber', placeholder='ex. 4')
-                                button#request-mentor-btn.btn.btn-primary(type='submit') request mentor
+                                    input#mentor-req-table.form-control(type='text', name='tableNumber', placeholder='ex. 4')
+                                button#request-mentor-btn.btn.btn-primary request mentor
                 .row
                     .panel.panel-default
                         .panel-heading
@@ -76,21 +79,18 @@ block append main_content
                         .calendar
                             .schedule-tab
                                 .heading
-                                    h3 fri, 9/16
+                                        h3 fri, 9/16
                                 for event in calendar
-                                    if moment().isBefore(event.start)
                                         if moment(event.start).format("ddd").toLowerCase() == "fri"
                                             +calendarEvents(event)
                                 .heading
-                                    h3 sat, 9/17
+                                        h3 sat, 9/17
                                 for event in calendar
-                                    if moment().isBefore(event.start)
                                         if moment(event.start).format("ddd").toLowerCase() == "sat"
                                             +calendarEvents(event)
                                 .heading
-                                    h3 sun, 9/18
+                                        h3 sun, 9/18
                                 for event in calendar
-                                    if moment().isBefore(event.start)
                                         if moment(event.start).format("ddd").toLowerCase() == "sun"
                                             +calendarEvents(event)
             .col-md-4
@@ -114,6 +114,12 @@ block append main_content
                 .row
                     .panel.panel-default
                         .panel-heading
+                            h3.panel-title program
+                        .program
+                            a(href="/docs/BRH_schedule_finalfinalfinal.pdf") program schedule
+                .row
+                    .panel.panel-default
+                        .panel-heading
                             h3.panel-title HackerEarth
                         .submit
                             a.box(href="https://bigredhacks2016.hackerearth.com/") submit projects here
@@ -128,7 +134,18 @@ block append main_content
                                 i.fa.fa-twitter-square.fa-3x(aria-hidden='true')
                             a(href="http://instagram.com/BigRedHacks")
                                 i.fa.fa-instagram.fa-3x(aria-hidden='true')
-
+                .row
+                    .panel.panel-default
+                        .panel-heading
+                            h3.panel-title Hardware
+                        .program
+                            a(href="https://hardware.mlh.io/events/bigred-hacks") hardware
+                .row
+                    .panel.panel-default
+                        .panel-heading
+                            h3.panel-title Android App
+                        .program
+                            a(href="https://play.google.com/store/apps/details?id=edu.bigredhacks.android") android app
 block footer
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
     script(src="/socket.io/socket.io.js")

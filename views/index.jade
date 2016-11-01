@@ -74,6 +74,7 @@ block append content
                                     when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
                                     when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
                                     default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
+                                a.btn.btn-light-blue(href="/live") live
                             else
                                 if middlehelp.isRegistrationOpen()
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
@@ -320,12 +321,12 @@ block append content
                         img(src='img/logos/sketch.png', alt='Sketch')
                 li#soylent.logo-1
                     a(href='https://www.soylent.com/')
-                        img(src='http://farm8.staticflickr.com/7323/11212265035_59f7466a7e_o.png', alt='Soylent')
+                        img(src='/img/logos/soylent.png', alt='Soylent')
 
             ul.logos
                 li#hackerearth.logo-1
                     a(href='https://www.hackerearth.com/')
-                        img(src='http://blog.hackerearth.com/wp-content/uploads/2015/09/logo_new.png', alt='HackerEarth')
+                        img(src='/img/logos/hackerearth.png', alt='HackerEarth')
                 li#ultrapress.logo-1
                     a(href='https://ultrapress.com/')
                         img(src='https://ultrapress-production.s3.amazonaws.com/static/images/public/ultrapress-custom-tshirts.png', alt='UltraPress')
