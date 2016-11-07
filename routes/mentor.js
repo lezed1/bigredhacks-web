@@ -8,6 +8,7 @@ var middle = require('../routes/middleware.js');
 var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var socketutil = require('../util/socketutil');
+var moment = require('moment');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -198,7 +199,7 @@ module.exports = function(io) {
                     if (err) {
                         console.error(err);
                         req.flash("error", "An error occurred.");
-                        return res.redirect('/register');
+                        return res.redirect('/mentor/register');
                     }
 
                     return res.redirect('/mentor/dashboard');

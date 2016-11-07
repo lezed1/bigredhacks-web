@@ -728,7 +728,7 @@ function checkInUser(req, res, next) {
  */
 function getUsersPlanningToAttend(req, res, next) {
     var project = "name pubid email school internal.checkedin";
-    User.find({$or: [{"internal.going": true}, {"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
+    User.find({$or: [{"internal.status": {$ne: "Rejected"}}, {"internal.going": {$ne: false}},{"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
             res.status(500).send(null);
         }
@@ -751,7 +751,6 @@ function getUsersPlanningToAttend(req, res, next) {
  * @apiParam twitter post to twitter
  */
 function postAnnouncement(req, res, next) {
-    console.log(req.body);
     const message = req.body.message;
 
     var newAnnouncement = new Announcement({
