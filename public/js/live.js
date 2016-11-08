@@ -13,7 +13,7 @@ socket.on('announcement', function(data) {
 });
 
 function getTimeRemaining(endtime) {
-    var t = Date.parse(endtime) - Date.parse(new Date());
+    var t = Math.max(0,Date.parse(endtime) - Date.parse(new Date()));
     var seconds = Math.floor((t / 1000) % 60);
     var minutes = Math.floor((t / 1000 / 60) % 60);
     var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
@@ -79,5 +79,5 @@ function initializeClock(id, endtime) {
     var timeinterval = setInterval(updateClock, 1000);
 }
 
-var deadline = new Date(Date.parse(new Date("September 18, 2016 10:00:00")));
+var deadline = new Date(Date.parse(new Date("September 18, 2016 8:00:00")));
 initializeClock('clockdiv', deadline);

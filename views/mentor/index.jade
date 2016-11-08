@@ -32,6 +32,7 @@ block mentor_content
           h2.page-title unclaimed requests
           table#mentorRequests-table.table.table-striped
               tr
+                  th Request Time 
                   th Name
                   th Email
                   th Description
@@ -40,6 +41,7 @@ block mentor_content
 
               for mentorRequest in mentorRequests
                   tr(data-request=mentorRequest.id)
+                      td #{moment(mentorRequest.createdAt).from()}
                       td #{mentorRequest.user.name.first}
                       td #{mentorRequest.user.email}
                       td #{mentorRequest.description}

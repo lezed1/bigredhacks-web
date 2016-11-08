@@ -751,7 +751,6 @@ function getUsersPlanningToAttend(req, res, next) {
  * @apiParam twitter post to twitter
  */
 function postAnnouncement(req, res, next) {
-    console.log(req.body);
     const message = req.body.message;
 
     var newAnnouncement = new Announcement({
