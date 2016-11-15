@@ -29,8 +29,6 @@ var OAuth = require('oauth');
 var util = require('../../util/util.js');
 
 var Twitter = require('twitter');
-var graph = require('fbgraph');
-graph.setAccessToken(config.fb.access_token);
 
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
@@ -786,13 +784,6 @@ function postAnnouncement(req, res, next) {
                 };
 
                 fcm.send(message, function(err,response){
-                });
-            }
-
-            if (req.body.facebook) {
-                graph.post("/feed", {message: req.body.message}, function (err, res) {
-                    if (err) console.log('ERROR posting to Facebook: ' + err);
-                    console.log(res);
                 });
             }
 
