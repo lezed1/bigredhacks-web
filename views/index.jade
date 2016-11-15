@@ -74,6 +74,7 @@ block append content
                                     when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
                                     when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
                                     default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
+                                a.btn.btn-light-blue(href="/live") live
                             else
                                 if middlehelp.isRegistrationOpen()
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
@@ -101,7 +102,7 @@ block append content
         .leftClouds(data-100="left:-5%;" data-top="left:-30%;")
         .rightClouds(data-50="left:70%;" data-top="left:100%;")
         .cloud3
-        .rainClouds(data-0="left:2%;" data-160-top="left:2%;")
+        .rainClouds(data-0="left:-6%;" data-160-top="left:2%;")
 
     //- Section: sustainable
     section#clocktowerland.clocktowerland
@@ -109,13 +110,13 @@ block append content
         .clockBody
             .clockWindow
             .clockCircle
-                p.counter 161
+                p.counter ??? 
                 p days until
                 p BigRed//Hacks!
 
         section#schedule.schedule
             .section-heading.container
-                h2(style='float:left;') Schedule
+                h2(style='float:left;') Winners
             .driftCloud1(data-100-bottom="left:40%;" data-top="left:100%;")
             .driftCloud2(data-100-bottom="left:37%;" data-top="left:100%;")
             .twocloud
@@ -125,39 +126,36 @@ block append content
             .container
                 .schedule-table
                     .heading
-                        h3 friday, 9/16
-                    .time
-                        p 4:30 - 6:30 pm
+                      .data
+                        h3 Best UI/Design:
+                        -var a = function(href,text){ return "<a href='"+href+"'>"+text+"</a>" }
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/515a200/submission/","Recycle Rampage")}
+                        h5 Identifying everyday products that are recyclable can be a challenge. For example, I had no idea that plastic bags were
+                          |supposed to be disposed of in a landfill...
                     .data
-                        p participant registration
-                        h5 call auditorium
-                    .time
-                        p 6:00 pm
+                        h3 Best Business Prospect:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/6c160b1/submission/","Add.me")}
+                        h5 We wanted to build a platform for everyone to connect on multiple mediums (Facebook, Instagram, Snapchat, Twitter,
+                          |YouTube, Github, LinkedIn, etc) in an immediate and intuitive way …
                     .data
-                        p opening ceremony
-                        h5 call auditorium
-                    .time
-                        p 8:00 pm
-                    .data
-                        p hacking begins
-                        h5 physical sciences building
+                        h3 Best Technical Feat:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/cd65341/submission/","Andreesen")}
+                        h5 We build a rudimentary web browser. With no libraries. In pure C++. Named after the great Marc Andreessen, author of Mosaic, and for a16z...
                     .heading
-                    h3 sunday, 9/18
-                    .time
-                        p 8:00 am
-                    .data
-                        p hacking ends
-                        h5 physical sciences building
-                    .time
-                        p 9:00 am - 11:00 am
-                    .data
-                        p project expo
-                        h5 physical sciences building
-                    .time
-                        p 12:00 pm - 2:00 pm
-                    .data
-                        p closing ceremony
-                        h5 call auditorium
+                      .data
+                        h3 Sustainability:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/be5f0c2/submission/","BinGo")}
+                        h5 Recycling is one of the simplest and most straight-forward methods to contribute to the sustainability
+                          |movement on a daily basis, and yet many are unaware...
+                      .data
+                        h3 Best First-Time Hack:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/4af0e3a/submission/","PuppetPlant")}
+                        h5 Our goal is to inspire people to improve their habits by emphasizing with a physical product. We want to use
+                          |PuppetPlant as a prototype to illustrate how using emotions of the things people care about can motivate them...
+                      .data
+                        h3 Best Hardware Hack:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/teams/22d4970/submission/","JankTank")}
+                        h5 Remote-controlled tank with a live camera feed. Weapons systems in development
 
 
         section.hillholder
@@ -261,12 +259,12 @@ block append content
                         img(src='img/logos/sketch.png', alt='Sketch')
                 li#soylent.logo-1
                     a(href='https://www.soylent.com/')
-                        img(src='http://farm8.staticflickr.com/7323/11212265035_59f7466a7e_o.png', alt='Soylent')
+                        img(src='/img/logos/soylent.png', alt='Soylent')
 
             ul.logos
                 li#hackerearth.logo-1
                     a(href='https://www.hackerearth.com/')
-                        img(src='http://blog.hackerearth.com/wp-content/uploads/2015/09/logo_new.png', alt='HackerEarth')
+                        img(src='/img/logos/hackerearth.png', alt='HackerEarth')
                 li#ultrapress.logo-1
                     a(href='https://ultrapress.com/')
                         img(src='https://ultrapress-production.s3.amazonaws.com/static/images/public/ultrapress-custom-tshirts.png', alt='UltraPress')

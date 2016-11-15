@@ -186,7 +186,6 @@ router.post('/RequestMentor', function (req, res, next) {
                if (err) {
                    console.error(err);
                }
-
                 MentorRequest.find({}, function(err, requests) {
                     socketutil.updateRequests(requests);
                     return res.status(200).send('Request made!');

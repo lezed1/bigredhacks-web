@@ -154,14 +154,6 @@ function generateRainDrops($) {
     $("#intro").append($div5);
 }
 
-// Clocktower timer
-(function ($) {
-    const SEP_SIXTEEN = 1473984000;
-    $timer = $('.counter');
-    daysLeft = Math.floor( Math.abs( Date.now() / 1000 - SEP_SIXTEEN ) / 86400) + 1;
-    $timer.text(daysLeft + '');
-})(jQuery);
-
 
 jQuery( document ).ready(function() {
     var ua = window.navigator.userAgent;
