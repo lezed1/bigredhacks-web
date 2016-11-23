@@ -13,8 +13,8 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
 
     //Ensures that Canvas is supported in the browser
     if (!qr.isCanvasSupported() || !qr.hasGetUserMedia()){
-        throw alert("Your browser doesn't match the required specs."),
-        new Error("Canvas and getUserMedia are required");
+        alert("Your browser doesn't match the required specs.");
+        throw new Error("Canvas and getUserMedia are required");
     }
     //Specifies where to put the stream and what triggers the video
     //decodeFromCamera is the object that starts scanning every frame of the camera stream
@@ -28,7 +28,7 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
     elems.forEach(function(e) {
         e.activator.onclick = function(r) {
             //Stop any default behavior associated with buttons
-            r && r.preventDefault(),
+            r && r.preventDefault();
             //Attempt to decode
             e.decoder.call(qr, e.target, function(e, r) {
             if (e){
