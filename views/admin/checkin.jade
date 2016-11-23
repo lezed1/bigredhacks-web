@@ -12,13 +12,13 @@ block append admin_content
         +contentHeading("participant checkin")
         #searchparameters.col-md-12
             section#camera(ng-init='showVideo = true')
-                        label(style="display: block;text-align: center;") Scan QR Code
-                        br
-                        video(autoplay id="camera-demo" poster="http://cirocosta.github.io/qcode-decoder/dist/assets/webcam.png" ng-show="showVideo" style="display:block; margin-left:auto;margin-right:auto;")
-                        br(ng-show="showVideo")
-                        div(align="center")
-                            button(id='scanQR' class='btn' ng-click="showVideo = true") Start Scanning
-                            button(id='stopScanQR' class='btn' ng-click="showVideo = false") Stop Scanning
+                label Scan QR Code
+                br
+                video(autoplay id="camera-demo" poster="http://cirocosta.github.io/qcode-decoder/dist/assets/webcam.png" ng-show="showVideo")
+                br(ng-show="showVideo")
+                div(align="center")
+                    button(id='scanQR' class='btn' ng-click="showVideo = true") Start Scanning
+                    button(id='stopScanQR' class='btn' ng-click="showVideo = false") Stop Scanning
             br
             form
                 .form-group
