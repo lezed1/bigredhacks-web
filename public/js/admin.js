@@ -181,6 +181,28 @@ $('document').ready(function () {
         });
     });
 
+    // remove user from database
+    $('#remove-user').on('click', function () {
+        var _this = this;
+        var pubid = $("#pubid").text();
+        var c = confirm("Are you sure you want to remove this user?");
+        if (c) {
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/user/" + pubid + "/removeUser",
+                data: {
+                    pubid: pubid
+                },
+                success: function (data) {
+                    console.log("remove success");
+                },
+                error: function (e) {
+                    console.log("Couldn't remove the user!");
+                }
+            });
+        }
+    });
+
 
     /******************
      * SEARCH PAGE ****

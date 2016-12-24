@@ -35,6 +35,8 @@ router.patch('/user/:pubid/setStatus', setUserStatus);
 router.patch('/team/:teamid/setStatus', setTeamStatus);
 router.patch('/user/:email/setRole', setUserRole);
 
+router.delete('/user/:pubid/removeUser', removeUser);//+++
+
 router.get('/np', getNoParticipation);
 router.post('/np/set', setNoParticipation);
 
@@ -106,6 +108,35 @@ function setUserStatus(req, res, next) {
                 }
             });
 
+        }
+    });
+}
+
+
+/**
+ * @api {DELETE} /api/admin/user/:pubid/removeUser
+ *
+ * @apiName RemoveUser
+ * @apiGroup Admin
+ *
+ * @apiParam {String}
+ */
+function removeUser(req, res, next) {
+    User.findOne({pubid: req.params.pubid}, function (err, user) {
+        if (err || !user) {
+            console.log('Error: ' + err);
+            return res.sendStatus(500);
+        }
+        else {
+            user.remove({'pubid': req.params.pubid}, function (err, rem) {
+                if (err) {
+                    console.error(err);
+                    return res.sendStatus(500);
+                }
+                //return res.sendStatus(200);
+                // Redirect to review page
+                return res.redirect('/admin/review');
+            })
         }
     });
 }
