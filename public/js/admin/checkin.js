@@ -20,7 +20,8 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
     //decodeFromCamera is the object that starts scanning every frame of the camera stream
     var elems = [{
         target: document.querySelector("#camera video"),
-        activator: document.querySelector("#camera button"),
+        activator: document.querySelector("#camera #scanQR"),
+        deactivator: document.querySelector("#camera #stopScanQR"),
         decoder: qr.decodeFromCamera
     }];
 
@@ -30,19 +31,29 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
             //Stop any default behavior associated with buttons
             r && r.preventDefault();
             //Attempt to decode
-            e.decoder.call(qr, e.target, function(e, r) {
-            if (e){
-                throw e;
-            }
+            e.decoder.call(qr, e.target, function(err, result) {
+                if (err){
+                    throw err;
+                }
 
-            //If decode works, then this will alert.
-            //Change this check-in logic later
-            alert("Just decoded: " + r);
+                //If decode works, then this will alert.
+                // TODO: Attach check-in logic to this
+                alert("Just decoded: " + result);
 
-            //Reload to kill the stream
+                //Reload to kill the stream
+                location.reload();
+            }, false)
+        };
+
+        e.deactivator.onclick = function(r) {
+            //Stop any default behavior associated with buttons
+            r && r.preventDefault();
+            //Attempt to decode
+
+            // Although we could stop the timer here, this does not disable the camera stream, so reload instead.
+            //clearInterval(qr.timerCapture);
             location.reload();
-            }, true)
-        }   
+        }
     });
 
     $scope.filterSearch = function (user) {
