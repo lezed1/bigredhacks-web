@@ -183,7 +183,6 @@ $('document').ready(function () {
 
     // remove user from database
     $('#remove-user').on('click', function () {
-        var _this = this;
         var pubid = $("#pubid").text();
         var c = confirm("Are you sure you want to remove this user?");
         if (c) {
@@ -193,8 +192,8 @@ $('document').ready(function () {
                 data: {
                     pubid: pubid
                 },
-                success: function (data) {
-                    console.log("remove success");
+                success: function (res) {
+                    location.href = "/admin/dashboard";
                 },
                 error: function (e) {
                     console.log("Couldn't remove the user!");

@@ -128,18 +128,20 @@ function removeUser(req, res, next) {
             return res.sendStatus(500);
         }
         else {
-            user.remove({'pubid': req.params.pubid}, function (err, rem) {
+            user.remove({'pubid': req.params.pubid}, function (err) {
                 if (err) {
-                    console.error(err);
+                    console.log('Remove error: ' + err);
                     return res.sendStatus(500);
                 }
-                //return res.sendStatus(200);
-                // Redirect to review page
-                return res.redirect('/admin/review');
-            })
+                else {
+                    console.log('removed user ' + req.params.pubid);
+                    res.sendStatus(200);
+                }
+            });
         }
     });
 }
+
 
 /**
  * @api {PATCH} /api/admin/team/:teamid/setStatus Set status of entire team
