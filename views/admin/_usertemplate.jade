@@ -2,7 +2,6 @@
    Display detailed information for a user
 
 h2 #{user.name.first} #{user.name.last} (#[i.fa.fa-user] #[span#pubid #{user.pubid}])
-button#remove-user.btn.btn-danger remove
 
 .row
     .col-sm-3.col-md-3
@@ -94,6 +93,9 @@ button#remove-user.btn.btn-danger remove
                     select#setCheckedIn.form-control(name="setCheckedIn")
                         option(value="") select
                         +generateOptions("true false".split(" "), {selected: (user.internal.checkedin + "")})
+        br
+        button#remove-user.btn.btn-danger delete user
+        br
         .text-center
             | Update user application decision:
             form.decision-radio.user.np-enabled(data-pubid = user.pubid)

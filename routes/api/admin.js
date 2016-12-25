@@ -35,7 +35,7 @@ router.patch('/user/:pubid/setStatus', setUserStatus);
 router.patch('/team/:teamid/setStatus', setTeamStatus);
 router.patch('/user/:email/setRole', setUserRole);
 
-router.delete('/user/:pubid/removeUser', removeUser);//+++
+router.delete('/user/removeUser', removeUser);
 
 router.get('/np', getNoParticipation);
 router.post('/np/set', setNoParticipation);
@@ -114,27 +114,33 @@ function setUserStatus(req, res, next) {
 
 
 /**
- * @api {DELETE} /api/admin/user/:pubid/removeUser
+ * @api {DELETE} /api/admin/user/removeUser Remove a single user from database.
  *
  * @apiName RemoveUser
  * @apiGroup Admin
  *
- * @apiParam {String}
+ * @apiParam {String} pubid
  */
 function removeUser(req, res, next) {
-    User.findOne({pubid: req.params.pubid}, function (err, user) {
-        if (err || !user) {
-            console.log('Error: ' + err);
-            return res.sendStatus(500);
+    User.findOne({pubid: req.body.pubid}, function (err, user) {
+        if (err) {
+            console.error(err);
+            req.flash('error', 'An error occurred while finding the user');
+            return res.status(500).send(err);
+        }
+        if (!user) {
+            req.flash('error', 'Cannot find user with this pubid');
+            return res.status(500).send('User not found! ');
         }
         else {
-            user.remove({'pubid': req.params.pubid}, function (err) {
+            user.remove({'pubid': req.body.pubid}, function (err) {
                 if (err) {
-                    console.log('Remove error: ' + err);
+                    console.error('Remove error: ' + err);
                     return res.sendStatus(500);
                 }
                 else {
-                    console.log('removed user ' + req.params.pubid);
+                    console.log('Success: removed user ' + req.body.pubid);
+                    req.flash('success', 'Successfully removed user '+ req.body.pubid);
                     res.sendStatus(200);
                 }
             });

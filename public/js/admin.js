@@ -183,14 +183,13 @@ $('document').ready(function () {
 
     // remove user from database
     $('#remove-user').on('click', function () {
-        var pubid = $("#pubid").text();
         var c = confirm("Are you sure you want to remove this user?");
         if (c) {
             $.ajax({
                 type: "DELETE",
-                url: "/api/admin/user/" + pubid + "/removeUser",
+                url: "/api/admin/user/removeUser",
                 data: {
-                    pubid: pubid
+                    pubid: $("#pubid").text()
                 },
                 success: function (res) {
                     location.href = "/admin/dashboard";
