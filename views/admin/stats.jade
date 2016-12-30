@@ -16,7 +16,14 @@ block append admin_content
             input#annotation.form-control(type='text', name='annotation', placeholder='ex: Placed a message in a bottle.', value = input.info || '', required=true)
         .form-group
             button#resume-save.btn.btn-blue(type='submit') Add
-    div#annotationlist
+    table#annotationlist.table.table-striped
+        tr 
+            th Annotation
+            th Date Created
+        for annotation in annotations
+            tr
+                td #{annotation.info}
+                td #{annotation.time}
 
     h2 Major Distribution for RSVP'd
     table#majors-table.table.table-striped

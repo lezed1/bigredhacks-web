@@ -67,27 +67,5 @@ var chart = c3.generate({
     }
 });
 
-// Display annotations as a list for now
-function makeUL(array) {
-    // Create the list element:
-    var list = document.createElement('ul');
-
-    for(var i = 0; i < array.length; i++) {
-        // Create the list item:
-        var item = document.createElement('li');
-
-        const time = new Date(array[i].time);
-
-        // Set its contents:
-        item.appendChild(document.createTextNode(array[i].info + ' (' + time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate() + ')'));
-
-        // Add it to the list:
-        list.appendChild(item);
-    }
-
-    // Finally, return the constructed list:
-    return list;
-}
-
-// Add the contents of options[0] to #foo:
-document.getElementById('annotationlist').appendChild(makeUL(annotations));
+// Kevin, use this for the annotations data
+console.log(annotations);
