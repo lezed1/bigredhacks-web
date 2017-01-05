@@ -12,6 +12,7 @@ var MentorRequest = require('../../models/mentor_request');
 var middle = require('../middleware');
 var util = require('../../util/util');
 var email = require('../../util/email');
+var socketutil = require('../../util/socketutil');
 
 /**
  * @api {get} /api/colleges Request a full list of known colleges
@@ -155,6 +156,7 @@ router.get('/calendar', function (req, res, next) {
  * @apiSuccess {String} tableNumber Where the requester is located, usually a table number
  */
 router.post('/RequestMentor', function (req, res, next) {
+    console.log(req.body);
     if (!req.body.email || !req.body.request) {
         return res.status(500).send('Missing email or request.');
     }
@@ -184,8 +186,10 @@ router.post('/RequestMentor', function (req, res, next) {
                if (err) {
                    console.error(err);
                }
-
-                return res.redirect('/live');
+                MentorRequest.find({}, function(err, requests) {
+                    socketutil.updateRequests(requests);
+                    return res.status(200).send('Request made!');
+                });
             });
         });
     });

@@ -23,6 +23,8 @@ block append admin_content
             a(href='#decisions', aria-controls='decisions', role='tab', data-toggle='tab') Decisions
         li(role='presentation')
             a(href='#rsvp-override', aria-controls='rsvp-override', role='tab', data-toggle='tab') RSVP Override
+        li(role='presentation')
+            a(href='#mentors', aria-controls='mentors', role='tab', data-toggle='tab') Mentors
 
     //- Tab panes
     .tab-content
@@ -91,10 +93,6 @@ block append admin_content
                         | &nbsp;Mobile
                     br
                     label
-                        input#facebook(type='checkbox', name='facebook', value='true', checked=false)
-                        | &nbsp;Facebook
-                    br
-                    label
                         input#twitter(type='checkbox', name='twitter', value='true', checked=false)
                         | &nbsp;Twitter
                     br
@@ -122,15 +120,29 @@ block append admin_content
                     .form-group.np-enabled
                         input#waitlist-amount(type='Number' name='numberToAccept' placeholder='amount')
                         button#waitlist-make.btn.btn-success(type='submit' onclick="return confirm('Are you sure?')") Move Off Waitlist
-        #messages.tab-pane(role='tabpanel') ...
-        #settings.tab-pane(role='tabpanel') ...
         #rsvp-override.tab-pane(role='tabpanel')
             h2 Per-User RSVP Override
             .form-group
                 label User's email
                 input.form-control(type='text', name='email', placeholder='ex. dinasauronion@yahoo.com',value='')
                 br
-                label New RSVP Time
+                label New RSVP Time (in days)
                 input.form-control(type='text', name='days-to-rsvp', placeholder='ex. 12 Days', value='')
             .form-group
                 button#rsvpOverride.btn.btn-success(type='submit') Override
+        #mentors.tab-pane(role='tabpanel')
+            .assign-mentor-section
+                h2 Assign Mentor Key
+                p Assign a valid key for the mentor to enter on their end
+                form#mentor-assign-form(method = 'post', action='/api/admin/makeKey')
+                    .form-group.np-enabled
+                        input#mentor-secret-key(type='text' name='mentorKey' placeholder='key')
+                        button#mentor-assign.btn.btn-success(type='submit') Make Mentor Key
+            br
+            .existing-mentor-keys-section
+                table.table.table-striped
+                    tr
+                        th Existing Mentor Keys
+                    for key in mentorkeys
+                        tr
+                            td= key.key

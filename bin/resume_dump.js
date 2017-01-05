@@ -14,14 +14,14 @@ var User = require('../models/user.js');
 var RESUME_DEST = 'resume/';
 var RECEIPT_DEST = 'travel/';
 
-var LOCAL_DEST = '/home/leon/resumes/';
+var LOCAL_DEST = 'D:/resumes/';
 
 var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
 });
 
-var query = { "internal.going": true}
+var query = { "internal.going": true};
 /*
     "$or": [
         {"internal.going": true},

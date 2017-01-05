@@ -1,6 +1,7 @@
 "use strict";
 /**
- * Holds inventory information for a hardware item
+ * A log entry of a hardware transaction. Objects should not be deleted as it is meant to recover from
+ * any errors in the HardwareItemCheckout schema
  */
 
 var mongoose = require('mongoose');
@@ -14,10 +15,10 @@ var hardwareItemTransactionSchema = new mongoose.Schema({
 });
 
 // Methods
-hardwareItemTransactionSchema.statics.make = function transaction(itemName, student_id, quantity, checkOut, callback) {
+hardwareItemTransactionSchema.statics.make = function transaction(itemName, studentId, quantity, checkOut, callback) {
     let txn = new this({
         itemName,
-        student_id,
+        studentId,
         quantity,
         checkOut
     });

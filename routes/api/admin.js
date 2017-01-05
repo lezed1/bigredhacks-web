@@ -5,6 +5,8 @@ var async = require('async');
 var mongoose = require('mongoose');
 var app = require('../../app');
 
+var FCM = require('fcm-push');
+
 // Mongoose Models
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
@@ -16,23 +18,24 @@ var Announcement = require('../../models/announcement.js');
 var Inventory = require('../../models/hardware_item.js');
 var InventoryTransaction = require('../../models/hardware_item_checkout.js');
 var HardwareItemTransaction = require('../../models/hardware_item_transaction.js');
+var MentorAuthorizationKey = require('../../models/mentor_authorization_key');
 
 var config = require('../../config.js');
 var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 var email = require('../../util/email');
-var io = require('../../app').io;
+var socketutil = require('../../util/socketutil');
 var OAuth = require('oauth');
 var util = require('../../util/util.js');
 
 var Twitter = require('twitter');
-var graph = require('fbgraph');
-graph.setAccessToken(config.fb.access_token);
 
 // All routes
 router.patch('/user/:pubid/setStatus', setUserStatus);
 router.patch('/team/:teamid/setStatus', setTeamStatus);
 router.patch('/user/:email/setRole', setUserRole);
+
+router.delete('/user/removeUser', removeUser);
 
 router.get('/np', getNoParticipation);
 router.post('/np/set', setNoParticipation);
@@ -77,6 +80,8 @@ router.post('/hardware/inventory', setInventory);
 router.post('/cornellLottery', cornellLottery);
 router.post('/cornellWaitlist', cornellWaitlist);
 
+router.post('/makeKey', makeKey);
+
 /**
  * @api {PATCH} /api/admin/user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
  * @apiname SetStatus
@@ -91,7 +96,7 @@ function setUserStatus(req, res, next) {
             return res.sendStatus(500);
         }
         else {
-            user.internal.status =  req.body.status;
+            user.internal.status = req.body.status;
 
             // Redirect to home page
             user.save(function (err) {
@@ -106,6 +111,43 @@ function setUserStatus(req, res, next) {
         }
     });
 }
+
+
+/**
+ * @api {DELETE} /api/admin/user/removeUser Remove a single user from database.
+ *
+ * @apiName RemoveUser
+ * @apiGroup Admin
+ *
+ * @apiParam {String} pubid
+ */
+function removeUser(req, res, next) {
+    User.findOne({pubid: req.body.pubid}, function (err, user) {
+        if (err) {
+            console.error(err);
+            req.flash('error', 'An error occurred while finding the user');
+            return res.status(500).send(err);
+        }
+        if (!user) {
+            req.flash('error', 'Cannot find user with this pubid');
+            return res.status(500).send('User not found! ');
+        }
+        else {
+            user.remove({'pubid': req.body.pubid}, function (err) {
+                if (err) {
+                    console.error('Remove error: ' + err);
+                    return res.sendStatus(500);
+                }
+                else {
+                    console.log('Success: removed user ' + req.body.pubid);
+                    req.flash('success', 'Successfully removed user '+ req.body.pubid);
+                    res.sendStatus(200);
+                }
+            });
+        }
+    });
+}
+
 
 /**
  * @api {PATCH} /api/admin/team/:teamid/setStatus Set status of entire team
@@ -181,12 +223,12 @@ function makeRollingAnnouncement(req, res, next) {
     const DAYS_TO_RSVP = Number(config.admin.days_to_rsvp);
     const WAITLIST_ID = config.mailchimp.l_cornell_waitlisted;
     const ACCEPTED_ID = config.mailchimp.l_cornell_accepted;
-    User.find( {$and : [ { $where: "this.internal.notificationStatus != this.internal.status" }, {"internal.status": { $ne: "Pending"}}]} , function (err, recipient) {
+    User.find({$and: [{$where: "this.internal.notificationStatus != this.internal.status"}, {"internal.status": {$ne: "Pending"}}]}, function (err, recipient) {
         if (err) console.log(err);
         else {
             // Do not want to overload by doing too many requests, so this will limit the async
             const maxRequestsAtATime = 3;
-            async.eachLimit(recipient, maxRequestsAtATime, function(recip, callback) {
+            async.eachLimit(recipient, maxRequestsAtATime, function (recip, callback) {
                 var config = {
                     "from_email": "info@bigredhacks.com",
                     "from_name": "BigRed//Hacks",
@@ -196,8 +238,8 @@ function makeRollingAnnouncement(req, res, next) {
                     }
                 };
 
-                email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function(err) {
-                    if (err)  {
+                email.sendDecisionEmail(recip.name.first, recip.internal.notificationStatus, recip.internal.status, config, function (err) {
+                    if (err) {
                         return callback(err);
                     } else {
                         recip.internal.notificationStatus = recip.internal.status;
@@ -211,7 +253,7 @@ function makeRollingAnnouncement(req, res, next) {
                             function offWaitlist(cb) {
                                 if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
                                     // We can get errors for non-termination reasons, so callback will only log error
-                                    helper.removeSubscriber(WAITLIST_ID, recip.email, function(err) {
+                                    helper.removeSubscriber(WAITLIST_ID, recip.email, function (err) {
                                         if (err) {
                                             console.error(err);
                                         }
@@ -224,7 +266,7 @@ function makeRollingAnnouncement(req, res, next) {
                             function onAcceptedList(cb) {
                                 if (recip.internal.cornell_applicant && recip.internal.status == 'Accepted') {
                                     // We can get errors for non-termination reasons, so callback will only log error
-                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, function(err) {
+                                    helper.addSubscriber(ACCEPTED_ID, recip.email, recip.name.first, recip.name.last, function (err) {
                                         if (err) {
                                             console.error(err);
                                         }
@@ -239,7 +281,7 @@ function makeRollingAnnouncement(req, res, next) {
                         });
                     }
                 })
-            }, function(err) {
+            }, function (err) {
                 if (err) {
                     console.error('An error occurred with decision emails. Decision sending was terminated. See the log for remediation: ' + err);
                     req.flash('error', 'An error occurred. Check the logs!');
@@ -375,7 +417,7 @@ function setBusCaptain(req, res, next) {
         captain: function (callback) {
             User.findOne({"email": email}, callback);
         },
-        bus: function (callback){
+        bus: function (callback) {
             Bus.findOne({"name": routeName}, callback);
         }
     }, function assignCaptain(err, results) {
@@ -389,7 +431,7 @@ function setBusCaptain(req, res, next) {
 
         if (bus.captain.name) {
             res.status(500).send('Bus already has a captain');
-        } else if (captain.internal.busid != bus.id){
+        } else if (captain.internal.busid != bus.id) {
             res.status(500).send('User has not signed up for that bus');
         } else {
             bus.captain.name = captain.name.first + " " + captain.name.last;
@@ -399,12 +441,12 @@ function setBusCaptain(req, res, next) {
 
             captain.internal.busCaptain = true;
 
-            bus.save(function(err) {
+            bus.save(function (err) {
                 if (err) {
                     console.error(err);
                     res.sendStatus(500);
                 } else {
-                    captain.save(function(err) {
+                    captain.save(function (err) {
                         if (err) {
                             console.error(err);
                             res.sendStatus(500);
@@ -436,7 +478,7 @@ function deleteBusCaptain(req, res, next) {
         captain: function (callback) {
             User.findOne({"email": email}, callback);
         },
-        bus: function (callback){
+        bus: function (callback) {
             Bus.findOne({"captain.email": email}, callback);
         }
     }, function removeCaptain(err, results) {
@@ -459,12 +501,12 @@ function deleteBusCaptain(req, res, next) {
 
         captain.internal.busCaptain = false;
 
-        bus.save(function(err) {
+        bus.save(function (err) {
             if (err) {
                 console.error(err);
                 return res.sendStatus(500);
             } else {
-                captain.save(function(err) {
+                captain.save(function (err) {
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);
@@ -494,7 +536,7 @@ function setBusOverride(req, res, next) {
         return res.status(500).send('Missing email or route name');
     }
 
-    User.findOne( {"email" : email}, function(err,user) {
+    User.findOne({"email": email}, function (err, user) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
@@ -504,12 +546,14 @@ function setBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
+            var fakeRes = {};
+            fakeRes.sendStatus = function (status) {
+            }; // FIXME: Refactor to not use a void function
             util.removeUserFromBus(Bus, req, fakeRes, user);
         }
 
         // Confirm bus exists
-        Bus.findOne({name: req.body.routeName}, function(err,bus){
+        Bus.findOne({name: req.body.routeName}, function (err, bus) {
             if (err) {
                 console.error(err);
                 return res.sendStatus(500);
@@ -539,7 +583,7 @@ function deleteBusOverride(req, res, next) {
         return res.status(500).send('Missing email');
     }
 
-    User.findOne( {"email" : email}, function(err,user) {
+    User.findOne({"email": email}, function (err, user) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
@@ -549,7 +593,9 @@ function deleteBusOverride(req, res, next) {
 
         if (user.internal.busid) {
             // User has already RSVP'd for a bus, undo this
-            var fakeRes = {}; fakeRes.sendStatus = function(status) { }; // FIXME: Refactor to not use a void function
+            var fakeRes = {};
+            fakeRes.sendStatus = function (status) {
+            }; // FIXME: Refactor to not use a void function
             util.removeUserFromBus(Bus, req, fakeRes, user);
         }
 
@@ -719,7 +765,7 @@ function checkInUser(req, res, next) {
  */
 function getUsersPlanningToAttend(req, res, next) {
     var project = "name pubid email school internal.checkedin";
-    User.find({$or: [{"internal.going": true}, {"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
+    User.find({$or: [{"internal.status": {$ne: "Rejected"}}, {"internal.going": {$ne: false}},{"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
             res.status(500).send(null);
         }
@@ -742,7 +788,6 @@ function getUsersPlanningToAttend(req, res, next) {
  * @apiParam twitter post to twitter
  */
 function postAnnouncement(req, res, next) {
-    console.log(req.body);
     const message = req.body.message;
 
     var newAnnouncement = new Announcement({
@@ -763,17 +808,21 @@ function postAnnouncement(req, res, next) {
         else {
             // Broadcast announcement
             if (req.body.web) {
-                io.emit('announcement', req.body.message);
+                socketutil.announceWeb(req.body.message);
             }
 
             if (req.body.mobile) {
-                // TODO: Waiting on mobile API to implement this
-            }
+                var serverkey = config.firebase.key;
+                var fcm = new FCM(serverkey);
 
-            if (req.body.facebook) {
-                graph.post("/feed", { message: req.body.message }, function(err, res) {
-                    if (err) console.log('ERROR posting to Facebook: ' + err);
-                    console.log(res);
+                var message = {
+                    to : '/topics/cats',
+                    notification : {
+                        title : req.body.message
+                    }
+                };
+
+                fcm.send(message, function(err,response){
                 });
             }
 
@@ -868,13 +917,13 @@ function annotate(req, res, next) {
  * @apiParam {Number} amount
  */
 function studentReimbursementsPost(req, res, next) {
-    User.findOne( { email: req.body.email }, function (err, user) {
+    User.findOne({email: req.body.email}, function (err, user) {
         if (err) {
             console.log('Reimbursement Error: ' + err); // If null, check amount
             res.status(500).send('Reimbursement Error: ' + err);
         } else if (!req.body.amount || req.body.amount < 0) {
             res.status(500).send("Missing amount or amount is less than zero");
-        } else if (!user){
+        } else if (!user) {
             res.status(500).send("No such user");
         } else {
             user.internal.reimbursement_override = req.body.amount;
@@ -902,7 +951,7 @@ function studentReimbursementsDelete(req, res, next) {
         return res.status(500).send("Email required");
     }
 
-    User.findOne( { email: req.body.email }, function (err, user) {
+    User.findOne({email: req.body.email}, function (err, user) {
         if (err) {
             console.log('ERROR on delete: ' + err);
             res.status(500).send("Error on delete: " + err)
@@ -938,7 +987,7 @@ function rsvpDeadlineOverride(req, res, next) {
         return res.status(500).send('Need positive daysToRSVP value');
     }
 
-    User.find( {email: req.body.email}, function (err, user) {
+    User.find({email: req.body.email}, function (err, user) {
         if (err) {
             return res.status(500).send(err);
         } else if (!user) {
@@ -955,12 +1004,15 @@ function rsvpDeadlineOverride(req, res, next) {
  * @apiname TransactHardware
  * @apigroup Admin
  *
+ * TODO: This method is a bit messy. Should be refactored in the future. (#178)
+ *
  * @apiParam {Number} quantity The quantity of hardware we own
  * @apiParam {String} name The unique name of the hardware
  **/
 function setInventory(req, res, next) {
     let body = req.body;
-    if (!body || !body.quantity || !body.name) {
+    body.quantity = Number(body.quantity);
+    if (!body || body.quantity === undefined || !body.name || isNaN(body.quantity)) {
         return res.status(500).send('Missing quantity or name');
     }
 
@@ -1009,13 +1061,15 @@ function setInventory(req, res, next) {
  **/
 function transactHardware(req, res, next) {
     var body = req.body;
-    if (body.checkingOut === undefined || !body.email || body.quantity === undefined || !body.name) {
+    if (!body.email || body.quantity === undefined || !body.name) {
         return res.status(500).send('Missing a parameter, check the API!');
     }
 
+    body.checkingOut = body.checkingOut !== undefined;
+
     body.quantity = Number(body.quantity); // This formats as a string by default
 
-    if (body.quantity < 1) {
+    if (body.quantity < 1 || isNaN(body.quantity)) {
         return res.status(500).send('Please send a positive quantity');
     }
 
@@ -1055,7 +1109,7 @@ function transactHardware(req, res, next) {
 
                     transaction.quantity += body.quantity;
 
-                    result.item.changeQuantity(-body.quantity, function (err) {
+                    result.item.addQuantity(-body.quantity, function (err) {
                         if (err) {
                             return res.status(500).send(err);
                         }
@@ -1082,6 +1136,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Checked out ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1099,7 +1154,7 @@ function transactHardware(req, res, next) {
 
                 transaction.quantity -= body.quantity;
 
-                result.item.changeQuantity(body.quantity, function (err) {
+                result.item.addQuantity(body.quantity, function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send('Could not save item');
@@ -1127,6 +1182,7 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
@@ -1141,11 +1197,12 @@ function transactHardware(req, res, next) {
                                             return res.status(500).send('Error: Could not store hardware transaction. Please log on paper');
                                         }
 
+                                        req.flash('success', 'Returned ' + body.quantity + ' ' + result.item.name);
                                         return res.redirect('/admin/hardware');
                                     });
                                 });
                             }
-                    });
+                        });
                 });
             }
         });
@@ -1167,11 +1224,13 @@ function cornellLottery(req, res, next) {
         return res.status(500).send('Please provide a numberToAccept >= 0');
     }
     // Find all non-accepted Cornell students
-    User.find( { $and: [
-        {'internal.cornell_applicant' : true},
-        {'internal.status' : {$ne : 'Accepted'}},
-        {'internal.status' : {$ne : 'Rejected'}}
-    ]}, function (err, pendings) {
+    User.find({
+        $and: [
+            {'internal.cornell_applicant': true},
+            {'internal.status': {$ne: 'Accepted'}},
+            {'internal.status': {$ne: 'Rejected'}}
+        ]
+    }, function (err, pendings) {
         if (err) {
             console.error(err);
             return res.status(500).send(err);
@@ -1180,7 +1239,7 @@ function cornellLottery(req, res, next) {
         // Filter into sets for making decisions
         let notFemale = [];
         let female = [];
-        pendings.forEach(function(user) {
+        pendings.forEach(function (user) {
             if (user.gender == "Female") {
                 female.push(user);
             } else {
@@ -1205,21 +1264,33 @@ function cornellLottery(req, res, next) {
         }
 
         // Save decisions
-        accepted.forEach(function(x) {x.internal.status = 'Accepted'});
-        notFemale.forEach(function(x) {x.internal.status = 'Waitlisted'});
-        female.forEach(function(x) {x.internal.status = 'Waitlisted'});
+        accepted.forEach(function (x) {
+            x.internal.status = 'Accepted'
+        });
+        notFemale.forEach(function (x) {
+            x.internal.status = 'Waitlisted'
+        });
+        female.forEach(function (x) {
+            x.internal.status = 'Waitlisted'
+        });
 
-        async.parallel( [
+        async.parallel([
             function (cb) {
-                async.each(accepted, function(user, callback) {user.save(callback)}, cb);
+                async.each(accepted, function (user, callback) {
+                    user.save(callback)
+                }, cb);
             },
             function (cb) {
-                async.each(notFemale, function(user, callback) {user.save(callback)}, cb);
+                async.each(notFemale, function (user, callback) {
+                    user.save(callback)
+                }, cb);
             },
             function (cb) {
-                async.each(female, function(user, callback) {user.save(callback)}, cb);
+                async.each(female, function (user, callback) {
+                    user.save(callback)
+                }, cb);
             }
-        ], function(err){
+        ], function (err) {
             if (err) {
                 console.error('ERROR in lottery: ' + err);
                 req.flash('error', 'Error in lottery');
@@ -1241,15 +1312,17 @@ function cornellLottery(req, res, next) {
  **/
 function cornellWaitlist(req, res, next) {
     // Find all non-accepted Cornell students
-    if (!req.body.numberToAccept || req.body.numberToAccept <= 0){
+    if (!req.body.numberToAccept || req.body.numberToAccept <= 0) {
         return res.status(500).send('Need a positive numberToAccept');
     }
 
-    User.find( { $and: [
-        {'internal.cornell_applicant' : true},
-        {'internal.status' : {$ne : 'Accepted'}},
-        {'internal.status' : {$ne : 'Rejected'}}
-    ]}).sort( {'created_at' : 'asc'} ).exec(function (err, pendings) {
+    User.find({
+        $and: [
+            {'internal.cornell_applicant': true},
+            {'internal.status': {$ne: 'Accepted'}},
+            {'internal.status': {$ne: 'Rejected'}}
+        ]
+    }).sort({'created_at': 'asc'}).exec(function (err, pendings) {
         let numAccepted = 0;
         pendings.forEach(function (student) {
             if (numAccepted < req.body.numberToAccept) {
@@ -1258,7 +1331,9 @@ function cornellWaitlist(req, res, next) {
             }
         });
 
-        async.each(pendings, function(student, cb) {student.save(cb)}, function(err, result) {
+        async.each(pendings, function (student, cb) {
+            student.save(cb)
+        }, function (err, result) {
             if (err) {
                 console.error(err);
                 return res.status(500).send(err);
@@ -1280,21 +1355,21 @@ function cornellWaitlist(req, res, next) {
  **/
 function csvBus(req, res, next) {
     let query = [
-        {'internal.status' : 'Accepted'},
-        {'internal.cornell_applicant' : false}
+        {'internal.status': 'Accepted'},
+        {'internal.cornell_applicant': false}
     ];
 
     if (req.body.optInOnly) {
-        query.push({'internal.busid': {$ne : null}});
+        query.push({'internal.busid': {$ne: null}});
     }
 
     if (req.body.rsvpOnly) {
-        query.push({'internal.going' : true});
+        query.push({'internal.going': true});
     }
 
     async.parallel({
         students: function students(cb) {
-            User.find({ $and : query}, cb);
+            User.find({$and: query}, cb);
         },
         buses: function bus(cb) {
             Bus.find({}, cb);
@@ -1302,7 +1377,7 @@ function csvBus(req, res, next) {
         colleges: function colleges(cb) {
             Colleges.find({}, cb);
         }
-    }, function(err, result) {
+    }, function (err, result) {
         if (err) {
             return console.error(err);
         }
@@ -1357,12 +1432,37 @@ function csvBus(req, res, next) {
                 let bus = emailLists[z];
                 csv += bus.name;
                 csv += '\n';
-                bus.emails.forEach(x=>csv+= x + ',\n');
+                bus.emails.forEach(function (x) {
+                    csv += x + ',\n'
+                });
             }
         }
 
         return res.status(200).send(csv);
     });
+}
+
+/**
+ * Makes a valid key for mentors to enter on their end
+ */
+function makeKey(req, res, next) {
+    var key = req.body.mentorKey;
+
+    //Check whether the key already exists and save it
+    MentorAuthorizationKey.findOneAndUpdate(
+        {'key': key}, //queries to see if it exists
+        {'key': key}, //rewrites it if it does (does not make a new one)
+        {upsert: true}, //if it doesn't exist, it makes a creates a new one
+        function(err){
+            if(err){
+                req.flash('error', 'An error occurred');
+                return res.redirect('/admin/dashboard');
+            }
+
+            req.flash('success', 'Successfully made a new key');
+            return res.redirect('/admin/dashboard');
+        }
+    );
 }
 
 /**

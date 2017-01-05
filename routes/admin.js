@@ -10,6 +10,7 @@ var email = require('../util/email.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
+var util = require('../util/util.js');
 
 var User = require('../models/user.js');
 var Team = require('../models/team.js');
@@ -19,6 +20,7 @@ var TimeAnnotation = require('../models/time_annotation.js');
 var HardwareItem = require('../models/hardware_item.js');
 var HardwareItemCheckout = require('../models/hardware_item_checkout.js');
 var HardwareItemTransaction = require('../models/hardware_item_transaction.js');
+var MentorAuthorizationKey = require('../models/mentor_authorization_key');
 
 //filter out admin users in aggregate queries.
 var USER_FILTER = {role: "user"};
@@ -236,42 +238,19 @@ router.get('/dashboard', function (req, res, next) {
             User.find({"internal.status": "Accepted"})
                 .select("pubid name email school.name school.id internal.reimbursement_override internal.status internal.going")
                 .exec(done)
+        },
+        mentorkeys: function(done) {
+            MentorAuthorizationKey.find({}, done);
         }
+
     }, function (err, result) {
         if (err) {
             console.log(err);
         }
 
-        // Calculate Maximum Reimbursement
-        // Checks through per-school reimbursements to see if user matches any of those schools
-        let _filterSchoolReimbursement = function _filterSchoolReimbursement(user) {
-            for (let i = 0; i < result.reimbursements.length; i++) {
-                let x = result.reimbursements[i];
-                if (x.college.id == user.school.id) {
-                    return x.amount;
-                }
-            }
-
-            return -1;
-        };
-
-        // Calculates reimbursement using the ordering: user-override => school-override => default
-        let _calculateReimbursement = function _calculateReimbursement(user, rsvpOnly) {
-            if (user.internal.going == false || (rsvpOnly && !user.internal.going)) {
-                return 0;
-            }
-
-            if (user.internal.reimbursement_override > 0) {
-                return user.internal.reimbursement_override;
-            }
-
-            let school_override = _filterSchoolReimbursement(user);
-            return (school_override == -1) ? Number(config.admin.default_reimbursement) : school_override;
-        };
-
         // Assumes charterbus reimbursements have been set
-        let currentMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, true), 0);
-        let potentialMax = result.accepted.reduce((acc, user) => acc + _calculateReimbursement(user, false), 0);
+        let currentMax = result.accepted.reduce((acc, user) => acc + util.calculateReimbursement(result.reimbursements, user, true), 0);
+        let potentialMax = result.accepted.reduce((acc, user) => acc + util.calculateReimbursement(result.reimbursements, user, false), 0);
         let reimburse = {currentMax, potentialMax};
 
         return res.render('admin/index', {
@@ -280,7 +259,8 @@ router.get('/dashboard', function (req, res, next) {
             schools: result.schools,
             rsvps: result.rsvps,
             decisionAnnounces: result.decisionAnnounces,
-            reimburse
+            reimburse,
+            mentorkeys: result.mentorkeys
 
         })
     });
@@ -305,6 +285,9 @@ router.get('/user/:pubid', function (req, res, next) {
                 },
                 stats: function genStats(callback) {
                     _getStats(user, callback);
+                },
+                reimbursements: function (done) {
+                    Reimbursements.find({}, done);
                 }
             }, function (err, info) {
                 if (err) {
@@ -314,7 +297,8 @@ router.get('/user/:pubid', function (req, res, next) {
                 res.render('admin/user', {
                     title: 'Review User',
                     currentUser: user,
-                    stats: info.stats
+                    stats: info.stats,
+                    reimbursement: util.calculateReimbursement(info.reimbursements, user, false)
                 })
             });
         }
@@ -561,15 +545,32 @@ router.get('/reimbursements', function (req, res, next) {
                 .select("pubid name email school.name internal.reimbursement_override")
                 .sort("name.first")
                 .exec(done)
+        }, checkedIns: function (done) {
+            User.find({'internal.checkedin' : true}).sort('school.name').exec(done);
         }
     }, function (err, result) {
         if (err) {
             console.error(err);
         }
 
+        var easyReimbursements = [];
+
+        result.checkedIns.forEach(function(user) {
+            var reimbursement = util.calculateReimbursement(result.reimbursements, user, false);
+            if (reimbursement > 0) {
+                easyReimbursements.push({
+                    name: user.name.full,
+                    email: user.email,
+                    school: user.school.name,
+                    reimbursement:reimbursement
+                });
+            }
+        });
+
         return res.render('admin/reimbursements', {
             reimbursements: result.reimbursements,
-            overrides: result.overrides
+            overrides: result.overrides,
+            easyReimbursements: easyReimbursements
         });
     })
 });
@@ -657,12 +658,15 @@ router.get('/stats', function (req, res, next) {
                 HardwareItemCheckout.find().populate('student_id inventory_id').exec(cb);
             },
             transactions: function transactions(cb) {
-                HardwareItemTransaction.find().populate('student_id').exec(cb);
+                HardwareItemTransaction.find().populate('studentId').exec(cb);
             }
         }, function(err, result) {
             if (err) {
                 console.error(err);
             }
+
+            result.hardwareNameList = [];
+            result.inventory.forEach(function(x) {result.hardwareNameList.push(x.name)});
 
             res.render('admin/hardware', result);
         });

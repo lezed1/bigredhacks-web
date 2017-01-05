@@ -23,7 +23,7 @@ hardwareItemSchema.methods.modifyOwnedQuantity = function modifyOwnedQuantity(ne
     this.save(callback);
 };
 
-hardwareItemSchema.methods.changeQuantity = function changeQuantity(changeInQuantity, callback) {
+hardwareItemSchema.methods.addQuantity = function changeQuantity(changeInQuantity, callback) {
     this.quantityAvailable += changeInQuantity;
     if (this.quantityAvailable > this.quantityOwned) {
         return callback('Quantity available exceeds quantity owned!');

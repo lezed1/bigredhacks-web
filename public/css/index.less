@@ -226,14 +226,14 @@ section {
     h2 {
     color: @sky-blue;
   }
-  p{
+  p {
     color: @jasonblue;
   }
-  h3,h4{
+  h3,h4 {
     color: @jasonblue;
   }
 }
-.big-heading h2{
+.big-heading h2 {
   color: @jasonblue;
     font-size: 34px;
     text-transform: lowercase;
@@ -245,8 +245,7 @@ section {
   left: 30%;
 }
 
-.buttons{
-  //position: relative;
+.buttons {
   padding-left: 31%;
   padding-right: 0;
   margin-right: 0;
@@ -256,7 +255,7 @@ section {
   text-align: left;
 }
 
-.big-heading2 h2{
+.big-heading2 h2 {
   position: relative;
   padding-left: 31%;
   padding-right: 0;
@@ -452,7 +451,7 @@ section {
     color: @jasonblue;
     margin: 0px;
   }
-  h2{
+  h2 {
     margin-bottom: 15px;
   }
   h3 {
@@ -466,6 +465,8 @@ section {
       color: @light-gray;
     }
   }
+
+  margin-bottom: 100px;
 }
 
 .schedule-table {
@@ -480,20 +481,34 @@ section {
     column-count: 2;
     -webkit-column-count: 2;
     -moz-column-count: 2;
+    margin-bottom: 150px;
   }
 }
 
 .sustainable {
-  z-index: 50;
   position: relative;
-  p, h2 {
-    z-index: 50;
-    color: @jasonblue;
+  z-index: 500;
+  padding-top: 180px;
+  padding-bottom: 180px;
+  opacity: 0.8;
+  background: @ocean-blue;
+  .container {
+    color: @off-white;
   }
-  .content {
-    padding-top: 100px;
-    padding-bottom: 200px;
 
+  h2, dd, dt {
+    color: white;
+  }
+  dt {
+    font-size: 20px;
+    padding-top: 10px;
+  }
+  dd {
+    font-size: 16px;
+    font-weight: @weight-normal;
+  }
+  a {
+    color: @light-purple;
   }
 }
 
@@ -506,7 +521,7 @@ section {
   float: right;
 }
 
-.waterholder{
+.waterholder {
   background: @ocean-blue;
   z-index: -99999;
 }
@@ -529,11 +544,11 @@ section {
     font-size: 20px;
     padding-top: 10px;
   }
-  dd{
+  dd {
     font-size: 16px;
     font-weight: @weight-normal;
   }
-  a{
+  a {
     color: @light-purple;
   }
 }
@@ -669,7 +684,7 @@ footer p {
     }
   }
 
-  .clockCircle p, .clockBody, .hill, .clockTop, .raindrop{
+  .clockCircle p, .clockBody, .hill, .clockTop, .raindrop {
     visibility: hidden;
     display: none;
   }
@@ -723,7 +738,7 @@ footer p {
     margin-right: 0;
   }
 
-  .big-heading2 h2{
+  .big-heading2 h2 {
     padding-left: 0;
     padding-right: 0;
     margin-right: 0;
@@ -830,7 +845,7 @@ footer p {
   height: 35px;
 }
 
-#wayfair img{
+#wayfair img {
   width: 35%;
   margin-right: 0px;
 }
@@ -879,7 +894,7 @@ footer p {
     border-width: 0 75px 300px 75px;
     top: -450px;
     bottom: 0;
-    left: 75%;
+    left: 85%;
     //overflow: hidden;
     border-color: transparent transparent #d8d8d8 transparent;
   }
@@ -892,7 +907,7 @@ footer p {
     height: calc(~"100% + 150px");
     top: -150px;
     bottom: 0;
-    left: 75%;
+    left: 85%;
     overflow: hidden;
     background: #f0f0f0;
   }
@@ -984,7 +999,7 @@ footer p {
 
   .twocloud {
     position: absolute;
-    top: 60%;
+    top: 70%;
     width: 100%;
     height: 20%;
     left: -4%;
@@ -1193,20 +1208,20 @@ footer p {
 }
 
 //404 error
-.landing-header{
+.landing-header {
   font-size:30px;
   text-align: center;
 }
-.landing-subheader{
+.landing-subheader {
   font-size: 14px;
   text-align: center;
 }
-.landing-icon.fa.fa-exclamation-triangle{
+.landing-icon.fa.fa-exclamation-triangle {
   font-size: 70px;
   color: @redish;
   text-align: center;
 }
-.landing-container{
+.landing-container {
   text-align: center;
 }
 //puzzle

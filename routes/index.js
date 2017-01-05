@@ -62,7 +62,7 @@ router.post('/cornell/subscribe', function (req, res, next) {
  * @apiName DayOf
  * @apiGroup Index
  */
-router.get('/live', middle.requireDayof,function (req, res, next) {
+router.get('/live',function (req, res, next) {
     async.parallel({
             announcements: function announcements(callback) {
                 const PROJECTION = 'message time';
@@ -96,17 +96,6 @@ router.get('/live', middle.requireDayof,function (req, res, next) {
 router.get('/wayel', function (req, res, next) {
     res.render('wayel', {
         title: 'Cornell\'s Ultimate Hackathon\'s Ultimate Puzzle'
-    });
-});
-
-/**
- * @api {GET} /hardware hardware chcekout page
- * @apiName Hardware
- * @apiGroup Index
- */
-router.get('/hardware', function (req, res, next) {
-    res.render('hardware', {
-        title: 'Hardware'
     });
 });
 

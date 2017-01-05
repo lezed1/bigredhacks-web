@@ -4,24 +4,24 @@
 extends _layout-admin
 
 block append admin_content
+
+    +showMessages(messages)
+    
     h1#title Hardware
     .tabs
         ul.nav.nav-tabs.center(role='tablist')
-            li
+            li.active
                 a(href='#hardware-available', role='tab', data-toggle='tab') Hardware Available
             li
                 a(href='#checkouts', role='tab', data-toggle='tab') Checkouts
             li
                 a(href='#transactions', role='tab', data-toggle='tab') Transactions
             li
-                a(href='#check-out-form', role='tab', data-toggle='tab') Check-out form
-            li
-                a(href='#return-form', role='tab', data-toggle='tab') Return form
-            li
                 a(href='#inventory-form', role='tab', data-toggle='tab') Set Inventory
 
     .tab-content
         #hardware-available.tab-pane.active(role='tabpanel')
+            h2 Hardware Available
             table.table.table-striped
                 tr
                     th Name of hardware
@@ -32,59 +32,53 @@ block append admin_content
                         th #{item.name}
                         th #{item.quantityAvailable}
                         th #{item.quantityOwned}
+            h2#checkout-or-return Checkout or Return hardware
+            form(action='/api/admin/hardware/transaction' method='post')
+                .form-group
+                    select#name.form-control(name='name')
+                        +generateOptions(['select'].concat(hardwareNameList),{selected: name})
+                .form-group
+                    input#email.form-control(type='text', name='email', placeholder='email')
+                .form-group
+                    input.form-control(type='number', name='quantity', placeholder='quantity', value=1)
+                .form-group
+                    label(for='checkingOut') Checking Out?&nbsp;
+                        input#checkingOut(type='checkbox', value='', name='checkingOut')
+                button#checkout-hardware-btn.btn.btn-primary(type='submit') Submit
         #checkouts.tab-pane(role='tabpanel')
+            h2 Hardware Currently Checked out
             table.table.table-striped
                 tr
                     th Name of hardware
                     th Quantity
                     th Name of student
                     th Email of student
-                    th Date
                 for checkout in checkouts
                     tr
                         th #{checkout.inventory_id.name}
                         th #{checkout.quantity}
-                        th #{checkout.student_id.name.full}
+                        th #{checkout.student_id.name.first} #{checkout.student_id.name.first}
                         th #{checkout.student_id.email}
         #transactions.tab-pane(role='tabpanel')
+            h2 All Hardware Transactions
             table.table.table-striped
                 tr
-                    th Checking Out?
+                    th Action
                     th Name of hardware
                     th Quantity
                     th Name of student
                     th Email of student
                     th Date
                 for txn in transactions
+                    -
+                        var checkoutReadable = txn.checkOut ? 'Check Out' : 'Return';
                     tr
-                        th #{txn.checkOut}
+                        th #{checkoutReadable}
                         th #{txn.itemName}
                         th #{txn.quantity}
                         th #{txn.studentId.name.full}
                         th #{txn.studentId.email}
                         th #{txn.timestamp}
-        #check-out-form.tab-pane(role='tabpanel')
-            h2#test Checkout hardware
-            form(action='/api/admin/hardware/transaction' method='post')
-                input(type='hidden', name='checkingOut', value='true')
-                .form-group
-                    input#hardware.form-control(type='text', name='name', placeholder='name of hardware')
-                .form-group
-                    input#email.form-control(type='text', name='email', placeholder='email')
-                .form-group
-                    input.form-control(type='number', name='quantity', placeholder='quantity')
-                button#checkout-hardware-btn.btn.btn-primary(type='submit') check out
-        #return-form.tab-pane(role='tabpanel')
-            h2 Return hardware
-            form(action='/api/admin/hardware/transaction' method='post')
-                input(type='hidden', name='checkingOut', value=false)
-                .form-group
-                    input.form-control(type='text', name='name', placeholder='name of hardware')
-                .form-group
-                    input.form-control(type='text', name='email', placeholder='email')
-                .form-group
-                    input.form-control(type='number', name='quantity', placeholder='quantity')
-                button#return-hardware-btn.btn.btn-primary(type='submit') return
         #inventory-form.tab-pane.np-enabled(role='tabpanel')
             h2 Set Inventory
             form(action='/api/admin/hardware/inventory' method='post')

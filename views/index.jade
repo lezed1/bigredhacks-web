@@ -74,11 +74,14 @@ block append content
                                     when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
                                     when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
                                     default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
+                                a.btn.btn-light-blue(href="/live") live
                             else
                                 if middlehelp.isRegistrationOpen()
                                     button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
                                     | &nbsp;&nbsp;&nbsp;
                                     a.btn.btn-blue(href="/login") login
+                                else if middlehelp.isResultsReleased()
+                                    a.btn.btn-light-blue(href="/login") login
 
                 //- section about
                 //+sectionHeading("Be a part of something big")
@@ -92,14 +95,13 @@ block append content
 
                     p
                         | BigRed//Hacks is the oldest student-run, large-scale hackathon at Cornell University.
-                        | Across three days, students from all across the US will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
-                    p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
+                        | Across three days, students from all across the US gather in Ithaca to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
                     br
 
         .leftClouds(data-100="left:-5%;" data-top="left:-30%;")
         .rightClouds(data-50="left:70%;" data-top="left:100%;")
         .cloud3
-        .rainClouds(data-0="left:2%;" data-160-top="left:2%;")
+        .rainClouds(data-0="left:-6%;" data-160-top="left:2%;")
 
     //- Section: sustainable
     section#clocktowerland.clocktowerland
@@ -107,13 +109,13 @@ block append content
         .clockBody
             .clockWindow
             .clockCircle
-                p.counter 161
+                p.counter ??? 
                 p days until
                 p BigRed//Hacks!
 
         section#schedule.schedule
             .section-heading.container
-                h2(style='float:left;') Schedule
+                h2(style='float:left;') Winners
             .driftCloud1(data-100-bottom="left:40%;" data-top="left:100%;")
             .driftCloud2(data-100-bottom="left:37%;" data-top="left:100%;")
             .twocloud
@@ -123,51 +125,37 @@ block append content
             .container
                 .schedule-table
                     .heading
-                        h3 friday, 9/16
-                    .time
-                        p 4:30 - 6:30 pm
+                      .data
+                        h3 Best UI/Design:
+                        - var a = function(href,text){ return "<a href='"+href+"'>"+text+"</a>" }
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Recycle_Rampage/submission/","Recycle Rampage")}
+                        h5 Identifying everyday products that are recyclable can be a challenge. For example, I had no idea that plastic bags were
+                          |supposed to be disposed of in a landfill...
                     .data
-                        p participant registration
-                        h5 call auditorium
-                    .time
-                        p 6:00 pm
+                        h3 Best Business Prospect:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Add.me/submission/","Add.me")}
+                        h5 We wanted to build a platform for everyone to connect on multiple mediums (Facebook, Instagram, Snapchat, Twitter,
+                          |YouTube, Github, LinkedIn, etc) in an immediate and intuitive way …
                     .data
-                        p opening ceremony
-                        h5 call auditorium
-                    .time
-                        p 8:00 pm
-                    .data
-                        p hacking begins
-                        h5 physical sciences building
+                        h3 Best Technical Feat:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Andreessen/submission/","Andreesen")}
+                        h5 We build a rudimentary web browser. With no libraries. In pure C++. Named after the great Marc Andreessen, author of Mosaic, and for a16z...
                     .heading
-                    h3 sunday, 9/18
-                    .time
-                        p 8:00 am
-                    .data
-                        p hacking ends
-                        h5 physical sciences building
-                    .time
-                        p 9:00 am - 11:00 am
-                    .data
-                        p project expo
-                        h5 physical sciences building
-                    .time
-                        p 12:00 pm - 2:00 pm
-                    .data
-                        p closing ceremony
-                        h5 call auditorium
+                      .data
+                        h3 Sustainability:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/HawkStorm/submission/","BinGo")}
+                        h5 Recycling is one of the simplest and most straight-forward methods to contribute to the sustainability
+                          |movement on a daily basis, and yet many are unaware...
+                      .data
+                        h3 Best First-Time Hack:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/PuppetPlant/submission/","PuppetPlant")}
+                        h5 Our goal is to inspire people to improve their habits by emphasizing with a physical product. We want to use
+                          |PuppetPlant as a prototype to illustrate how using emotions of the things people care about can motivate them...
+                      .data
+                        h3 Best Hardware Hack:
+                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/JankTank/submission/","JankTank")}
+                        h5 Remote-controlled tank with a live camera feed. Weapons systems in development
 
-        section#sustainable.sustainable
-
-            .content
-                +sectionHeading("Sustainable hacks")
-                .container
-                    br
-                    p
-                        | Passionate about the environment? This year, we will have prizes for the best sustainable hacks.
-                        | Band together with other like-minded students to solve some of the most pressing issues facing our planet’s future.
-                    p We will provide mentors and resources necessary for your hack to succeed!
-                    br
 
         section.hillholder
             .hill
@@ -178,80 +166,29 @@ block append content
     section.waterholder
         .water
 
-            //- Section: faq
-            section#faq.faq
-                +sectionHeading("Frequently Asked Questions")
+            //- Section: sustainable
+            section#sustainable.sustainable
+                +sectionHeading("Summary")
                 .container
-                    dl
-                        dt Who is eligible to participate?
-                        dd
-                            | We are inviting all undergraduate and graduate students to participate in our hackathon.
-                            | You don't need any past experience.
-                            | You don't even need to be a computer science major!
-                            | Our only requirement is that you are at least 18 years old and enrolled in an accredited college or university.
-                        dt What will I need to bring?
-                        dd
-                            | Bring your school ID for registration.
-                            | You are also responsible for bringing any equipment for building and demoing your hack: laptop, chargers, phones, etc.
-                            | You may also want to bring a sleeping bag, change of clothes, and toothbrush.
-                        dt Do I have to sign up with a team?
-                        dd
-                            | You don't have to sign up with a team, but it's certainly more fun!
-                            | We allow teams of up to four people (they don't have to be from the same school), and while they can be specified on the application, you won't officially create your team until the event.
-                            | If you don't have a team yet, we'll host a social before the hacking begins for you to meet other amazing people.
-                        dt Are you providing food?
-                        dd
-                            | Don't worry, there will be lots of delicious food and beverages at our event, complementary to all participants.
-                            | We'll have vegetarian options as well.
-                        dt What's the deal with transportation?
-                        dd
-                            | Our goal is to reimburse student travel as needed (up to $150 evaluated on a case by case basis).
-                            | There will be a reimbursement table: please bring your travel ticket, receipt, and government-issued photo ID.
-                            | We ask that you pick a reasonably priced method of travel.
-                            | There will be limited on-campus parking.
-                            | We'll also be chartering buses for popular locations.
-                            | <br><br>Are you the director of a hackathon club at your school? Get in touch with us to organize a trip!
-                        dt Do I have to do a sustainable hack?
-                        dd
-                            | Nope! While the theme of this year's BigRed//Hacks will be sustainability, we'll have plenty of other
-                            | prize categories to compete for.
-                        dt Are hardware hacks allowed?
-                        dd
-                            | This is the first year that we will be providing a dedicated hardware lab with sensors, microcontrollers, and basic components.
-                            | Some of our sponsors are bringing hardware to loan, but we still suggest that you bring your own equipment if you know that you'll absolutely need it.
-                        dt What are the rules?
-                        dd
-                            | We want BigRed//Hacks to be fun and fair for everyone.
-                            | Your project should be started from scratch and worked on only during the 36 hours, and you may only incorporate outside resources (code, graphics, sound, etc) that are freely licensed and accessible to all participants equally.
-                            | Of course, maintain a positive, respectful attitude toward your fellow hackers throughout the event.
-                        dt Why is there an application?
-                        dd
-                            | We want to guarantee that students from a wide range of schools and experiences are given an equal and fair chance to participate.
-                            | Furthermore, we hope that the process will encourage registrants to be committed to building something awesome.
-                            | Even if you've never been to a hackathon before, please apply!
-                        dt Why can't Cornell students apply yet?
-                        dd
-                            | We're doing applications a little differently this year.
-                            | General applications are immediately available for all students not at Cornell.
-                            | In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis.
-                            | Add yourself to the mailing list so that you'll know when applications open.
-                        dt Have more questions?
-                        dd Send them to #[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us #[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
-                        //- School 1 20-30%
-                        .redfish(style="top:20%;" data-800-top="left:70%;" data--200-top="left:35%;")
-                        .bluefish(style="top:22%;" data-800-top="left:90%;" data--200-top="left:25%;")
-                        .greenfish(style="top:26%;" data-800-top="left:85%;" data--200-top="left:15%;")
-                        //- School 2 45-55%
-                        .redfish(style="top:45%;" data-900-top="left:60%;" data--200-top="left:22%;")
-                        .bluefish(style="top:48%;" data-900-top="left:75%;" data--200-top="left:25%;")
-                        .redfish(style="top:52%;" data-900-top="left:62%;" data--200-top="left:12%;")
-                        .orangefish(style="top:54%;" data-900-top="left:64%;" data--200-top="left:12%;")
-                        .yellowfish(style="top:57%;" data-900-top="left:55%;" data--200-top="left:11%;")
-                        //- School 3 75-85%
-                        .redfish(style="top:75%;" data-900-top="left:70%;" data--200-top="left:-10%;")
-                        .bluefish(style="top:78%;" data-900-top="left:90%;" data--200-top="left:5%;")
-                        .orangefish(style="top:82%;" data-900-top="left:85%;" data--200-top="left:7%;")
-                        .redfish(style="top:85%;" data-900-top="left:85%;" data--200-top="left:2%;")
+                    br
+                    p
+                      | Our fall hackathon was focused on sustainability. 
+                      | We encouraged critical thinking and innovative problem solving 
+                      | to combat climate change and environmental destruction, and we were not disappointed. 
+                      | Over three days, our hackers formed over 210 teams to develop creative solutions in the 
+                      | form of games, apps, and websites to tackle challenges facing our planet.
+
+
+                    //- School 1 20-30%
+                    .redfish(style="top:20%;" data-900-top="left:70%;" data--200-top="left:35%;")
+                    .bluefish(style="top:23%;" data-900-top="left:75%;" data--200-top="left:10%;")
+                    //- School 2 45-55%
+                    .yellowfish(style="top:55%;" data-900-top="left:25%;" data--200-top="left:11%;")
+                    //- School 3 75-85%
+                    .orangefish(style="top:65%;" data-900-top="left:125%;" data--200-top="left:15%;")
+                    .bluefish(style="top:73%;" data-900-top="left:120%;" data--200-top="left:20%;")
+                    .redfish(style="top:80%;" data-900-top="left:140%;" data--200-top="left:35%;")
+
 
     //- Section: sponsors
     section#sponsors.sponsors
@@ -318,12 +255,12 @@ block append content
                         img(src='img/logos/sketch.png', alt='Sketch')
                 li#soylent.logo-1
                     a(href='https://www.soylent.com/')
-                        img(src='http://farm8.staticflickr.com/7323/11212265035_59f7466a7e_o.png', alt='Soylent')
+                        img(src='/img/logos/soylent.png', alt='Soylent')
 
             ul.logos
                 li#hackerearth.logo-1
                     a(href='https://www.hackerearth.com/')
-                        img(src='http://blog.hackerearth.com/wp-content/uploads/2015/09/logo_new.png', alt='HackerEarth')
+                        img(src='/img/logos/hackerearth.png', alt='HackerEarth')
                 li#ultrapress.logo-1
                     a(href='https://ultrapress.com/')
                         img(src='https://ultrapress-production.s3.amazonaws.com/static/images/public/ultrapress-custom-tshirts.png', alt='UltraPress')
@@ -334,7 +271,7 @@ block append content
                         img(src='img/logos/mlh.png', alt='Major League Hacking')
                 li#cornellcs.logo-1
                     a(href='http://www.cs.cornell.edu')
-                        img(src='img/logos/cornell-cs.png', alt='Cornell Computer Science')
+                        img(src='img/logos/cis.jpg', alt='Cornell Computer Science')
 
             ul.logos
                 li#equitas.logo-1
