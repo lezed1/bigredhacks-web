@@ -971,7 +971,6 @@ function studentReimbursementsDelete(req, res, next) {
     });
 }
 
-// TODO: Implement front-end to call this (#115)
 /**
  * @api {POST} /api/admin/rsvpDeadlineOverride Override the RSVP deadline of the given user
  * @apiname DeadlineOverride
@@ -987,7 +986,7 @@ function rsvpDeadlineOverride(req, res, next) {
         return res.status(500).send('Need positive daysToRSVP value');
     }
 
-    User.find({email: req.body.email}, function (err, user) {
+    User.findOne({email: req.body.email}, function (err, user) {
         if (err) {
             return res.status(500).send(err);
         } else if (!user) {
