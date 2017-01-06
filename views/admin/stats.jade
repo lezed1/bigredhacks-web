@@ -18,10 +18,12 @@ block append admin_content
             button#resume-save.btn.btn-blue(type='submit') Add
     table#annotationlist.table.table-striped
         tr 
+            th #
             th Annotation
             th Date Created
-        for annotation in annotations
+        each annotation,index in annotations
             tr
+                td #{index+1}
                 td #{annotation.info}
                 td #{annotation.time}
 
