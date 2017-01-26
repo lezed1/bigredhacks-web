@@ -4,6 +4,7 @@
 extends _layout-admin
 block prepend header
     link(href="/css/vendor/c3.css", rel="stylesheet")
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css", rel="stylesheet")
 
 block append admin_content
     if !input
@@ -12,6 +13,8 @@ block append admin_content
     div#chart
     form#annotate(method='post', action='/api/admin/annotate')
         label Add an annotation (just the message, will use current time as annotation)
+        .form-group
+            #datepicker
         .form-group
             input#annotation.form-control(type='text', name='annotation', placeholder='ex: Placed a message in a bottle.', value = input.info || '', required=true)
         .form-group
@@ -44,4 +47,5 @@ block append footer
     script(type='text/javascript').
         var users =!{JSON.stringify(users)}
         var annotations =!{JSON.stringify(annotations)}
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js")
     script(src="/js/stats.js")

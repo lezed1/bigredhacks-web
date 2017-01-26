@@ -43,7 +43,7 @@ var chart = c3.generate({
             orderCounts,
         ],
         labels: true
-    },
+    },  
     axis: {
         x: {
             type: 'timeseries',
@@ -61,4 +61,8 @@ var chart = c3.generate({
     size: {
         width: 1000
     }
+});
+
+// Datepicker 3  
+$('#datepicker').datepicker({
 });
