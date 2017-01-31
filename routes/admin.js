@@ -269,13 +269,7 @@ router.get('/dashboard', function (req, res, next) {
                     }
                 },
                 {$sort: {total: -1, name: 1}}
-
-            ], function (err, res) {
-                if (err) console.log(err);
-                else {
-                    return done(err, res);
-                }
-            })
+            ], done);
         },
         reimbursements: function (done) {
             Reimbursements.find({}, done);
