@@ -32,12 +32,12 @@ exports.validate_against_schema = function validate_against_schema(schema, confi
 exports.from_environment = function from_environment(schema) {
     var config = {};
     traverse_full_config(schema, function (category, key) {
-        if (!process.env.hasOwnProperty(key)) throw new Error('Missing environment variable ' + key);
+        if (!process.env.hasOwnProperty(category + "." + key)) throw new Error('Missing environment variable ' + category + "." + key);
         let type = schema[category][key].type || "String";
         if (!config.hasOwnProperty(category)) {
             config[category] = {};
         }
-        config[category][key] = cast_to_type(process.env[key], type);
+        config[category][key] = cast_to_type(process.env[category + "." + key], type);
     });
     return config;
 };
