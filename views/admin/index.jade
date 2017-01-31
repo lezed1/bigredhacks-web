@@ -125,7 +125,7 @@ block append admin_content
                             totalReject = totalReject + school.rejected;
 
                         tr
-                            td.text-center: h: a.low-vis(href="/admin/search?collegeid=" + school.collegeid + "&college=" + school.name,target="_blank") #{school.name}
+                            td: h: a.low-vis(href="/admin/search?collegeid=" + school.collegeid + "&college=" + school.name,target="_blank") #{school.name}
                             td.text-center= school.accepted
                             td.text-center= school.waitlisted
                             td.text-center= school.rejected
