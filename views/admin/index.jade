@@ -105,7 +105,41 @@ block append admin_content
                 form#notify-form(method='post', action='/api/admin/rollingDecision')
                     .form-group.np-enabled
                         button#notifyMake.btn.btn-success(type='submit' onclick="return confirm('Are you sure? This will email new decisions!')") Make Rolling Decision
-                span Will affect #{decisionAnnounces} people.
+                br
+                span Breakdown of decisions to be announced:
+                br
+                -
+                    var totalAccept = 0;
+                    var totalWaitlist = 0;
+                    var totalReject = 0;
+
+                table.table.table-striped
+                    tr
+                        th.text-center School Name
+                        th.text-center Will Accept
+                        th.text-center Will Waitlist
+                        th.text-center Will Reject
+                        th.text-center School Total
+                    for school in decisionAnnounces
+                        -
+                            totalAccept = totalAccept + school.accepted;
+                            totalWaitlist = totalWaitlist + school.waitlisted;
+                            totalReject = totalReject + school.rejected;
+
+                        tr
+                            td: h: a.low-vis(href="/admin/search?collegeid=" + school.collegeid + "&college=" + school.name,target="_blank") #{school.name}
+                            td.text-center= school.accepted
+                            td.text-center= school.waitlisted
+                            td.text-center= school.rejected
+                            td.text-center= school.total
+                    tr
+                        td.text-center Total:
+                        td.text-center=totalAccept
+                        td.text-center=totalWaitlist
+                        td.text-center=totalReject
+                        td.text-center=totalAccept+totalWaitlist+totalReject
+
+
             .lottery-section
                 h2 Run Lottery
                 p Run a gender-balanced lottery for Cornell students.
