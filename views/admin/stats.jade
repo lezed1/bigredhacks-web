@@ -11,14 +11,14 @@ block append admin_content
         - input = {}
     +contentHeading("Stats")
     div#chart
-    form#annotate(method='post', action='/api/admin/annotate')
+    form#annotate
         label Add an annotation (just the message, will use current time as annotation)
         .form-group
-            #datepicker
+            #datepicker(name='time')
         .form-group
             input#annotation.form-control(type='text', name='annotation', placeholder='ex: Placed a message in a bottle.', value = input.info || '', required=true)
         .form-group
-            button#resume-save.btn.btn-blue(type='submit') Add
+            button#send-ann.btn.btn-blue Add
     table#annotationlist.table.table-striped
         tr 
             th #

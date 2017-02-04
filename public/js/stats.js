@@ -65,4 +65,7 @@ var chart = c3.generate({
 
 // Datepicker 3  
 $('#datepicker').datepicker({
+    todayBtn: true,
+    todayHighlight: true
 });
+

@@ -733,3 +733,21 @@ function alertErrorHandler(jqXHR, textStatus, errorThrown) {
     alert(resp);
 }
 
+
+// annotations submit button
+    $("#send-ann").on('click', function () {
+        var that = this;
+        $.ajax({
+            method: "POST",
+            url: "/api/admin/annotate",
+            data: {
+                time: $("#datepicker").datepicker('getDate'),
+                annotation: $("#annotation").val()
+            },
+            error: function () {
+            },
+            success: function (res) {
+                location.reload();
+            }
+        });
+    });
