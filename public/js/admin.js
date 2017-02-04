@@ -733,7 +733,6 @@ function alertErrorHandler(jqXHR, textStatus, errorThrown) {
     alert(resp);
 }
 
-
 // annotations submit button
     $("#send-ann").on('click', function () {
         var that = this;
