@@ -893,8 +893,6 @@ function deleteAnnouncement(req, res, next) {
  */
 function annotate(req, res, next) {
     // format the date
-    console.log(req.body.time);
-    
     var newAnnotation = new TimeAnnotation({
         time: (req.body.time) ? req.body.time : Date.now(),
         info: req.body.annotation

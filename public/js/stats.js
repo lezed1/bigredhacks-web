@@ -79,8 +79,7 @@ $('#datepicker').datepicker({
                 time: $("#datepicker").datepicker('getDate'),
                 annotation: $("#annotation").val()
             },
-            error: function () {
-            },
+            error: alertErrorHandler,
             success: function (res) {
                 location.reload();
             }
