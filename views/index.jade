@@ -1,5 +1,4 @@
 extends _global/_layout
-
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
@@ -8,17 +7,21 @@ mixin sectionHeading(name)
 block append header
     link(href="/css/index.css", rel="stylesheet")
 block append content
-  nav.navbar.navbar-default
-    .container-fluid
-      .navbar-header
-        p.navbar-text BigRed//Hacks
-      .navbar-header
-        a.navbar-text(href='google.com') About
-      .navbar-header
-        p.navbar-text FAQ
-      .navbar-header
-        p.navbar-text Sponsors
-
+    nav.navbar.navbar-default
+        .container-fluid
+            .navbar-header
+                a.navbar-brand(href='#')
+                    img(alt='BigRed//Hacks', src='/img/icon/brh-icon-full.png', width=40, height=40)
+            .navbar-header
+                a.navbar-text(href='google.com') About
+            .navbar-header
+                a.navbar-text FAQ
+            .navbar-header
+                a.navbar-text Sponsors
+    section.intro#intro
+        .slogan
+            img(src='/img/sp17_brh_title.png')
+            h1 Spring Challenge
 block footer
     script(src="https://code.jquery.com/jquery-3.1.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js")
