@@ -224,12 +224,52 @@ router.get('/dashboard', function (req, res, next) {
             })
         },
         decisionAnnounces: function (done) {
-            User.count({$and: [{$where: "this.internal.notificationStatus != this.internal.status"}, {"internal.status": {$ne: "Pending"}}]}, function (err, resu) {
-                if (err) console.log(err);
-                else {
-                    return done(err, resu);
-                }
-            });
+            User.aggregate([
+                {
+                    $project: {
+                        notified: {$strcasecmp: ["$internal.notificationStatus", "$internal.status"]},
+                        school: {
+                            name:1,
+                            id: 1
+                        },
+                        "internal.status": 1
+                    }
+                },
+                {$match: {$and: [{"notified": {$ne: 0}}, {"internal.status": {$ne: "Pending"}}]}},
+                {
+                    $group: {
+                        _id: {name: "$school.name", collegeid: "$school.id", status: "$internal.status"},
+                        total: {$sum: 1}
+                    }
+                },
+                {
+                    $project: {
+                        accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
+                        waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
+                        rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]}
+                    }
+                },
+                {
+                    $group: {
+                        _id: {name: "$_id.name", collegeid: "$_id.collegeid"},
+                        accepted: {$sum: "$accepted"},
+                        waitlisted: {$sum: "$waitlisted"},
+                        rejected: {$sum: "$rejected"},
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        name: "$_id.name",
+                        collegeid: "$_id.collegeid",
+                        accepted: "$accepted",
+                        waitlisted: "$waitlisted",
+                        rejected: "$rejected",
+                        total: {$add: ["$accepted", "$waitlisted", "$rejected"]}
+                    }
+                },
+                {$sort: {total: -1, name: 1}}
+            ], done);
         },
         reimbursements: function (done) {
             Reimbursements.find({}, done);

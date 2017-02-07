@@ -556,15 +556,13 @@ module.exports = function (io) {
      * @apiParam user.email Email for login
      */
     router.post('/login',
-        /** TODO: Uncomment this before 2017 registration. In 2016 we have a mix of cases so this cannot be used yet.
          function (req, res, next) {
             if (req.body.email) {
                 req.body.email = req.body.email.toLowerCase();
             }
-
             next();
         },
-         */
+
         passport.authenticate('user_strat', {
             failureRedirect: '/login',
             failureFlash: true
