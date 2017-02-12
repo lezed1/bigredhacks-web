@@ -2,15 +2,11 @@ extends _global/_layout
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
-        br
-        h2(style={float: left}) #{name}
-
-mixin generateFAQs(text, count)
-    - for (var i=0; i<count; i++)
-        .question
-            p Question
-            p #{text}
-
+        .dots
+            .dot1
+            .dot2
+            .dot3
+        h2 #{name}
 block append header
     link(href="/css/index.css", rel="stylesheet")
 block append content
@@ -29,11 +25,17 @@ block append content
         .slogan
             img(src='/img/sp17_brh_title.png')
             h1 Spring Challenge
+
+    section.faq#description
+        +sectionHeading("What is the Data Science Challenge?")
+        .container
+            p
+                | BigRed//Hacks is the oldest student-run, large-scale hackathon at Cornell University.
+                | Across three days, students from all across the US will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
+            p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
+
     section.faq#faq
         +sectionHeading("FAQ")
-        .question-container
-           // +generateFAQs("hello adsklfjals;dkfjakls;dfjal;sdfja;sdfjkasfd", 4)
-
         .container
             .faq-table
                 dl
@@ -87,13 +89,13 @@ block append content
                         | General applications are immediately available for all students not at Cornell.
                         | In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis.
 
-        +sectionHeading("Sponsors")
-        .container
-            img(src='img/logos/microsoft.png', alt='Microsoft')
+    +sectionHeading("Sponsors")
+    .container
+        img(src='img/logos/microsoft.png', alt='Microsoft')
 
 
-        footer
-            p &copy;BigRed//Hacks 2017
+    footer
+        p &copy;BigRed//Hacks 2017
 
 block footer
     script(src="https://code.jquery.com/jquery-3.1.1.min.js")
