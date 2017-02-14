@@ -49,8 +49,8 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 30px;
-  font-family: 'Montserrat', sans-serif;
+  margin: 15px 0 10px 70px;
+  font-family: 'Andale Mono', sans-serif;
   font-weight: @weight-normal;
   letter-spacing: 1px;
   z-index: 999999;
@@ -137,10 +137,17 @@ section {
   }
 }
 
+.headerbox {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  padding-right: 180px;
+}
+
 .redbox {
-  background-color: @red;
-  margin-left: calc(~"25% - 150px");
-  margin-right: calc(~"50% - 120px");
+  background-color: #cd5257;
+  //margin-left: calc(~"25% - 150px");
+  //margin-right: calc(~"50% - 120px");
     h2 {
     color: @white;
   }
@@ -154,7 +161,7 @@ section {
 .big-heading h2 {
   color: @white;
     font-size: 28px;
-    font-family: "Andale Mono", "sans-serif";
+    font-family: 'Andale Mono', sans-serif;
 }
 
 .center-date {
@@ -174,7 +181,7 @@ section {
 .big-heading2 h2 {
   color: @white;
   font-size: 15px;
-  font-family: "Andale Mono", "sans-serif";
+  font-family: 'Andale Mono', sans-serif;
   text-align: left;
 }
 
@@ -534,14 +541,16 @@ footer p {
 
   .navbar {
     padding: 20px 0;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     background: 0 0;
   }
 
-  .navbar-text {
-    color: @red;
+  .navbar-default .navbar-text {
+    font-weight: 900;
+    color: #cd5257;
     margin-left: 60px;
-    font-size: 14px;
+    padding-top: 15px;
+    font-size: 15px;
   }
 
   .intro {
