@@ -49,10 +49,10 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 15px 0 10px 70px;
+  margin: 15px 0 10px 115px;
   font-family: 'Andale Mono', sans-serif;
   font-weight: @weight-normal;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   z-index: 999999;
 }
 
@@ -161,6 +161,8 @@ section {
 .big-heading h2 {
   color: @white;
     font-size: 28px;
+    padding-top: 25px;
+    margin-bottom: -18px;
     font-family: 'Andale Mono', sans-serif;
 }
 
@@ -169,20 +171,12 @@ section {
   left: 30%;
 }
 
-.buttons {
-  padding-left: 31%;
-  padding-right: 0;
-  margin-right: 0;
-  color: @jasonblue;
-  font-size: 40px;
-  text-align: left;
-}
-
 .big-heading2 h2 {
   color: @white;
-  font-size: 15px;
+  font-size: 13px;
   font-family: 'Andale Mono', sans-serif;
   text-align: left;
+  padding-bottom: 25px;
 }
 
 .home-section {
@@ -227,19 +221,6 @@ section {
       position: relative;
       top: -21px;
       padding-right: 10px;
-    }
-
-    .icon {
-      background-image: url(/img/icon/brh-icon-blue-full.svg);
-      background-size:contain;
-      background-repeat: no-repeat;
-      position: relative;
-      height: 100px;
-      width: 100px;
-      display: inline-block;
-      margin-right: -10px;
-      margin-bottom: 0;
-      vertical-align: bottom;
     }
 
     h2, h4, h3 {
@@ -516,19 +497,10 @@ footer p {
   padding: 9px 15px 9px 15px;
   z-index: 600;
   position: relative;
-  &.btn-red {
-    font-weight: @weight-bold;
-  }
-  &.btn-blue {
-    font-weight: @weight-bold;
-    border-radius: 10px;
-    width: 150px;
-  }
-  &.btn-light-blue {
-    font-weight: @weight-bold;
-    border-radius: 10px;
-    width: 150px;
-  }
+  background-color: transparent;
+  border-color: transparent;
+  color: red;
+
 
   &.fixed-width {
     width: 90px;
@@ -550,7 +522,7 @@ footer p {
     color: #cd5257;
     margin-left: 60px;
     padding-top: 15px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .intro {
@@ -612,18 +584,6 @@ footer p {
     text-align: center;
     width: 100%;
   }
-
-  .btn {
-    &.btn-blue {
-      font-weight: @weight-bold;
-      width: 130px;
-    }
-    &.btn-light-blue {
-      font-weight: @weight-bold;
-      width: 130px;
-    }
-  }
-
 }
 
 
