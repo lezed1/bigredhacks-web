@@ -293,12 +293,11 @@ label {
 
 .btn-style(@color) {
   font-weight: @weight-normal;
-  background-color: @color;
-  border-color: darken(@color, 5%);
-  color: white;
-  &:focus {
-    background-color: darken(@color, 20%);
-    border-color: darken(@color, 5%);
+  background-color: transparent;
+  border-color: transparent;
+  &:active{
+    border-color: transparent;
+    outline: none;
     box-shadow: none;
   }
   &:hover {
@@ -312,6 +311,7 @@ label {
   &.btn-default {
     .btn-style(@neutral);
     font-family: "Andale Mono", sans-serif;
+    outline: none;
     font-size: 18px;
     padding-top: 60px;
     margin-right: 150px;
