@@ -148,22 +148,16 @@ section {
   background-color: #cd5257;
   //margin-left: calc(~"25% - 150px");
   //margin-right: calc(~"50% - 120px");
-    h2 {
-    color: @white;
-  }
-  p {
-    color: @white;
-  }
-  h3,h4 {
+    h2,h3,h4,p {
     color: @white;
   }
 }
 .big-heading h2 {
   color: @white;
-    font-size: 28px;
-    padding-top: 25px;
-    margin-bottom: -18px;
-    font-family: 'Andale Mono', sans-serif;
+  font-size: 28px;
+  padding-top: 25px;
+  margin-bottom: -18px;
+  font-family: 'Andale Mono', sans-serif;
 }
 
 .center-date {
@@ -274,17 +268,6 @@ section {
   //    right: 0;
   //  }
 
-    .announcement {
-      &.orange {
-        color: @nav-orange !important;
-      }
-      &.blue {
-        color: @nav-blue !important;
-      }
-      &.purple {
-        color: spin(saturate(lighten(@nav-purple, 40%), 70%), 10) !important;
-      }
-    }
 
   }
   .page-scroll {
@@ -308,33 +291,6 @@ section {
   background: @white;
 }
 
-/*
-.brand-heading {
-  font-size: 40px;
-}
-
-.intro-text {
-  font-size: 18px;
-}*/
-
-// ===========================
-//--- About
-//============================
-/*.about {
-  background-color: @white;
-  z-index: -2;
-  position: relative;
-  p, h2 {
-    position: relative;
-    color: @black;
-    z-index: 999;
-  }
-  .container p, h2{
-    //background-color: blue;
-    z-index: 9999999;
-  }
-}*/
-
 .sponsors {
   background-color: @white;
   h2 {
@@ -347,7 +303,6 @@ section {
 .schedule {
 
   h2, h3, h4, p {
-    color: @jasonblue;
     margin: 0px;
   }
   h2 {
@@ -412,18 +367,6 @@ section {
 }
 
 .preload01  { background: url(/img/whale_happy.svg) no-repeat -9999px -9999px; }
-
-.hillholder {
-  position: relative;
-  z-index: 50;
-  width: 350px;
-  float: right;
-}
-
-.waterholder {
-  background: @ocean-blue;
-  z-index: -99999;
-}
 
 .faq {
   position: relative;
@@ -605,7 +548,6 @@ footer p {
     padding-left: 0;
     padding-right: 0;
     margin-right: 0;
-    color: @jasonblue;
     font-size: 5px;
     text-align: center;
   }

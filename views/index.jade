@@ -31,7 +31,26 @@ block append content
                 btn-group.group
                   button.button.btn.btn-default Apply Now
                   button.button.btn.btn-default Log In
+
+//- Creates a message if content exists, where type:error|success
+mixin message(content, type)
+ if content
+   - var msg_class
+   case type.toLowerCase()
+       when "error": -msg_class = "alert-danger"
+       when "success": -msg_class = "alert-success"
+       default: -msg_class = "alert-success"
+   .alert.float.alert-dismissible.float.fadeOut(class=msg_class, role="alert")
+       button.close(type="button", data-dismiss="alert", aria-label="Close"): span(aria-hidden="true") &times;
+       | #{content.toLowerCase()}
+
+if messages.error
+  +message(messages.error[0].toLowerCase(), "error")
+  if messages.success
+  +message(messages.success[0].toLowerCase(), "success")
+
 block footer
-    script(src="https://code.jquery.com/jquery-3.1.1.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js")
+    script(src="/js/jquery.validate.options.js")
+    script(src="//code.jquery.com/jquery-3.1.1.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js")
     script(src="/js/index.js")
