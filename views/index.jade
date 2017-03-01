@@ -1,348 +1,56 @@
 extends _global/_layout
-
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
         br
         h2(style={float: left}) #{name}
-
-block vars
-    - bodyAttr = {"id":"page-top", "data-spy":"scroll", "data-target":".navbar-custom"}
 block append header
     link(href="/css/index.css", rel="stylesheet")
-
 block append content
-    a#mlh-trust-badge(style='display:block;max-width:100px;min-width:60px;position:fixed;right:50px;top:0;width:10%;z-index:10000', href='https://mlh.io/seasons/na-2017/events?utm_source=na-2017&utm_medium=TrustBadge&utm_campaign=na-2017&utm_content=gray', target='_blank')
-      img(src='https://s3.amazonaws.com/logged-assets/trust-badge/2017/gray.svg', alt='Major League Hacking 2017 Hackathon Season', style='width:100%')
-    nav.navbar.navbar-custom.navbar-fixed-top.top-nav-collapse(role="navigation")
-        .container
-            .navbar-header.page-scroll
-                button.navbar-toggle(type="button", data-toggle="collapse", data-target=".navbar-main-collapse")
-                    i.fa.fa-bars
-                a.navbar-brand(href="/")
-                    img(src="img/logo/BRH-Logo-White.svg", height="40" width="180", draggable="false")
-
-            //- Collect the nav links, forms, and other content for toggling
-            .collapse.navbar-collapse.navbar-left.navbar-main-collapse
-                ul.nav.navbar-nav
-                    li: a(href="#about") About
-                    li: a(href="#sustainable") Sustainability
-                    li: a(href="#faq") FAQ
-                    li: a(href="#sponsors") Sponsors
-
-
-    //- Creates a message if content exists, where type:error|success
-    mixin message(content, type)
-        if content
-            - var msg_class
-            case type.toLowerCase()
-                when "error": -msg_class = "alert-danger"
-                when "success": -msg_class = "alert-success"
-                default: -msg_class = "alert-success"
-            .alert.float.alert-dismissible.float.fadeOut(class=msg_class, role="alert")
-                button.close(type="button", data-dismiss="alert", aria-label="Close"): span(aria-hidden="true") &times;
-                | #{content.toLowerCase()}
-
-    if messages.error
-        +message(messages.error[0].toLowerCase(), "error")
-    if messages.success
-        +message(messages.success[0].toLowerCase(), "success")
-
-    //- Section: intro
-    section#intro.intro
-        .transparent
-        .intro-wrapper
-            .h1container
-                h1 #[div.icon] BigRed//Hacks
+    nav.navbar.navbar-default
+        .container-fluid
+            .navbar-header
+                a.navbar-brand(href='#')
+                    img(alt='BigRed//Hacks', src='/img/icon/brh-icon-full.png', width=40, height=40)
+            .navbar-header
+                a.navbar-text(href='google.com') About
+            .navbar-header
+                a.navbar-text FAQ
+            .navbar-header
+                a.navbar-text Sponsors
+    section.intro#intro
+        .slogan
+            img.center-block(src='/img/sp17_brh_title.png', width= 800, height: 85)
             .intro-contents
-            .bluebox
-                .slogan
-                    br
-                    br
-                    br
-                    br
-                    .center-date
-                        .big-heading2
-                            h2 Sept 16-18, 2016 @ Ithaca,&nbsp;NY
-                            h2 Cornell University
-                            br
-                            br
+              .headerbox
+                .redbox
+                  .big-heading
+                    h2 Data Science Student Challenge
+                  .big-heading2
+                    h2 Powered by Cortana Intelligence Suite
+                btn-group.group
+                  button.button.btn.btn-default Apply Now
+                  button.button.btn.btn-default Log In
 
-                        .buttons
-                            if isUser
-                                case userRole
-                                    when "admin": a.btn.btn-light-blue(href="/admin/dashboard") admin dashboard
-                                    when "mentor": a.btn.btn-light-blue(href="/admin/dashboard") my dashboard
-                                    default: a.btn.btn-light-blue(href="/user/dashboard") my dashboard
-                                a.btn.btn-light-blue(href="/live") live
-                            else
-                                if middlehelp.isRegistrationOpen()
-                                    button.btn.btn-light-blue(data-toggle="modal" data-target="#regModal") register
-                                    | &nbsp;&nbsp;&nbsp;
-                                    a.btn.btn-blue(href="/login") login
-                                else if middlehelp.isResultsReleased()
-                                    a.btn.btn-light-blue(href="/login") login
+//- Creates a message if content exists, where type:error|success
+mixin message(content, type)
+ if content
+   - var msg_class
+   case type.toLowerCase()
+       when "error": -msg_class = "alert-danger"
+       when "success": -msg_class = "alert-success"
+       default: -msg_class = "alert-success"
+   .alert.float.alert-dismissible.float.fadeOut(class=msg_class, role="alert")
+       button.close(type="button", data-dismiss="alert", aria-label="Close"): span(aria-hidden="true") &times;
+       | #{content.toLowerCase()}
 
-                //- section about
-                //+sectionHeading("Be a part of something big")
-                .about#about.container
-                    br
-                    br
-                    br
-                    br
-                    .big-heading
-                        h2 Be a part of something big
-
-                    p
-                        | BigRed//Hacks is the oldest student-run, large-scale hackathon at Cornell University.
-                        | Across three days, students from all across the US gather in Ithaca to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
-                    br
-
-        .leftClouds(data-100="left:-5%;" data-top="left:-30%;")
-        .rightClouds(data-50="left:70%;" data-top="left:100%;")
-        .cloud3
-        .rainClouds(data-0="left:-6%;" data-160-top="left:2%;")
-
-    //- Section: sustainable
-    section#clocktowerland.clocktowerland
-        .clockTop
-        .clockBody
-            .clockWindow
-            .clockCircle
-                p.counter ??? 
-                p days until
-                p BigRed//Hacks!
-
-        section#schedule.schedule
-            .section-heading.container
-                h2(style='float:left;') Winners
-            .driftCloud1(data-100-bottom="left:40%;" data-top="left:100%;")
-            .driftCloud2(data-100-bottom="left:37%;" data-top="left:100%;")
-            .twocloud
-                .cloud4
-                .cloud5
-                .cloud6
-            .container
-                .schedule-table
-                    .heading
-                      .data
-                        h3 Best UI/Design:
-                        - var a = function(href,text){ return "<a href='"+href+"'>"+text+"</a>" }
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Recycle_Rampage/submission/","Recycle Rampage")}
-                        h5 Identifying everyday products that are recyclable can be a challenge. For example, I had no idea that plastic bags were
-                          |supposed to be disposed of in a landfill...
-                    .data
-                        h3 Best Business Prospect:
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Add.me/submission/","Add.me")}
-                        h5 We wanted to build a platform for everyone to connect on multiple mediums (Facebook, Instagram, Snapchat, Twitter,
-                          |YouTube, Github, LinkedIn, etc) in an immediate and intuitive way …
-                    .data
-                        h3 Best Technical Feat:
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/Andreessen/submission/","Andreesen")}
-                        h5 We build a rudimentary web browser. With no libraries. In pure C++. Named after the great Marc Andreessen, author of Mosaic, and for a16z...
-                    .heading
-                      .data
-                        h3 Sustainability:
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/HawkStorm/submission/","BinGo")}
-                        h5 Recycling is one of the simplest and most straight-forward methods to contribute to the sustainability
-                          |movement on a daily basis, and yet many are unaware...
-                      .data
-                        h3 Best First-Time Hack:
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/PuppetPlant/submission/","PuppetPlant")}
-                        h5 Our goal is to inspire people to improve their habits by emphasizing with a physical product. We want to use
-                          |PuppetPlant as a prototype to illustrate how using emotions of the things people care about can motivate them...
-                      .data
-                        h3 Best Hardware Hack:
-                        p !{a("https://bigredhacks2016.hackerearth.com/sprints/bigredhacks-fall-2016/dashboard/JankTank/submission/","JankTank")}
-                        h5 Remote-controlled tank with a live camera feed. Weapons systems in development
-
-
-        section.hillholder
-            .hill
-        section#whaleDiv
-            .whale
-            .whale-happy
-            .preload-01
-    section.waterholder
-        .water
-
-            //- Section: sustainable
-            section#sustainable.sustainable
-                +sectionHeading("Summary")
-                .container
-                    br
-                    p
-                      | Our fall hackathon was focused on sustainability. 
-                      | We encouraged critical thinking and innovative problem solving 
-                      | to combat climate change and environmental destruction, and we were not disappointed. 
-                      | Over three days, our hackers formed over 210 teams to develop creative solutions in the 
-                      | form of games, apps, and websites to tackle challenges facing our planet.
-
-
-                    //- School 1 20-30%
-                    .redfish(style="top:20%;" data-900-top="left:70%;" data--200-top="left:35%;")
-                    .bluefish(style="top:23%;" data-900-top="left:75%;" data--200-top="left:10%;")
-                    //- School 2 45-55%
-                    .yellowfish(style="top:55%;" data-900-top="left:25%;" data--200-top="left:11%;")
-                    //- School 3 75-85%
-                    .orangefish(style="top:65%;" data-900-top="left:125%;" data--200-top="left:15%;")
-                    .bluefish(style="top:73%;" data-900-top="left:120%;" data--200-top="left:20%;")
-                    .redfish(style="top:80%;" data-900-top="left:140%;" data--200-top="left:35%;")
-
-
-    //- Section: sponsors
-    section#sponsors.sponsors
-        +sectionHeading("Sponsors")
-
-        .container
-            ul.logos
-                li#capitalone.logo-4
-                    a(href='http://capitalone.com')
-                        img(src='img/logos/capitalone.png', alt='Capital One')
-                li#Priceline.logo-4
-                    a(href='http://priceline.com')
-                        img(src='img/logos/priceline.png', alt='Priceline')
-                li#microsoft.logo-4
-                    a(href='http://microsoft.com')
-                        img(src='img/logos/microsoft.png', alt='Microsoft')
-            ul.logos
-                li#bloomberg.logo-3
-                    a(href='http://www.bloomberg.com')
-                        img(src='img/logos/bloomberg.png', alt='Bloomberg')
-                li#grammatech.logo-3
-                    a(href='https://www.grammatech.com/')
-                        img(src='https://www.grammatech.com/sites/all/themes/grammatech/logo.png', alt='GrammaTech')
-                li#a16z.logo-3
-                    a(href='https://www.a16z.com/')
-                        img(src='img/logos/a16z.png', alt='a16z')
-
-            ul.logos
-                li#wayfair.logo-2
-                    a(href='http://www.wayfair.com/')
-                        img(src='img/logos/wayfair.png', alt='Wayfair')
-                li#oracle.logo-2
-                    a(href='http://oracle.com/')
-                        img(src='img/logos/oracle.png', alt='Oracle')
-                li#mathworks.logo-2
-                    a(href='https://www.mathworks.com/')
-                        img(src='img/logos/mathworks.png', alt='MathWorks')
-
-            ul.logos
-                li#deshaw.logo-1
-                    a(href='https://www.deshaw.com/')
-                        img(src='img/logos/DEShaw.png', alt='D.E. Shaw and Co.')
-                li#eship.logo-1
-                    a(href='http://eship.cornell.edu')
-                        img(src='img/logos/eship.png', alt='Entrepreneurship at Cornell')
-            ul.logos
-                li#codepen.logo-1
-                    a(href='http://codepen.com')
-                        img(src='img/logos/codepen.png', alt='CodePen')
-                li#tech.logo-1
-                    a(href='http://get.tech/')
-                        img(src='https://www.101domain.com/images/flags/large/TECH.png', alt='.Tech')
-                li#venturestorm.logo-1
-                    a(href='http://www.venturestorm.com/')
-                        img(src='img/logos/venturestorm.png', alt='Venture Storm')
-
-            ul.logos
-
-                li#lifx.logo-1
-                    a(href='http://www.lifx.com/')
-                        img(src='img/logos/lifx.jpg', alt='LIFX')
-                li#sketch.logo-1
-                    a(href='https://www.sketchapp.com/')
-                        img(src='img/logos/sketch.png', alt='Sketch')
-                li#soylent.logo-1
-                    a(href='https://www.soylent.com/')
-                        img(src='/img/logos/soylent.png', alt='Soylent')
-
-            ul.logos
-                li#hackerearth.logo-1
-                    a(href='https://www.hackerearth.com/')
-                        img(src='/img/logos/hackerearth.png', alt='HackerEarth')
-                li#ultrapress.logo-1
-                    a(href='https://ultrapress.com/')
-                        img(src='https://ultrapress-production.s3.amazonaws.com/static/images/public/ultrapress-custom-tshirts.png', alt='UltraPress')
-
-            ul.logos
-                li#mlh.logo-1
-                    a(href='http://www.mlh.io')
-                        img(src='img/logos/mlh.png', alt='Major League Hacking')
-                li#cornellcs.logo-1
-                    a(href='http://www.cs.cornell.edu')
-                        img(src='img/logos/cis.jpg', alt='Cornell Computer Science')
-
-            ul.logos
-                li#equitas.logo-1
-
-                        img(src='img/logos/equitas.png', alt='Equitas')
-                li#clerky.logo-1
-                    a(href='http://www.clerky.com')
-                        img(src='img/logos/clerky.png', alt='Clerky')
-                li#jetbrains.logo-1
-                    a(href='http://www.jetbrains.com')
-                        img(src='img/logos/jetBrains.png', alt='Jet Brains')
-            p.logos
-                | Interested in sponsoring? Contact us at
-                a(href='mailto:sponsors@bigredhacks.com')  sponsors@bigredhacks.com
-                | .
-            br
-            br
-            br
-            .c
-
-    footer
-        .container
-            .row
-                .col-md-12.col-lg-12
-                    p.footer
-                        a(href='http://www.facebook.com/BigRedHacks', target='_blank')
-                            img.s-icon(src='img/social/icon_facebook.png', draggable='false')
-                        | &nbsp;&nbsp;
-                        a(href='http://www.twitter.com/BigRedHacks', target='_blank')
-                            img.s-icon(src='img/social/icon_twitter.png', draggable='false')
-                        | &nbsp;&nbsp;
-                        a(href='https://www.instagram.com/bigredhacks/', target='_blank')
-                            img.s-icon(src='img/social/icon_instagram.png', draggable='false')
-                        | &nbsp;&nbsp;
-                        a(href='mailto:info@bigredhacks.com')
-                            img.s-icon(src='img/social/icon_email.svg', draggable='false')
-                        | &nbsp;&nbsp;
-                    br
-                    p.footer
-                        | ©2016 BigRed//Hacks
-                        br
-                        //span#cover-photo-attribution
-                        | All other trademarks and logos ® their respective owners.
-                        br
-                        | From Ithaca with ♥
-    #regModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-        .modal-dialog
-            .modal-content
-                form#subscribeEmail(method='post', action='/cornell/subscribe', name='subscribeEmail')
-                    .modal-header
-                        button.close(type='button', data-dismiss='modal', aria-label='Close')
-                            span(aria-hidden='true') ×
-                        h4.modal-title Where do you go to school?
-                    .modal-body.hidden
-                        p Cornell University students won't be able to register until August 25th, but in the meantime, add yourself to the mailing list. You'll receive an email when we open registration.
-                        .form-group
-                            label(for='cornellEmail') email address *
-                            input#cornellEmail.form-control(type='email', name='cornellEmail', placeholder='bigredhacks@cornell.edu', value='', required='')
-                    #regFooter.modal-footer
-                        if middlehelp.isCornellRegistrationOpen()
-                            a.btn.btn-blue.reg-select(href='/register/cornelluniversity') Cornell/Ithaca
-                        else
-                            button#regCornell.btn.btn-blue.reg-select(type='button') Cornell/Ithaca
-                        a.btn.btn-blue.reg-select(href='/register') Somewhere else
-                        button#cornell-submit.btn.btn-blue.hidden(type='submit') Submit
+if messages.error
+  +message(messages.error[0].toLowerCase(), "error")
+  if messages.success
+  +message(messages.success[0].toLowerCase(), "success")
 
 block footer
-    script(src="/js/vendor/jquery.easing.min.js")
-    script(src="/js/vendor/jquery.scrollTo.js")
-    script(src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js")
     script(src="/js/jquery.validate.options.js")
-    script(src="/js/vendor/skrollr.min.js")
+    script(src="//code.jquery.com/jquery-3.1.1.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js")
     script(src="/js/index.js")
-    script(src="/js/asdf.js")
