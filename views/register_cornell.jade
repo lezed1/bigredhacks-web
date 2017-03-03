@@ -118,7 +118,12 @@ block append terms
     br
     label Please carefully read the liability waiver:
     .form-group
-        a#liability-cornell.btn.btn-default.btn-danger(type='button', href='http://www.bigredhacks.com/docs/waiver2016.pdf', target='_blank') liability waiver & release
+        a#liability-cornell.btn.btn-default.btn-danger(type='button', href='/docs/waiver.pdf', target='_blank') liability waiver & release
+    .form-group
+        .checkbox
+            label
+                input#liability-agree(type='checkbox', name='liability')
+                | I understand and agree to the #[a(href="/docs/waiver.pdf") liability waiver & release.]
         //-
             a#code-of-conduct-cornell.btn.btn-danger(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
 
