@@ -6,19 +6,14 @@ nav.navbar.navbar-default
         .navbar-header
             a.navbar-brand(href='#')
                 img(alt='BigRed//Hacks', src='/img/icon/brh-icon-full.png', width=40, height=40)
-        .navbar-header
-            a.navbar-text(href='/') Home
+        .navbar-header: a.navbar-text(href='/') Home
         if isUser
-            .navbar-header
-                a.navbar-text(href="/user/dashboard") Dashboard
-            .navbar-header
-                a.navbar-text(href="/user/logout") Logout
+            .navbar-header: a.navbar-text(href="/user/dashboard") Dashboard
+            .navbar-header: a.navbar-text(href="/user/logout") Logout
         else
             if middlehelp.isCornellRegistrationOpen()
-                .navbar-header
-                    a.navbar-text(href="/register/cornelluniversity") Register
-            .navbar-header
-                a.navbar-text(href="/login") Login
+                .navbar-header: a.navbar-text(href="/register/cornelluniversity") Register
+            .navbar-header: a.navbar-text(href="/login") Login
 //-
     nav.navbar.top-nav-collapse.navbar-default(role='navigation')
         .container
