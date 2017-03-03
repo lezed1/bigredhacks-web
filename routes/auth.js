@@ -84,6 +84,7 @@ module.exports = function (io) {
 
             if (college == null) {
                 //college does not exist, or not allowed
+                console.error('found null college, redirecting to index');
                 return res.redirect('/');
             }
             else {
