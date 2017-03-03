@@ -3,7 +3,11 @@ extends _global/_layout
 mixin sectionHeading(name)
     .section-heading.container
         br
-        h2(style="float: left; margin-left: 0") #{name}
+        .dots
+            .dot1
+            .dot2
+            .dot3
+        h2 #{name}
 
 mixin generateFAQs(text, count)
     - for (var i=0; i<count; i++)
@@ -36,11 +40,11 @@ block append content
                 a.navbar-brand(href='#')
                     img(alt='BigRed//Hacks', src='/img/icon/brh-icon-full.png', width=40, height=40)
             .navbar-header
-                a.navbar-text(href='google.com') About
+                a.navbar-text(href='#description') About
             .navbar-header
-                a.navbar-text FAQ
+                a.navbar-text(href='#faq') FAQ
             .navbar-header
-                a.navbar-text Sponsors
+                a.navbar-text(href='#microsoft') Sponsors
 
     section.intro#intro
         .slogan
@@ -55,6 +59,15 @@ block append content
                 btn-group.group
                   a.button.btn.btn-default(href="/register/cornelluniversity") Apply Now
                   button.button.btn.btn-default Log In
+
+    section.faq#description
+        +sectionHeading("What is the Data Science Challenge?")
+        .container
+            p
+                | BigRed//Hacks is the oldest student-run, large-scale hackathon at Cornell University.
+                | Across three days, students from all across the US will gather to build the coolest and most innovative projects, meet amazing people, and win some prizes along the way!
+            p We encourage all developers regardless of technical ability or hackathon experience to apply. Admission and food is free for all hackers.
+
 
     section.faq#faq
         +sectionHeading("FAQ")
@@ -110,6 +123,14 @@ block append content
                         | We're doing applications a little differently this year.
                         | General applications are immediately available for all students not at Cornell.
                         | In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis.
+
+
+    +sectionHeading("Sponsors")
+    .container
+        img#microsoft(src='img/logos/microsoft.png', alt='Microsoft')
+
+    footer
+        p &copy;BigRed//Hacks 2017
 
 block footer
     script(src="/js/jquery.validate.options.js")
