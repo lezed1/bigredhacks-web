@@ -14,14 +14,14 @@ block dashboard_content
 
     +showMessages(messages)
 
-    p welcome back, #{user.name.first} #{user.name.last}.
+    p Welcome back, #{user.name.first} #{user.name.last}.
     br
 
-    +sectionHeading("status")
-    if middlehelp.isRegistrationOpen()
-        p registration process is still open.
+    +sectionHeading("Status")
+    if middlehelp.isCornellRegistrationOpen()
+        p Cornell registration is still open.
     else
-        p registration process is closed.
+        p Registration process is closed.
 
     //-General (Non-Cornell) decision content
     if (!cornellian)
@@ -121,8 +121,9 @@ block dashboard_content
             //-Pending decision
         else
             p.long-text
-                | We're accepting Cornell students based on a lottery system this year.
-                | Keep an eye on this page and your email for a decision!
+                | We'll be making decisions later on. You'll get an email once your decision is ready.
+            p.long-text
+                | Why are you still here? Go enjoy your beautiful day in Ithaca!
 
     if status == "accepted"
 
@@ -308,9 +309,9 @@ block dashboard_content
                             input#cornellteamcheck.checkbox(type="checkbox",value="",checked=user.internal.teamwithcornell)
                             | I plan to work with (a) Cornell student(s).
 
-    +sectionHeading("resume")
-    a.btn.btn-blue(href=resumeLink, target='_blank') view my resume
-    button#resume-update.btn.btn-blue update my resume
+    +sectionHeading("Resume")
+    a.btn.btn-default(href=resumeLink, target='_blank') View My Resume
+    button#resume-update.btn.btn-default Update My Resume
     br
     br
     form#resume-form.form-inline(method='post', action='/user/updateresume', style='display:none', enctype='multipart/form-data')

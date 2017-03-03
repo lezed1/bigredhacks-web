@@ -5,7 +5,7 @@
 @sidebar-brand-font-size: 24pt;
 
 .page-title, h1, h2, h3, h4, h5, h6 {
-  text-transform: lowercase;
+  //text-transform: lowercase;
 }
 body {
   @media (max-width: 768px) {
@@ -18,8 +18,7 @@ body {
 }
 
 p {
-  color: @jasonblue;
-  font-style: italic;
+  color: @text-normal;
 }
 
 .btn {
@@ -38,12 +37,11 @@ form#resume-form {
     content: " | ";
     font-style: normal;
   }
-  font-style: italic;
 }
 
 ul.team-list {
   margin-top: 10px;
-  color: @jasonblue;
+  color: @text-normal;
   list-style-type: none;
 
   li {
@@ -62,7 +60,7 @@ ul.team-list {
 ///////////////
 
 .sidebar {
-  background: @ocean-blue;
+  background: @medium-red;
   top: 0;
   bottom: 0;
   left: 0;
