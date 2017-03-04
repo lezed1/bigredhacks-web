@@ -61,8 +61,16 @@ block append content
                     h2#caption Powered by Cortana Intelligence Suite
 
                 btn-group.group
-                  a.button.btn.btn-default(href="/register/cornelluniversity") Apply Now
-                  a.button.btn.btn-default(href="/login") Log In
+                    if isUser
+                        case userRole
+                            when "admin": a.btn.btn-default(href="/admin/dashboard") admin dashboard
+                            when "mentor": a.btn.btn-default(href="/admin/dashboard") my dashboard
+                            default: a.btn.btn-default(href="/user/dashboard") my dashboard
+                        //- a.btn.btn-light-blue(href="/live") live
+                    else
+                        if middlehelp.isCornellRegistrationOpen()
+                            a.button.btn.btn-default(href="/register/cornelluniversity") Apply Now
+                        a.button.btn.btn-default(href="/login") Log In
 
               .banner
                   .logos
