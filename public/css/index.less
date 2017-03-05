@@ -44,8 +44,8 @@ body {
   height: 100%;
   font-family: 'Nunito Sans', sans-serif;
   font-weight: @weight-normal;
-  color: @black;
-  background-color: #242C37;
+  color: @bg-light;
+  background-color: @bg-dark;
   padding: 0;
   margin: 0;
 }
@@ -152,7 +152,7 @@ section {
 }
 
 .redbox {
-  background-color: @medium-red;
+  //background-color: @medium-red;
   margin-top: 10px;
   //margin-left: calc(~"25% - 150px");
   //margin-right: calc(~"50% - 120px");
@@ -251,12 +251,16 @@ section {
   //padding-top: 15%; //with announcement
   position: relative;
   background-color: #242C37;
+  //background-color: @white;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 
   .banner{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: @bg-light;
     margin-top: 50px;
     text-align: center;
     //margin-left: 90px;
@@ -401,7 +405,7 @@ section {
     margin-bottom: 150px;
   }
   dd, dt {
-    color: white;
+    color: @bg-light;
   }
 }
 
@@ -424,7 +428,7 @@ section {
     color: white;
   }
   dd, dt {
-    color: white;
+    color: @bg-light;
   }
   .container {
     width: 80%;
@@ -513,7 +517,7 @@ footer p {
   .navbar-text {
     font-weight: 900;
     font-family: 'Nunito';
-    color: #cd5257;
+    color: @bg-light;
     padding-top: 15px;
     font-size: 16px;
   }
@@ -532,7 +536,7 @@ footer p {
   .navbar-default .navbar-text {
     font-weight: bold;
     font-family: 'Nunito';
-    color: #cd5257;
+    color: @bg-light;
     margin-left: 60px;
     padding-top: 15px;
     font-size: 16px;
