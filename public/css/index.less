@@ -44,10 +44,15 @@ body {
   height: 100%;
   font-family: 'Nunito Sans', sans-serif;
   font-weight: @weight-normal;
-  color: @black;
-  background-color: @bg-light;
+  color: @bg-light;
+  background-color: @bg-dark;
   padding: 0;
   margin: 0;
+}
+@media (max-width: 768px){
+  body{
+    width: 800px;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -147,7 +152,7 @@ section {
 }
 
 .redbox {
-  background-color: @medium-red;
+  //background-color: @medium-red;
   margin-top: 10px;
   //margin-left: calc(~"25% - 150px");
   //margin-right: calc(~"50% - 120px");
@@ -203,7 +208,7 @@ section {
     font-size: 40px;
     color: @dark-red;
     display: inline-block;
-
+    margin-left: 0px;
   }
 }
 .dots {
@@ -245,13 +250,16 @@ section {
   padding: 80px 0 80px 0;
   //padding-top: 15%; //with announcement
   position: relative;
-  background-color: @white;
+  //background-color: @white;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 
   .banner{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: @white;
     margin-top: 50px;
     text-align: center;
     //margin-left: 90px;
@@ -396,7 +404,7 @@ section {
     margin-bottom: 150px;
   }
   dd, dt {
-    color: black;
+    color: @bg-light;
   }
 }
 
@@ -416,7 +424,7 @@ section {
   }
 
   dd, dt {
-    color: black;
+    color: @bg-light;
   }
   .container {
     width: 80%;
@@ -458,18 +466,20 @@ section {
 //============================
 
 footer {
-
-  padding: 50px;
-  background-color: @dark-red;
+  //padding: 50px;
+  //background-color: @dark-red;
   bottom: 0;
   width: 100%;
   margin-top: 30px;
 
+  .container{
+    width: 80%;
+  }
 }
 
 footer p {
   color: #f8f8f8;
-  text-align: center;
+  text-align: left;
 
 }
 
@@ -486,6 +496,7 @@ footer p {
   position: relative;
   background-color: transparent;
   border-color: transparent;
+  border-bottom-width: thick;
   color: red;
 
 
@@ -495,6 +506,20 @@ footer p {
 }
 
 /* Media queries */
+.navbar {
+  letter-spacing: 2px;
+  background: 0 0;
+  border-color: transparent;
+}
+
+.navbar-default
+  .navbar-text {
+    font-weight: 900;
+    font-family: 'Nunito';
+    color: @bg-light;
+    padding-top: 15px;
+    font-size: 16px;
+  }
 
 @media (min-width: 767px) {
 
@@ -508,8 +533,9 @@ footer p {
   }
 
   .navbar-default .navbar-text {
-    font-weight: 900;
-    color: #cd5257;
+    // font-weight: bold;
+    //font-family: 'Nunito';
+    color: @bg-light;
     margin-left: 60px;
     padding-top: 15px;
     font-size: 16px;
@@ -559,16 +585,6 @@ footer p {
     }
   }
 
-  .clockCircle p, .clockBody, .hill, .clockTop, .raindrop {
-    visibility: hidden;
-    display: none;
-  }
-
-  .center-date {
-    width: 100%;
-  }
-
-
   .buttons {
     padding-left: 0;
     text-align: center;
@@ -615,15 +631,6 @@ footer p {
       width: 100%;
       padding: 0 15px 0 15px;
     }
-    .sustainable {
-      padding-top: 0;
-      padding-bottom: 50px;
-      .container {
-        width: 100%;
-      }
-      .content {
-        padding-top: 0;
-      }
     }
     .redbox {
       .container {
@@ -688,427 +695,4 @@ footer p {
   max-width: 23%;
   margin: 3% 3% 0 3%;
   max-height: 60px;
-}
-
-#bloomberg img {
-  height: 45px;
-}
-#grammatech img {
-  height: 60px;
-}
-#a16z img {
-  height: 35px;
-}
-
-#wayfair img {
-  width: 35%;
-  margin-right: 0px;
-}
-
-#eship img {
-  width: 35%;
-}
-
-#jetbrains img {
-  margin-left: -45px;
-  margin-top: -20px;
-  max-height: none;
-  height: 130px;
-}
-
-#equitas img {
-  margin-top: -20px;
-}
-
-#clerky img {
-  margin-top: -20px;
-}
-
-.clocktowerland {
-  position: relative;
-}
-
-@media (min-width: 767px) {
-  .clocktower {
-    background-image: url(/img/clocktower.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 100%;
-    width: 800px;
-    left: 80%;
-    position: absolute;
-    z-index: 1000;
-  }
-
-  .clockTop {
-    position: absolute;
-    z-index: 50;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 75px 300px 75px;
-    top: -450px;
-    bottom: 0;
-    left: 85%;
-    //overflow: hidden;
-    border-color: transparent transparent #d8d8d8 transparent;
-  }
-
-  .clockBody {
-    position: absolute;
-    z-index: 50;
-    width: 150px;
-    max-width: 150px;
-    height: calc(~"100% + 150px");
-    top: -150px;
-    bottom: 0;
-    left: 85%;
-    overflow: hidden;
-    background: #f0f0f0;
-  }
-
-  .clockCircle {
-    .noselect;
-    position: absolute;
-    top: 22%;
-    left: calc(~"50% - 62.5px");
-    border-radius: 50%;
-    width: 125px;
-    height: 125px;
-    background: #FFFFFF;
-    .counter {
-      padding-top: 24px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 50px;
-      line-height: 30px;
-      color: @picton;
-    }
-    p {
-      text-align: center;
-      vertical-align: middle;
-      font-size: 12px;
-      line-height: 1px;
-      color: @picton;
-    }
-  }
-
-  .hill {
-    background-image: url(/img/hill.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    min-width: 100%;
-    min-height: 100%;
-    bottom: -1px;
-    position: absolute;
-    z-index: 100;
-    height: 320px;
-  }
-
-  .clockWindow {
-    position: absolute;
-    background-image: url(/img/windows.svg);
-    background-repeat: no-repeat;
-    top: 5%;
-    left: calc(50% - (37px));
-    width: 125px;
-    height: 125px;
-  }
-
-  .cloud-generic {
-    background-image :url(/img/cloud1.svg);
-    background-size:contain;
-    background-repeat: no-repeat;
-    height: 200px;
-    width: 300px;
-  }
-
-  .cloud-static {
-    background-image :url(/img/clouds/high-cloud-1.svg);
-    background-size:contain;
-    background-repeat: no-repeat;
-    z-index: 2;
-    position: absolute;
-    width: 28%;
-    height: 28%;
-  }
-    .leftClouds {
-      .cloud-static;
-      left: 0%;
-      top: 28%;
-    }
-
-    .rightClouds {
-      .cloud-static;
-      left: 70%;
-      top: 40%;
-    }
-
-  .rainClouds {
-    .cloud-static;
-    top: 80%;
-    width: 25%;
-    height: 32%;
-    //opacity: .8;
-  }
-
-  .twocloud {
-    position: absolute;
-    top: 70%;
-    width: 100%;
-    height: 20%;
-    left: -4%;
-  }
-
-  .cloud6 {
-    .cloud-static;
-    background-image: url(/img/clouds/lowcloud5.svg);
-    top: 100%;
-    left: 5%;
-    z-index: 3000;
-    width: 30%;
-    height: 30%;
-  }
-
-  .cloud3 {
-    .cloud-static;
-    background-image: url(/img/clouds/highcloud6.svg);
-    top: 96%;
-    left: 66%;
-    height: 6%;
-  }
-
-  .cloud4 {
-    .cloud-static;
-    background-image: url(/img/clouds/lowcloud4.svg);
-    top: 70%;
-    z-index: 3000;
-    width: 60%;
-    height: 60%;
-  }
-
-  .cloud5 {
-    .cloud-static;
-    background-image: url(/img/clouds/lowcloud3.svg);
-    top: 70%;
-    left: 70%;
-    z-index: 3001;
-    width: 30%;
-    height: 30%;
-  }
-
-  .driftCloud1 {
-    .cloud-static;
-    background-image: url(/img/clouds/lowcloud1.svg);
-    top: 32%;
-    opacity: .8;
-    z-index: 3000;
-    width: 16%;
-    height: 16%;
-  }
-
-  .driftCloud2 {
-    .cloud-static;
-    background-image: url(/img/clouds/lowcloud2.svg);
-    top: 32%;
-    opacity: .8;
-    z-index: 3000;
-    width: 16%;
-    height: 16%;
-  }
-
-  @media (min-width: 1500px) {
-    .whale {
-      background-image: url(/img/whale.svg);
-      background-size: contain;
-      background-repeat: no-repeat;
-      z-index: 500;
-      position: absolute;
-      height: 300px;
-      width: 700px;
-      top: -220px;
-      left: 35%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    // Whale
-    #whaleDiv {
-      position: relative;
-    }
-
-    .whale:hover {
-      background-image: url(/img/whale_happy.svg);
-    }
-
-    .whale-happy {
-      z-index: 499;
-      height: 300px;
-      width: 700px;
-      top: -220px;
-    }
-  }
-
-    .whale {
-      background-image: url(/img/whale.svg);
-      background-size: contain;
-      background-repeat: no-repeat;
-      z-index: 500;
-      position: absolute;
-      height: 150px;
-      width: 350px;
-      top: -110px;
-      left: 35%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    // Whale
-    #whaleDiv {
-      position: relative;
-    }
-
-    .whale:hover {
-      opacity: 0;
-      //background-image: url(/img/whale_happy.svg);
-    }
-    .whale-happy {
-      background-image: url(/img/whale_happy.svg);
-      background-size: contain;
-      background-repeat: no-repeat;
-      z-index: 499;
-      position: absolute;
-      height: 150px;
-      width: 350px;
-      top: -110px;
-      left: 35%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-
-  .wave {
-    background-size:contain;
-    background-repeat: no-repeat;
-    z-index: 3500;
-    position: absolute;
-    height: 300px;
-    width: 700px;
-    top: -5px;
-    left: 55%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .wave1 {
-    .wave;
-    background-image: url(/img/waves/wave1.svg);
-    top: -5px;
-    left: 55%;
-  }
-
-  .wave2 {
-    .wave;
-    background-image: url(/img/waves/wave2.svg);
-    top: 6%;
-    left: 45%;
-  }
-
-  .wave3 {
-    .wave;
-    background-image: url(/img/waves/wave3.svg);
-    top: 97%;
-    left: 2%;
-  }
-
-
-  .fishGeneric {
-    background-size:contain;
-    background-repeat: no-repeat;
-    height: 40px;
-    width: 60px;
-    position: absolute;
-    z-index: -10;
-  }
-
-
-  .redfish {
-    .fishGeneric;
-    background-image: url(/img/fishred.svg);
-  }
-
-  .bluefish {
-    .fishGeneric;
-    background-image: url(/img/fishblue.svg);
-  }
-
-  .orangefish {
-    .fishGeneric;
-    background-image: url(/img/fishorange.svg);
-  }
-
-  .yellowfish {
-    .fishGeneric;
-    background-image: url(/img/fishyellow.svg);
-  }
-
-  .greenfish {
-    .fishGeneric;
-    background-image: url(/img/fishgreen.svg);
-  }
-}
-
-.landing-container {
-  margin-top: 200px;
-}
-
-//404 error
-.landing-header {
-  font-size:30px;
-  text-align: center;
-}
-.landing-subheader {
-  font-size: 14px;
-  text-align: center;
-}
-.landing-icon.fa.fa-exclamation-triangle {
-  font-size: 70px;
-  color: @redish;
-  text-align: center;
-}
-.landing-container {
-  text-align: center;
-}
-//puzzle
-.c {
-  display: none;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  z-index: 9997;
-  top: 0;
-  left: 0;
-}
-
-.wat1 {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: white;
-  -moz-border-radius: 50px;
-  -webkit-border-radius: 50px;
-  border-radius: 50px;
-  z-index: 9998;
-}
-
-.wat2 {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: white;
-  -moz-border-radius: 50px;
-  -webkit-border-radius: 50px;
-  border-radius: 50px;
-  z-index: 9998;
 }

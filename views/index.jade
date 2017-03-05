@@ -2,11 +2,8 @@ extends _global/_layout
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
+        img(src='/img/fade.png', width= 800, height= 85)
         br
-        .dots
-            .dot1
-            .dot2
-            .dot3
         h2 #{name}
 
 mixin generateFAQs(text, count)
@@ -38,7 +35,7 @@ block append content
         .container-fluid
             .navbar-header
                 a.navbar-brand(href='/')
-                    img(alt='BigRed//Hacks', src='/img/icon/brh-icon-full.png', width=40, height=40)
+                    img(alt='BigRed//Hacks', src='/img/icon/brh-icon-white-full.png', width=40, height=40)
             .navbar-header
                 a.navbar-text(href='#description') About
             .navbar-header
@@ -48,7 +45,7 @@ block append content
 
     section.intro#intro
         .slogan
-            img.center-block(src='/img/sp17_brh_title.png', width= 800, height= 85)
+            img.center-block(src='/img/sp17_brh_title_2.png', width= 800, height= 85)
             .intro-contents
               .headerbox
                 .redbox
@@ -128,7 +125,8 @@ block append content
 
 
     footer
-        .container
+        +sectionHeading("")
+        .container    
             .row
                 .col-md-12.col-lg-12
                     p.footer
