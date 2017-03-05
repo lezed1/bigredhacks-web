@@ -2,11 +2,8 @@ extends _global/_layout
 //-Generates full section header
 mixin sectionHeading(name)
     .section-heading.container
+        img(src='/img/fade.png', width= 800, height= 85)
         br
-        .dots
-            .dot1
-            .dot2
-            .dot3
         h2 #{name}
 
 mixin generateFAQs(text, count)
@@ -128,7 +125,8 @@ block append content
 
 
     footer
-        .container
+        +sectionHeading("")
+        .container    
             .row
                 .col-md-12.col-lg-12
                     p.footer
