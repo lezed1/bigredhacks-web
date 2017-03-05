@@ -53,6 +53,10 @@ body {
   body{
     width: 800px;
   }
+  .navbar-fixed-top {
+    position: relative;
+    top: auto;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -247,7 +251,7 @@ section {
 
 .intro {
   width: 100%;
-  padding: 80px 0 80px 0;
+  padding: 80px 0 0 0;
   //padding-top: 15%; //with announcement
   position: relative;
   background-color: #242C37;
@@ -273,6 +277,11 @@ section {
 
     }
 
+  }
+  @media (max-width: 768px){
+    .banner{
+      display:none;
+    }
   }
   .intro-wrapper {
     text-align: center;
@@ -508,20 +517,6 @@ footer p {
 }
 
 /* Media queries */
-.navbar {
-  letter-spacing: 2px;
-  background: 0 0;
-  border-color: transparent;
-}
-
-.navbar-default
-  .navbar-text {
-    font-weight: 900;
-    font-family: 'Nunito';
-    color: @bg-light;
-    padding-top: 15px;
-    font-size: 16px;
-  }
 
 @media (min-width: 767px) {
 
@@ -532,6 +527,7 @@ footer p {
     padding: 20px 0;
     letter-spacing: 2px;
     background: 0 0;
+    border-color: transparent;
   }
 
   .navbar-default .navbar-text {
@@ -559,6 +555,19 @@ footer p {
 
 @media (max-width: 768px) {
 
+  .navbar {
+    letter-spacing: 2px;
+    background: 0 0;
+    border-color: transparent;
+  }
+
+  .navbar-default
+    .navbar-text {
+      font-weight: 900;
+      font-family: 'Nunito';
+      color: @bg-light;
+      font-size: 16px;
+    }
   .intro {
     .intro-wrapper {
       .h1container {
@@ -579,13 +588,6 @@ footer p {
     }
   }
 
-  .intro {
-    .slogan {
-      h2 {
-        font-size: @main-header-size - 50pt;
-      }
-    }
-  }
 
   .buttons {
     padding-left: 0;
@@ -593,7 +595,6 @@ footer p {
     width: 100%;
   }
 }
-
 
 @media (max-width: 496px) {
 
@@ -603,51 +604,6 @@ footer p {
     //position: relative;
   }
 
-  .redbox {
-
-  .navbar-custom .nav.navbar-nav {
-    background-color: rgba(255, 255, 255, .4);
-  }
-
-  .navbar.navbar-custom.navbar-fixed-top {
-    margin-bottom: 30px;
-  }
-
-  .bluebox {
-    margin-top: 0;
-    padding-top: 0;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .big-heading2 h2 {
-    padding-left: 0;
-    padding-right: 0;
-    margin-right: 0;
-    font-size: 5px;
-    text-align: center;
-  }
-
-  section {
-    .container {
-      width: 100%;
-      padding: 0 15px 0 15px;
-    }
-    }
-    .redbox {
-      .container {
-        width: 100%;
-        left: 0;
-      }
-    }
-    .intro {
-      padding-bottom: 20px;
-    }
-  }
-
-  .faq {
-    padding-top: 50px;
-  }
 }
 
 .top-nav-collapse {
