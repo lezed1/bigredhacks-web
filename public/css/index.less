@@ -122,7 +122,14 @@ a {
   }
 }
 
-#fade {
+.fade-heading {
+  padding-top: 85px;
+}
+
+.fade-img {
+  display: inherit;
+  position: absolute;
+  left: 0%;
   width: 800px;
   height: 85px;
 }
@@ -173,10 +180,18 @@ section {
 }
 .big-heading h2 {
   color: @white;
-  font-size: 28px;
+  font-size: 32px;
   padding-top: 25px;
   margin-bottom: 18px;
   font-family: 'Overpass Mono', sans-serif;
+}
+
+.user-action-group {
+  margin-left: 75px;
+  .btn-default {
+    margin-right: 100px;
+    margin-left: 0px;
+  }
 }
 
 .center-date {
@@ -294,10 +309,14 @@ section {
 
   }
   @media (max-width: 768px){
-    .btn.btn-default{
-      margin-right: 70px;
+    .btn.btn-default.button-b2 {
       margin-left: 70px;
     }
+    .btn.btn-default{
+      margin-right: 70px;
+      margin-left: 0;
+    }
+
     .banner{
       display:none;
     }
@@ -463,7 +482,7 @@ section {
   }
   dt {
     font-size: 20px;
-    padding-top: 10px;
+    padding-top: 20px;
   }
   dd {
     font-size: 16px;
@@ -635,7 +654,7 @@ footer p {
     padding-right: 5%;
   }
 
-  #fade {
+  .fade-img {
     display: none;
   }
 
