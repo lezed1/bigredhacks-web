@@ -50,9 +50,6 @@ body {
   margin: 0;
 }
 @media (max-width: 768px){
-  body{
-    width: 800px;
-  }
   .navbar-fixed-top {
     position: relative;
     top: auto;
@@ -577,14 +574,37 @@ footer p {
 
 }
 
-@media (max-width: 768px) {
+.wide-img{
+  width: 80vw;
+  height: 85px;
+}
 
+#wrapper{
+  display: none;
+}
+
+@media (max-width: 768px) {
+    #intro{
+      padding-top: 5px;
+    }
+
+    #wrapper {
+        display: block;
+        max-width: 40vw; /* max-width doesn't behave correctly in legacy IE */
+        margin: 0 auto;
+    }
+    #wrapper img{
+        width:100%;       /* the image will now scale down as its parent gets smaller */
+    }
+    .wide-img{
+      display: none;
+    }
 
     .redbox {
       .container {
         position: relative;
         //left: -80px;
-        width: 100%;
+        // width: 80%;
       }
     }
 
@@ -677,6 +697,9 @@ footer p {
 
 @media (max-width: 496px) {
 
+  body{
+    width: 100%;
+  }
 
   #sponsors {
     display: none;
