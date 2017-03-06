@@ -3,9 +3,9 @@ extends _global/_layout
 mixin sectionHeading(name)
 
     .section-heading.container
-        img#fade(src='/img/fade.png')
+        img.fade-img(src='/img/fade.png')
         br
-        h2 #{name}
+        h2.fade-heading #{name}
 
 mixin generateFAQs(text, count)
     - for (var i=0; i<count; i++)
@@ -57,10 +57,9 @@ block append content
                   .big-heading2
                     h2#date March 24-25, 2017
                     h2#caption Powered by Cortana Intelligence Suite
-
-                btn-group.group
-                  a.button.btn.btn-default(href="/register/cornelluniversity") Apply Now
-                  a.button.btn.btn-default(href="/login") Log In
+                  btn-group.group.user-action-group
+                    a.button.btn.btn-default(href="/register/cornelluniversity") Apply Now
+                    a.button.btn.btn-default(href="/login") Log In
 
               .banner
                   .logos
